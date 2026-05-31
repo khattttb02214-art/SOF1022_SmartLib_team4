@@ -146,7 +146,7 @@ GO
 CREATE TABLE Sach (
     MaSach VARCHAR(10) PRIMARY KEY,
 
-    ISBN VARCHAR(20) UNIQUE,
+    ISBN VARCHAR(20) ,
 
     Barcode VARCHAR(100) UNIQUE,
 
@@ -646,3 +646,50 @@ ADD SoLuong INT NOT NULL DEFAULT 1
 
 ALTER TABLE ChiTietMuonTra
 ADD TienPhat DECIMAL(18,2) NOT NULL DEFAULT 0
+
+------------------------------------------------------------
+-- WISHLIST FOLDER
+------------------------------------------------------------
+
+CREATE TABLE WishlistFolder
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+
+    TenDanhMuc NVARCHAR(100) NOT NULL,
+
+    MaDocGia VARCHAR(10),
+
+    NgayTao DATETIME DEFAULT GETDATE(),
+
+    CONSTRAINT FK_WishlistFolder_DocGia
+        FOREIGN KEY (MaDocGia)
+        REFERENCES DocGia(MaDocGia)
+);
+GO
+IF COL_LENGTH('Wishlist', 'FolderId') IS NULL
+BEGIN
+    ALTER TABLE Wishlist
+    ADD FolderId INT NULL
+END
+GO
+ALTER TABLE Wishlist
+ADD CONSTRAINT FK_Wishlist_WishlistFolder
+FOREIGN KEY (FolderId)
+REFERENCES WishlistFolder(Id);
+GO
+
+SELECT *
+FROM Sach
+
+INSERT INTO TheLoai
+VALUES
+('TL004',N'Giáo dục',N'Sách giáo dục'),
+
+('TL005',N'Truyện tranh',N'Sách truyện tranh')
+
+SELECT name
+FROM sys.key_constraints
+WHERE parent_object_id = OBJECT_ID('Sach');
+
+ALTER TABLE Sach
+DROP CONSTRAINT UQ__Sach__447D36EA0ABF4AE7
