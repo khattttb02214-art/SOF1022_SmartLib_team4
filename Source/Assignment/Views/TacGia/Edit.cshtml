@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Assignment.Models.Entities.TacGium>
+
+@{
+    ViewData["Title"] = "Quản lý Tác Giả";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary fw-bold">QUẢN LÝ TÁC GIẢ</h2>
+        <a asp-action="Create" class="btn btn-success fw-bold">+ Thêm Tác Giả Mới</a>
+    </div>
+
+    <div class="card mb-4 bg-light shadow-sm">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3 align-items-center">
+                <div class="col-md-9">
+                    <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control" placeholder="Nhập tên tác giả cần tìm..." />
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Tìm kiếm</button>
+                    <a asp-action="Index" class="btn btn-secondary w-100">Xóa bộ lọc</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-bordered table-striped table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 15%;">Mã Tác Giả</th>
+                        <th style="width: 25%;">Tên Tác Giả</th>
+                        <th style="width: 30%;">Tiểu Sử</th>
+                        <th style="width: 15%;">Quốc Tịch</th>
+                        <th style="width: 15%;" class="text-center">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold text-secondary">@item.MaTacGia</td>
+                                <td class="text-dark fw-bold">@item.TenTacGia</td>
+                                <td>@item.TieuSu</td>
+                                <td>@item.QuocTich</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.MaTacGia">Sửa</a>
+                                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.MaTacGia" onclick="return confirm('Bạn chắc chắn muốn xóa tác giả này?')">Xóa</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">Không tìm thấy tác giả nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

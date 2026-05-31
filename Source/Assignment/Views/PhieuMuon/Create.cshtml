@@ -1,0 +1,48 @@
+﻿@model Assignment.Models.Entities.MuonTra
+
+<div class="container mt-4">
+    <h2 class="text-primary">Lập Phiếu Mượn Mới</h2>
+    <form asp-action="Create" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label>Mã Phiếu</label>
+                    <input asp-for="MaPhieu" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label>Chọn Độc Giả</label>
+                    <select asp-for="MaDocGia" class="form-control" asp-items="@(new SelectList(ViewBag.DocGia, "MaDocGia", "HoTen"))"></select>
+                </div>
+                <div class="mb-3">
+                    <label>Ngày Hẹn Trả</label>
+                    <input asp-for="NgayHenTra" type="date" class="form-control" required />
+                    <span asp-validation-for="NgayHenTra" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label>Chọn Sách (Có thể chọn nhiều)</label>
+                <div class="border p-3" style="height: 200px; overflow-y: scroll;">
+                    @if (ViewBag.Sach != null)
+                    {
+                        @foreach (var sach in ViewBag.Sach)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="selectedSachIds" value="@sach.MaCuonSach" id="@sach.MaCuonSach">
+                                <label class="form-check-label" for="@sach.MaCuonSach">
+                                    @sach.MaCuonSach
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Không có sách nào khả dụng.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <button type="submit" class="btn btn-success mt-3">Xác nhận mượn</button>
+    </form>
+</div>

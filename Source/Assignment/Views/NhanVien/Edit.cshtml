@@ -1,0 +1,61 @@
+@model Assignment.Models.Entities.NhanVien
+
+@{
+    ViewData["Title"] = "Cập nhật nhân viên";
+}
+
+<h1>Cập nhật thông tin</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MaNv" />
+
+            <div class="form-group mb-3">
+                <label asp-for="HoTen" class="control-label"></label>
+                <input asp-for="HoTen" class="form-control" />
+                <span asp-validation-for="HoTen" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="MatKhau" class="control-label">Mật khẩu mới</label>
+                <input asp-for="MatKhau" type="password" class="form-control" placeholder="Để trống nếu không muốn đổi" />
+                <span asp-validation-for="MatKhau" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MaChucVu" class="control-label">Chức vụ</label>
+                <select asp-for="MaChucVu" class="form-control" asp-items="ViewBag.MaChucVu">
+                    <option value="">-- Chọn chức vụ --</option>
+                </select>
+                <span asp-validation-for="MaChucVu" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TrangThai" class="control-label">Trạng thái</label>
+                <select asp-for="TrangThai" class="form-control">
+                    <option value="true">Đang hoạt động</option>
+                    <option value="false">Khóa</option>
+                </select>
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

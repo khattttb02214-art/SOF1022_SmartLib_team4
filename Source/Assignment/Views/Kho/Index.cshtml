@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Assignment.Models.Entities.Sach>
+
+<div class="container mt-4">
+    <h2 class="text-primary">QUẢN LÝ KHO SÁCH</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Mã Sách</th>
+                <th>Tên Sách</th>
+                <th>Số lượng hiện có</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MaSach</td>
+                    <td>@item.TenSach</td>
+                    <td>@item.CuonSaches.Count()</td>
+                    <td>
+                        <a asp-action="NhapKho" asp-route-maSach="@item.MaSach" class="btn btn-info btn-sm">Nhập thêm</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

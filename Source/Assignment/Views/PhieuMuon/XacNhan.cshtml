@@ -1,0 +1,44 @@
+﻿@model Assignment.Models.Entities.MuonTra
+@{
+    ViewData["Title"] = "Xác nhận phiếu mượn";
+}
+
+<div class="container mt-4">
+    <div class="card shadow" style="max-width: 700px; margin: 0 auto;">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">XÁC NHẬN PHIẾU MƯỢN - @Model.MaPhieu</h4>
+        </div>
+        <div class="card-body">
+            @if (TempData["Loi"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Loi"]</div>
+            }
+
+            <p><b>Độc giả:</b> @Model.MaDocGiaNavigation?.HoTen</p>
+            <p><b>Ngày hẹn trả:</b> @Model.NgayHenTra</p>
+            <hr />
+
+            <form asp-action="XacNhan" method="post">
+                <input type="hidden" name="id" value="@Model.MaPhieu" />
+                <label class="fw-bold mb-2">Chọn cuốn sách để cho mượn:</label>
+                <div class="border p-3" style="height: 200px; overflow-y: scroll;">
+                    @foreach (var cuon in ViewBag.SachCoSan)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="selectedSachIds" value="@cuon.MaCuonSach" />
+                            <label class="form-check-label">
+                                @cuon.MaCuonSach - @cuon.MaSachNavigation?.TenSach
+                            </label>
+                        </div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                    <button type="submit" class="btn btn-success">Xác nhận cho mượn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
