@@ -1,0 +1,108 @@
+﻿@model Assignment.Models.Entities.Sach
+
+@{
+    ViewData["Title"] = "Chỉnh sửa sách - SmartLib";
+}
+
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-4" style="max-width: 900px; margin: 0 auto; overflow: hidden;">
+        <div class="card-header bg-warning py-3 border-0">
+            <h4 class="mb-0 fw-bold text-dark text-center">
+                <i class="bi bi-pencil-square"></i> CHỈNH SỬA THÔNG TIN SÁCH
+            </h4>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="NgayTao" />
+                <input type="hidden" asp-for="TrangThai" />
+                <input type="hidden" asp-for="MaSach" />
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mã Sách</label>
+                            <input class="form-control bg-light" value="@Model.MaSach" disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TenSach" class="form-label fw-bold">Tên Sách</label>
+                            <input asp-for="TenSach" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MaTheLoai" class="form-label fw-bold">Thể Loại</label>
+                            <select asp-for="MaTheLoai" class="form-select" asp-items="ViewBag.MaTheLoai"></select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MaNxb" class="form-label fw-bold">Nhà Xuất Bản</label>
+                            <select asp-for="MaNxb" class="form-select" asp-items="ViewBag.MaNxb"></select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="MaKe" class="form-label fw-bold">Vị Trí Kệ Sách</label>
+                            <select asp-for="MaKe" class="form-select" asp-items="ViewBag.MaKe"></select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold small">Tổng kho</label>
+                                <input asp-for="SoLuongKho" class="form-control bg-light" readonly />
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold small">Khả dụng</label>
+                                <input asp-for="SoLuongKhaDung" class="form-control bg-light" readonly />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ảnh bìa mới</label>
+                            <input type="file" name="fileAnh" class="form-control" accept="image/*" />
+                            @if (!string.IsNullOrEmpty(Model.AnhBia))
+                            {
+                                <div class="mt-2 p-2 bg-light rounded border small">
+                                    <i class="bi bi-image"></i> Hiện tại: <strong>@Model.AnhBia</strong>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Danh sách Tác Giả</label>
+                    <select name="selectedTacGiaIds" class="form-select" multiple style="height: 120px;">
+                        @{
+                            var tacGiaList = ViewBag.TacGiaList as IEnumerable<Assignment.Models.Entities.TacGium>;
+                            var selectedIds = ViewBag.SelectedIds as List<string> ?? new List<string>();
+                            if (tacGiaList != null)
+                            {
+                                foreach (var tg in tacGiaList)
+                                {
+                                    bool isSelected = selectedIds.Contains(tg.MaTacGia);
+                                    <option value="@tg.MaTacGia" selected="@(isSelected ? "selected" : null)">@tg.TenTacGia</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="MoTa" class="form-label fw-bold">Mô Tả</label>
+                    <textarea asp-for="MoTa" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="d-flex gap-3 justify-content-end pt-3 border-top">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold">Quay Lại</a>
+                    <button type="submit" class="btn btn-warning px-5 fw-bold shadow-sm text-dark">
+                        <i class="bi bi-save"></i> Cập Nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

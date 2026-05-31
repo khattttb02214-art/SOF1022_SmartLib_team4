@@ -1,0 +1,53 @@
+﻿@model Assignment.Models.Entities.MuonTra
+<h2>Chỉnh sửa Phiếu Mượn</h2>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="MaPhieu" />
+
+    <div class="mb-3">
+        <label>Độc Giả</label>
+        <input class="form-control" value="@Model.MaDocGia" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label class="font-weight-bold">Sách hiện đang mượn:</label>
+        <ul>
+            @foreach (var ct in Model.ChiTietMuonTras)
+            {
+                <li>@(ct.MaCuonSachNavigation?.MaSachNavigation?.TenSach ?? "Sách không tên")</li>
+            }
+        </ul>
+    </div>
+
+    <div class="mb-3">
+        <label class="font-weight-bold">Thêm sách mới vào phiếu:</label>
+        <div class="border p-2">
+            @foreach (var s in (List<Assignment.Models.Entities.CuonSach>)ViewBag.SachCoTheMuon)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="addSachIds" value="@s.MaCuonSach" id="s_@s.MaCuonSach">
+                    <label class="form-check-label" for="s_@s.MaCuonSach">
+                        @s.MaSachNavigation?.TenSach (Mã: @s.MaCuonSach)
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Ngày Hẹn Trả</label>
+        <input asp-for="NgayHenTra" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Trạng Thái</label>
+        <select asp-for="TrangThai" class="form-control">
+            <option value="Chưa Trả">Chưa Trả</option>
+            <option value="Đã Trả">Đã Trả</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>

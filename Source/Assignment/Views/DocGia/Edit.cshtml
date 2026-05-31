@@ -1,0 +1,68 @@
+﻿@model Assignment.Models.Entities.DocGium
+
+<div class="container mt-4">
+    <h2>Sửa thông tin Độc giả: @Model.HoTen</h2>
+    <hr />
+
+    <form asp-controller="DocGia" asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="MaDocGia" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="HoTen" class="form-label"></label>
+                    <input asp-for="HoTen" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Lop" class="form-label"></label>
+                    <input asp-for="Lop" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Khoa" class="form-label"></label>
+                    <input asp-for="Khoa" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="SoDienThoai" class="form-label"></label>
+                    <input asp-for="SoDienThoai" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="DiaChi" class="form-label"></label>
+                    <input asp-for="DiaChi" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="NgaySinh" class="form-label"></label>
+                    <input asp-for="NgaySinh" type="date" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="NgayHetHan" class="form-label">Ngày hết hạn thẻ</label>
+                        <input asp-for="NgayHetHan" type="date" class="form-control"
+                               value="@(Model.NgayHetHan?.ToString("yyyy-MM-dd") ?? "")" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="TrangThaiThe" class="form-label">Trạng thái thẻ</label>
+                        <select asp-for="TrangThaiThe" class="form-select">
+                            <option value="true">Hoạt động</option>
+                            <option value="false">Bị khóa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input name="matKhauMoi" type="password" class="form-control" placeholder="Để trống nếu không đổi" />
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>

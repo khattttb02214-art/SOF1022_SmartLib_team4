@@ -1,0 +1,38 @@
+@model Assignment.Models.Entities.NhaXuatBan
+
+@{
+    ViewData["Title"] = "Xóa nhà xuất bản";
+}
+
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-4" style="max-width: 600px; margin: 0 auto; overflow: hidden;">
+        <div class="card-header bg-danger py-3 border-0">
+            <h4 class="mb-0 fw-bold text-white text-center">
+                <i class="bi bi-exclamation-triangle-fill"></i> XÁC NHẬN XÓA
+            </h4>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <h5 class="text-center mb-4">Bạn có chắc chắn muốn xóa NXB này không?</h5>
+
+            <div class="bg-light p-3 rounded-3 mb-4">
+                <p class="mb-1"><small class="text-muted fw-bold">Tên NXB:</small> <strong>@Model.TenNxb</strong></p>
+                <p class="mb-1"><small class="text-muted fw-bold">Địa chỉ:</small> @Model.DiaChi</p>
+                <p class="mb-0"><small class="text-muted fw-bold">Email:</small> @Model.Email</p>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="MaNxb" />
+
+                <div class="d-flex gap-3">
+                    <a asp-action="Index" class="btn btn-outline-secondary w-50 py-2 fw-bold">
+                        Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-danger w-50 py-2 fw-bold shadow-sm">
+                        <i class="bi bi-trash-fill"></i> Xác nhận xóa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
