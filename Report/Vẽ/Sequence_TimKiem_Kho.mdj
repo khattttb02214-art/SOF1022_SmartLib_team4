@@ -1257,9 +1257,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": false,
-											"left": 591,
+											"left": 580,
 											"top": 593,
-											"width": 109.1416015625,
+											"width": 130.10791015625,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 10,
@@ -1267,7 +1267,7 @@
 												"$ref": "AAAAAAGeY98vEOVb8HI="
 											},
 											"edgePosition": 1,
-											"text": "7 : Báo thành công"
+											"text": "7 : Hiển thị dữ liệu kho"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -1374,9 +1374,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": false,
-											"left": 278,
+											"left": 251,
 											"top": 648,
-											"width": 174.1923828125,
+											"width": 228.236328125,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 10,
@@ -1384,7 +1384,7 @@
 												"$ref": "AAAAAAGeY99cuuVxvL4="
 											},
 											"edgePosition": 1,
-											"text": "8 : Hiện thông tin kho"
+											"text": "8 : Hiện thị danh sách kết quả tìm được"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -1567,7 +1567,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGeY8cfrOOMaC0="
 							},
-							"name": "Báo thành công",
+							"name": "Hiển thị dữ liệu kho",
 							"source": {
 								"$ref": "AAAAAAGeY8iAZuQaKKU="
 							},
@@ -1582,7 +1582,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGeY8cfrOOMaC0="
 							},
-							"name": "Hiện thông tin kho",
+							"name": "Hiện thị danh sách kết quả tìm được",
 							"source": {
 								"$ref": "AAAAAAGeY8hB1+P5UcQ="
 							},
@@ -1660,7 +1660,8 @@
 					"_parent": {
 						"$ref": "AAAAAAGeY8cfq+OLVNw="
 					},
-					"name": "Role2"
+					"name": "Role2",
+					"type": ""
 				},
 				{
 					"_type": "UMLAttribute",
@@ -1668,7 +1669,8 @@
 					"_parent": {
 						"$ref": "AAAAAAGeY8cfq+OLVNw="
 					},
-					"name": "Role3"
+					"name": "Role3",
+					"type": ""
 				},
 				{
 					"_type": "UMLAttribute",
