@@ -801,7 +801,7 @@
 												"$ref": "AAAAAAGeg5ayNAykck8="
 											},
 											"edgePosition": 1,
-											"text": "3 : Tìm kiếm thông tin nhân viên"
+											"text": "3 : Tìm kiếm thông tin trong kho"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -917,7 +917,7 @@
 												"$ref": "AAAAAAGeg5bb4Ay6DMM="
 											},
 											"edgePosition": 1,
-											"text": "4 : Gửi thông tin nhân viên"
+											"text": "4 : Gửi thông tin kho"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -1151,7 +1151,7 @@
 												"$ref": "AAAAAAGeY8qvZeR9ZQ8="
 											},
 											"edgePosition": 1,
-											"text": "6 : Hiện thị thông tin nhân viên"
+											"text": "6 : Hiện thị thông tin kho"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -1840,9 +1840,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": false,
-											"left": 279,
+											"left": 243,
 											"top": 648,
-											"width": 181.42236328125,
+											"width": 252.24951171875,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 10,
@@ -1850,7 +1850,7 @@
 												"$ref": "AAAAAAGeY99cuuVxvL4="
 											},
 											"edgePosition": 1,
-											"text": "12 : Hiện thông báo kết quả"
+											"text": "12 : Hiện thông báo kết quả xoá thành công"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -2469,7 +2469,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGeY8cfrOOMaC0="
 							},
-							"name": "Tìm kiếm thông tin nhân viên",
+							"name": "Tìm kiếm thông tin trong kho",
 							"source": {
 								"$ref": "AAAAAAGeY8iAZuQaKKU="
 							},
@@ -2484,7 +2484,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGeY8cfrOOMaC0="
 							},
-							"name": "Gửi thông tin nhân viên",
+							"name": "Gửi thông tin kho",
 							"source": {
 								"$ref": "AAAAAAGeY8khs+RCGxU="
 							},
@@ -2514,7 +2514,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGeY8cfrOOMaC0="
 							},
-							"name": "Hiện thị thông tin nhân viên",
+							"name": "Hiện thị thông tin kho",
 							"source": {
 								"$ref": "AAAAAAGeY8hB1+P5UcQ="
 							},
@@ -2602,7 +2602,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGeY8cfrOOMaC0="
 							},
-							"name": "Hiện thông báo kết quả",
+							"name": "Hiện thông báo kết quả xoá thành công",
 							"source": {
 								"$ref": "AAAAAAGeY8hB1+P5UcQ="
 							},
@@ -2756,7 +2756,8 @@
 					"_parent": {
 						"$ref": "AAAAAAGeY8cfq+OLVNw="
 					},
-					"name": "Role2"
+					"name": "Role2",
+					"type": ""
 				},
 				{
 					"_type": "UMLAttribute",
@@ -2764,7 +2765,8 @@
 					"_parent": {
 						"$ref": "AAAAAAGeY8cfq+OLVNw="
 					},
-					"name": "Role3"
+					"name": "Role3",
+					"type": ""
 				},
 				{
 					"_type": "UMLAttribute",
