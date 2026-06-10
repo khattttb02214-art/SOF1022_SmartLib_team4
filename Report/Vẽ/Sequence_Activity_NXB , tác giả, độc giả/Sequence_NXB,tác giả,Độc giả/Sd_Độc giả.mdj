@@ -6600,12 +6600,13 @@
 																	"_parent": {
 																		"$ref": "AAAAAAGelgbZhttJTQ4="
 																	},
-																	"visible": false,
 																	"font": "Arial;13;0",
 																	"parentStyle": true,
 																	"left": 100,
 																	"top": 382,
-																	"height": 13
+																	"width": 28.1708984375,
+																	"height": 13,
+																	"text": "[Fail]"
 																}
 															],
 															"font": "Arial;13;0",
@@ -6634,12 +6635,13 @@
 																	"_parent": {
 																		"$ref": "AAAAAAGelgchg9tUB+k="
 																	},
-																	"visible": false,
 																	"font": "Arial;13;0",
 																	"parentStyle": true,
 																	"left": 100,
 																	"top": 487,
-																	"height": 13
+																	"width": 36.12451171875,
+																	"height": 13,
+																	"text": "[Pass]"
 																}
 															],
 															"font": "Arial;13;0",
@@ -7563,7 +7565,8 @@
 											"_parent": {
 												"$ref": "AAAAAAGelgbZeds4WWw="
 											},
-											"name": "Operand1"
+											"name": "Operand1",
+											"guard": "Fail"
 										},
 										{
 											"_type": "UMLInteractionOperand",
@@ -7571,7 +7574,8 @@
 											"_parent": {
 												"$ref": "AAAAAAGelgbZeds4WWw="
 											},
-											"name": "InteractionOperand1"
+											"name": "InteractionOperand1",
+											"guard": "Pass"
 										}
 									]
 								}
@@ -11359,12 +11363,13 @@
 																	"_parent": {
 																		"$ref": "AAAAAAGelgyTg9vXEu0="
 																	},
-																	"visible": false,
 																	"font": "Arial;13;0",
 																	"parentStyle": true,
 																	"left": 92,
 																	"top": 342,
-																	"height": 13
+																	"width": 28.1708984375,
+																	"height": 13,
+																	"text": "[Fail]"
 																}
 															],
 															"font": "Arial;13;0",
@@ -11393,12 +11398,13 @@
 																	"_parent": {
 																		"$ref": "AAAAAAGelgzYfdvmBec="
 																	},
-																	"visible": false,
 																	"font": "Arial;13;0",
 																	"parentStyle": true,
 																	"left": 92,
 																	"top": 463,
-																	"height": 13
+																	"width": 36.12451171875,
+																	"height": 13,
+																	"text": "[Pass]"
 																}
 															],
 															"font": "Arial;13;0",
@@ -11458,7 +11464,7 @@
 													"font": "Arial;13;0",
 													"parentStyle": false,
 													"left": 77,
-													"top": 377,
+													"top": 388,
 													"width": 209.47265625,
 													"height": 13,
 													"alpha": 1.5707963267948966,
@@ -11482,7 +11488,7 @@
 													"font": "Arial;13;0",
 													"parentStyle": false,
 													"left": 181,
-													"top": 392,
+													"top": 403,
 													"height": 13,
 													"alpha": 1.5707963267948966,
 													"distance": 25,
@@ -11504,7 +11510,7 @@
 													"font": "Arial;13;0",
 													"parentStyle": false,
 													"left": 182,
-													"top": 357,
+													"top": 368,
 													"height": 13,
 													"alpha": -1.5707963267948966,
 													"distance": 10,
@@ -11526,7 +11532,7 @@
 													"font": "Arial;13;0",
 													"parentStyle": false,
 													"left": 83,
-													"top": 373,
+													"top": 384,
 													"width": 14,
 													"height": 25
 												}
@@ -11539,7 +11545,7 @@
 											"tail": {
 												"$ref": "AAAAAAGebKuYbcA2cJg="
 											},
-											"points": "280:373;84:373",
+											"points": "280:384;84:384",
 											"nameLabel": {
 												"$ref": "AAAAAAGelg+weNweP2o="
 											},
@@ -12456,7 +12462,8 @@
 											"_parent": {
 												"$ref": "AAAAAAGelgyTedvGToo="
 											},
-											"name": "Operand1"
+											"name": "Operand1",
+											"guard": "Fail"
 										},
 										{
 											"_type": "UMLInteractionOperand",
@@ -12464,7 +12471,8 @@
 											"_parent": {
 												"$ref": "AAAAAAGelgyTedvGToo="
 											},
-											"name": "InteractionOperand1"
+											"name": "InteractionOperand1",
+											"guard": "Pass"
 										}
 									]
 								}
