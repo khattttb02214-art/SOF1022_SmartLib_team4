@@ -1,0 +1,310 @@
+@model List<SmartLib.Web.ViewModels.KeSachViewModel>
+@{ ViewData["Title"] = "Quản lý kệ sách"; }
+
+@section Styles {
+<style>
+.ke-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
+.ke-card { background:white; border-radius:16px; box-shadow:0 2px 10px rgba(0,0,0,0.08); transition:all .2s; overflow:hidden; }
+.ke-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.13); transform:translateY(-2px); }
+.ke-card-header { padding:14px 16px; display:flex; align-items:flex-start; justify-content:space-between;
+                  border-bottom:1px solid #f0f2f5; }
+.ke-badge-tang { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px;
+                 font-size:11px; font-weight:700; background:#eff6ff; color:#1d4ed8; }
+.ke-title { font-size:15px; font-weight:700; color:#1f2937; margin:0; }
+.ke-sub   { font-size:12px; color:#6b7280; margin-top:2px; }
+.ke-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; }
+.ke-stat  { text-align:center; padding:12px 8px; border-right:1px solid #f0f2f5; }
+.ke-stat:last-child { border-right:none; }
+.ke-stat-num { font-size:18px; font-weight:800; color:#1f2937; }
+.ke-stat-label { font-size:10.5px; color:#9ca3af; margin-top:2px; }
+.ke-tags { padding:10px 16px; display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid #f0f2f5; }
+.ke-tag  { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:20px;
+           font-size:11px; font-weight:600; }
+.ke-actions { padding:10px 16px; display:flex; gap:8px; border-top:1px solid #f0f2f5; }
+
+/* Progress bar sức chứa */
+.suc-chua-bar { height:5px; background:#e5e7eb; border-radius:10px; margin-top:4px; overflow:hidden; }
+.suc-chua-fill { height:100%; border-radius:10px; transition:width .5s; }
+
+/* Map visual */
+.lib-map { background:white; border-radius:16px; box-shadow:0 2px 10px rgba(0,0,0,0.08); padding:20px; margin-bottom:24px; }
+.map-floor { margin-bottom:16px; }
+.map-floor-title { font-weight:700; font-size:13px; color:#374151; margin-bottom:10px;
+                   display:flex; align-items:center; gap:8px; }
+.map-shelves { display:flex; flex-wrap:wrap; gap:8px; }
+.map-shelf { padding:8px 14px; border-radius:10px; font-size:12px; font-weight:600;
+             border:2px solid; cursor:pointer; transition:all .2s; text-align:center; min-width:80px; }
+.map-shelf.has-books { border-color:#2a5298; color:#2a5298; background:#eff6ff; }
+.map-shelf.empty     { border-color:#d1d5db; color:#9ca3af; background:#f9fafb; }
+.map-shelf:hover     { transform:scale(1.05); }
+</style>
+}
+
+
+<!-- Header -->
+<div class="page-header-card d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="mb-0"><i class="fa fa-map-location-dot me-2 text-primary"></i>Quản lý kệ sách</h4>
+        <div class="text-muted small mt-1">Vị trí và bản đồ kệ sách trong thư viện</div>
+    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKeModal">
+        <i class="fa fa-plus me-1"></i>Thêm kệ mới
+    </button>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="kho-stat-card blue"><div class="kho-stat-num">@ViewBag.TongKe</div><div class="kho-stat-label">Tổng số kệ</div></div></div>
+    <div class="col-6 col-md-3"><div class="kho-stat-card green"><div class="kho-stat-num">@ViewBag.TongSach</div><div class="kho-stat-label">Đầu sách</div></div></div>
+    <div class="col-6 col-md-3"><div class="kho-stat-card orange"><div class="kho-stat-num">@ViewBag.TongCuon</div><div class="kho-stat-label">Tổng cuốn</div></div></div>
+    <div class="col-6 col-md-3"><div class="kho-stat-card red"><div class="kho-stat-num">@ViewBag.KeTrong</div><div class="kho-stat-label">Kệ trống</div></div></div>
+</div>
+
+<!-- Bộ lọc tầng / phòng -->
+<div class="card shadow-sm mb-3 border-0">
+    <div class="card-body py-2">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <span class="text-muted small fw-semibold me-1">Lọc theo:</span>
+            <a asp-action="KeSach" class="btn btn-sm @(ViewBag.FilterTang==null && ViewBag.FilterPhong==null ? "btn-primary":"btn-outline-primary")">
+                <i class="fa fa-th me-1"></i>Tất cả
+            </a>
+            @foreach (var tang in (List<int?>)ViewBag.DanhSachTang)
+            {
+                <a asp-action="KeSach" asp-route-tang="@tang"
+                   class="btn btn-sm @(ViewBag.FilterTang?.ToString()==tang.ToString() ? "btn-info":"btn-outline-info")">
+                    <i class="fa fa-layer-group me-1"></i>Tầng @tang
+                </a>
+            }
+            @foreach (var phong in (List<string?>)ViewBag.DanhSachPhong)
+            {
+                <a asp-action="KeSach" asp-route-phong="@phong"
+                   class="btn btn-sm @(ViewBag.FilterPhong==phong ? "btn-warning":"btn-outline-warning")">
+                    <i class="fa fa-door-open me-1"></i>@phong
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Bản đồ thư viện (hiển thị khi không lọc) -->
+@if (ViewBag.FilterTang == null && ViewBag.FilterPhong == null)
+{
+    var byFloor = Model.GroupBy(k => k.Tang ?? 0).OrderBy(g => g.Key).ToList();
+    if (byFloor.Any())
+    {
+        <div class="lib-map mb-4">
+            <div class="fw-bold mb-3" style="font-size:14px;color:#374151">
+                <i class="fa fa-map text-primary me-2"></i>Sơ đồ kệ sách theo tầng
+            </div>
+            @foreach (var floor in byFloor)
+            {
+                <div class="map-floor">
+                    <div class="map-floor-title">
+                        <i class="fa fa-layer-group text-info"></i>
+                        @(floor.Key == 0 ? "Chưa xác định tầng" : $"Tầng {floor.Key}")
+                    </div>
+                    <div class="map-shelves">
+                        @foreach (var ke in floor)
+                        {
+                            <div class="map-shelf @(ke.SoSach > 0 ? "has-books" : "empty")"
+                                 onclick="window.location.href='/Kho/ChiTietKe/@ke.MaKe'"
+                                 title="@ke.TenKe — @ke.SoSach đầu sách">
+                                <div>@ke.MaKe</div>
+                                <div style="font-size:10px;margin-top:2px">@ke.SoSach sách</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+<!-- Danh sách kệ -->
+@if (!Model.Any())
+{
+    <div class="card shadow-sm border-0 text-center py-5 text-muted">
+        <i class="fa fa-box-open fa-3x mb-3"></i>
+        <p class="fw-semibold">Chưa có kệ sách nào</p>
+    </div>
+}
+else
+{
+    <div class="ke-grid">
+        @foreach (var ke in Model)
+        {
+            var pct = ke.SucChua.HasValue && ke.SucChua > 0 ? Math.Min(100, (int)(ke.SoCuon * 100.0 / ke.SucChua.Value)) : -1;
+            var fillColor = pct < 0 ? "#94a3b8" : pct > 85 ? "#ef4444" : pct > 60 ? "#f59e0b" : "#22c55e";
+
+            <div class="ke-card @(!ke.TrangThai ? "opacity-50" : "")">
+                <div class="ke-card-header">
+                    <div>
+                        @if (ke.Tang.HasValue)
+                        {
+                        { <span class="ke-badge-tang"><i class="fa fa-layer-group fa-xs"></i>Tầng @ke.Tang — @(ke.Phong ?? "")</span> }
+                        }
+                        <div class="ke-title mt-1">@ke.TenKe</div>
+                        <div class="ke-sub"><i class="fa fa-location-dot fa-xs me-1"></i>@(ke.ViTri ?? "Chưa có vị trí")</div>
+                    </div>
+                    <div class="d-flex gap-1">
+                        @if (!ke.TrangThai)
+                        {
+                        { <span class="badge bg-secondary">Ngưng</span> }
+                        }
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light" data-bs-toggle="dropdown"><i class="fa fa-ellipsis"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                <li><a asp-action="ChiTietKe" asp-route-id="@ke.MaKe" class="dropdown-item"><i class="fa fa-eye me-2"></i>Chi tiết</a></li>
+                                <li><a asp-action="SuaKe" asp-route-id="@ke.MaKe" class="dropdown-item"><i class="fa fa-pen me-2"></i>Sửa</a></li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
+                                    <form asp-action="XoaKe" method="post" onsubmit="return confirm('Xóa kệ @ke.TenKe?')">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@ke.MaKe" />
+                                        <button type="submit" class="dropdown-item text-danger"><i class="fa fa-trash me-2"></i>Xóa</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ke-stats">
+                    <div class="ke-stat">
+                        <div class="ke-stat-num text-primary">@ke.SoSach</div>
+                        <div class="ke-stat-label">Đầu sách</div>
+                    </div>
+                    <div class="ke-stat">
+                        <div class="ke-stat-num text-success">@ke.SoCuon</div>
+                        <div class="ke-stat-label">Tổng cuốn</div>
+                    </div>
+                    <div class="ke-stat">
+                        @if (ke.SucChua.HasValue)
+                        {
+                            <div class="ke-stat-num" style="color:@fillColor">@ke.SucChua</div>
+                            <div class="ke-stat-label">Sức chứa</div>
+                        }
+                        else
+                        {
+                            <div class="ke-stat-num text-muted">—</div>
+                            <div class="ke-stat-label">Sức chứa</div>
+                        }
+                    </div>
+                </div>
+
+                @if (pct >= 0)
+                {
+                    <div style="padding:8px 16px 4px">
+                        <div class="d-flex justify-content-between" style="font-size:11px;color:#6b7280;margin-bottom:3px">
+                            <span>Tỉ lệ lấp đầy</span><span style="color:@fillColor;font-weight:700">@pct%</span>
+                        </div>
+                        <div class="suc-chua-bar">
+                            <div class="suc-chua-fill" style="width:@pct%;background:@fillColor"></div>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(ke.TenTheLoaiPhuTrach) || !string.IsNullOrEmpty(ke.TenNXBPhuTrach))
+                {
+                    <div class="ke-tags">
+                        @if (!string.IsNullOrEmpty(ke.TenTheLoaiPhuTrach))
+                        {
+                        { <span class="ke-tag" style="background:#eff6ff;color:#1d4ed8"><i class="fa fa-layer-group fa-xs"></i>@ke.TenTheLoaiPhuTrach</span> }
+                        }
+                        @if (!string.IsNullOrEmpty(ke.TenNXBPhuTrach))
+                        {
+                        { <span class="ke-tag" style="background:#fff7ed;color:#c2410c"><i class="fa fa-building fa-xs"></i>@ke.TenNXBPhuTrach</span> }
+                        }
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(ke.MoTa))
+                {
+                    <div style="padding:6px 16px 10px;font-size:11.5px;color:#6b7280;font-style:italic">
+                        @ke.MoTa
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+
+<!-- Modal thêm kệ -->
+<div class="modal fade" id="addKeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="fa fa-plus-circle me-2 text-primary"></i>Thêm kệ sách mới</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="TaoKe" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Mã kệ</label>
+                            <input name="MaKe" class="form-control" placeholder="Tự động (KE001, KE002...)" maxlength="10" />
+                            <div class="form-text text-muted">Để trống để tự động tạo mã</div>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Tên kệ *</label>
+                            <input name="TenKe" class="form-control" placeholder="VD: Kệ Văn học A" maxlength="100" required />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Tầng</label>
+                            <input name="Tang" type="number" min="1" max="20" class="form-control" placeholder="1" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Phòng / Khu</label>
+                            <input name="Phong" class="form-control" placeholder="VD: Phòng A" maxlength="50" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Sức chứa (cuốn)</label>
+                            <input name="SucChua" type="number" min="1" class="form-control" placeholder="100" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Trạng thái</label>
+                            <select name="TrangThai" class="form-select">
+                                <option value="true">✅ Đang dùng</option>
+                                <option value="false">⛔ Ngưng dùng</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Vị trí chi tiết</label>
+                            <input name="ViTri" class="form-control" placeholder="VD: Góc trái, gần cửa sổ tầng 2" maxlength="200" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Thể loại phụ trách</label>
+                            <select name="MaTheLoaiPhuTrach" class="form-select">
+                                <option value="">-- Không chỉ định --</option>
+                                @foreach (var tl in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.DanhSachTheLoai)
+                                {
+                                { <option value="@tl.Value">@tl.Text</option> }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">NXB phụ trách</label>
+                            <select name="MaNXBPhuTrach" class="form-select">
+                                <option value="">-- Không chỉ định --</option>
+                                @foreach (var nxb in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.DanhSachNXB)
+                                {
+                                { <option value="@nxb.Value">@nxb.Text</option> }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Mô tả thêm</label>
+                            <textarea name="MoTa" class="form-control" rows="2" maxlength="200"
+                                      placeholder="Ghi chú thêm về kệ sách (tùy chọn)"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary px-4"><i class="fa fa-save me-1"></i>Lưu kệ sách</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+@model List<SmartLib.Web.Models.DocGia>
+@{ ViewData["Title"] = "Xét duyệt tài khoản"; }
+
+<div class="page-header-card d-flex justify-content-between align-items-center">
+    <h4 class="mb-0"><i class="fa fa-user-check me-2 text-warning"></i>Xét duyệt tài khoản sinh viên</h4>
+    @if (Model.Any())
+    {
+        <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fs-6">
+            @Model.Count tài khoản chờ duyệt
+        </span>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="fa fa-check-circle fa-4x text-success mb-3 opacity-75"></i>
+            <h5 class="text-muted">Không có tài khoản nào đang chờ xét duyệt</h5>
+            <p class="text-muted small">Tất cả yêu cầu đăng ký đã được xử lý.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var d in Model)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid var(--bs-warning) !important">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            @if (!string.IsNullOrEmpty(d.AnhDaiDien))
+                            {
+                                <img src="/uploads/readers/@d.AnhDaiDien" width="52" height="52"
+                                     class="rounded-circle" style="object-fit:cover;border:2px solid #ffc107" />
+                            }
+                            else
+                            {
+                                <div style="width:52px;height:52px;border-radius:50%;background:#fff3cd;display:grid;place-items:center;border:2px solid #ffc107">
+                                    <i class="fa fa-user text-warning fa-lg"></i>
+                                </div>
+                            }
+                            <div>
+                                <div class="fw-bold">@d.HoTen</div>
+                                <small class="text-muted font-monospace">@d.MaDocGia</small>
+                            </div>
+                        </div>
+
+                        <div class="bg-light rounded p-2 mb-3 small">
+                            @if (!string.IsNullOrEmpty(d.Lop))
+                            {
+                            { <div><i class="fa fa-graduation-cap fa-xs me-2 text-muted"></i>@d.Lop @(d.Khoa != null ? $"· {d.Khoa}" : "")</div> }
+                            }
+                            @if (!string.IsNullOrEmpty(d.Email))
+                            {
+                            { <div><i class="fa fa-envelope fa-xs me-2 text-muted"></i>@d.Email</div> }
+                            }
+                            @if (!string.IsNullOrEmpty(d.SoDienThoai))
+                            {
+                            { <div><i class="fa fa-phone fa-xs me-2 text-muted"></i>@d.SoDienThoai</div> }
+                            }
+                            @if (!string.IsNullOrEmpty(d.MaTheTV))
+                            {
+                            { <div><i class="fa fa-id-card fa-xs me-2 text-muted"></i>Thẻ TV: <span class="font-monospace fw-semibold">@d.MaTheTV</span></div> }
+                            }
+                            <div><i class="fa fa-clock fa-xs me-2 text-muted"></i>Đăng ký: @($"{d.NgayTaoThe:dd/MM/yyyy HH:mm}")</div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="ApproveAccount" asp-route-id="@d.MaDocGia"
+                               class="btn btn-success btn-sm flex-fill"
+                               onclick="return confirm('Duyệt tài khoản @d.HoTen?')">
+                                <i class="fa fa-check me-1"></i>Duyệt
+                            </a>
+                            <button onclick="confirmReject('@d.MaDocGia','@d.HoTen')"
+                                    class="btn btn-outline-danger btn-sm flex-fill">
+                                <i class="fa fa-times me-1"></i>Từ chối
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+<script>
+function confirmReject(id, ten) {
+    Swal.fire({
+        title: 'Từ chối tài khoản?',
+        html: `Bạn chắc chắn muốn từ chối yêu cầu đăng ký của <strong>${ten}</strong>?<br><small class="text-danger">Hành động này sẽ xóa tài khoản và gỡ liên kết thẻ thư viện.</small>`,
+        icon: 'warning', showCancelButton: true,
+        confirmButtonColor: '#d33', cancelButtonText: 'Hủy',
+        confirmButtonText: 'Từ chối & Xóa'
+    }).then(r => { if (r.isConfirmed) window.location.href = `/NhanVien/RejectAccount/${id}`; });
+}
+</script>
+}

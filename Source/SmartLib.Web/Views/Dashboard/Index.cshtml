@@ -1,0 +1,116 @@
+@model SmartLib.Web.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+
+    <!-- TITLE -->
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            Dashboard Thư Viện
+        </h2>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="row g-4">
+
+        <!-- TỔNG SÁCH -->
+        <div class="col-md-3">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Tổng sách</h6>
+                    <h2 class="fw-bold text-primary">@Model.TongSach</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- ĐỘC GIẢ -->
+        <div class="col-md-3">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Độc giả</h6>
+                    <h2 class="fw-bold text-success">@Model.TongDocGia</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- ĐANG MƯỢN -->
+        <div class="col-md-3">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Sách đang mượn</h6>
+                    <h2 class="fw-bold text-warning">@Model.SachDangMuon</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUÁ HẠN -->
+        <div class="col-md-3">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Sách quá hạn</h6>
+                    <h2 class="fw-bold text-danger">@Model.SachQuaHan</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="card shadow border-0 mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Thống kê mượn sách 7 ngày gần nhất</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="borrowChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- EXTRA -->
+    <div class="row mt-4 g-4">
+
+        <!-- TỔNG PHIẾU -->
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Tổng phiếu mượn</h6>
+                    <h2 class="fw-bold">@Model.TongPhieuMuon</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIỀN PHẠT -->
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Tổng tiền phạt</h6>
+                    <h2 class="fw-bold text-danger">@($"{Model.TongTienPhat:N0}") VNĐ</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('borrowChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Labels)),
+                datasets: [{
+                    label: 'Lượt mượn sách',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Data)),
+                    borderWidth: 3,
+                    tension: 0.3
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+}

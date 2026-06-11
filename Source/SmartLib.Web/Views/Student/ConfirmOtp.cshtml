@@ -1,0 +1,270 @@
+@{ ViewData["Title"] = "Xác nhận OTP"; }
+
+@section Styles {
+<style>
+:root {
+    --otp-indigo: #4f46e5; --otp-violet: #7c3aed; --otp-pink: #ec4899;
+}
+
+.otp-page {
+    min-height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 16px;
+}
+
+/* CARD */
+.otp-card {
+    background: #fff;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 28px;
+    box-shadow: 0 8px 48px rgba(79,70,229,.16);
+    width: 100%; max-width: 440px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* TOP GRADIENT STRIP */
+.otp-card__strip {
+    height: 6px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+}
+
+/* HEADER */
+.otp-card__header {
+    text-align: center;
+    padding: 36px 32px 20px;
+    position: relative;
+}
+.otp-card__header::before {
+    content: '';
+    position: absolute;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,.08) 0%, transparent 70%);
+    top: -20px; right: -30px; pointer-events: none;
+}
+.otp-shield-icon {
+    width: 72px; height: 72px; border-radius: 20px;
+    background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
+    border: 2px solid #c4b5fd;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: #7c3aed;
+    margin: 0 auto 18px;
+    position: relative; z-index: 1;
+}
+.otp-shield-icon::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 24px;
+    background: rgba(124,58,237,.06);
+    z-index: -1;
+}
+.otp-card__title {
+    font-size: 22px; font-weight: 800; color: #1e1b4b; margin: 0 0 8px;
+}
+.otp-card__sub {
+    font-size: 13px; color: #6b7280; line-height: 1.6; margin: 0;
+    max-width: 300px; margin-inline: auto;
+}
+
+/* ALERTS */
+.otp-alert {
+    margin: 0 28px 4px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: flex; align-items: flex-start; gap: 8px;
+}
+.otp-alert i { flex-shrink: 0; margin-top: 1px; }
+.otp-alert--info {
+    background: #ede9fe; border: 1.5px solid #c4b5fd; color: #4338ca;
+}
+.otp-alert--error {
+    background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b;
+}
+
+/* FORM BODY */
+.otp-form-body { padding: 24px 32px 32px; }
+
+/* OTP INPUT */
+.otp-label {
+    display: block; font-size: 12px; font-weight: 700;
+    color: #4338ca; margin-bottom: 10px; letter-spacing: .4px;
+    text-align: center;
+}
+.otp-input-wrap { position: relative; margin-bottom: 24px; }
+.otp-input-field {
+    width: 100%; border: 2px solid #e0e7ff;
+    border-radius: 16px; padding: 20px 20px;
+    font-size: 28px; font-weight: 800; font-family: 'Courier New', monospace;
+    text-align: center; letter-spacing: 12px;
+    color: #1e1b4b; background: #faf9ff;
+    outline: none; box-sizing: border-box;
+    transition: border-color .2s, box-shadow .2s;
+}
+.otp-input-field:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 4px rgba(124,58,237,.12);
+    background: #fff;
+}
+.otp-input-field::placeholder {
+    color: #d1d5db; letter-spacing: 8px; font-size: 22px;
+}
+
+/* PROGRESS DOTS */
+.otp-dots {
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;
+}
+.otp-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e0e7ff; transition: all .2s;
+}
+.otp-dot.filled { background: #7c3aed; transform: scale(1.2); }
+
+/* SUBMIT BTN */
+.otp-submit-btn {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #fff; border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 700; font-family: inherit;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 6px 20px rgba(79,70,229,.35);
+    transition: transform .15s, box-shadow .15s;
+    margin-bottom: 14px;
+}
+.otp-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,.45); }
+.otp-submit-btn:active { transform: scale(.98); }
+
+/* RESEND LINK */
+.otp-resend-link {
+    display: block; text-align: center;
+    padding: 12px;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 12px;
+    font-size: 13px; font-weight: 600;
+    color: #6b7280; text-decoration: none;
+    transition: all .15s; background: #faf9ff;
+}
+.otp-resend-link:hover { border-color: #c4b5fd; color: #7c3aed; background: #f3f0ff; }
+
+/* TIMER */
+.otp-timer {
+    text-align: center; font-size: 11px; color: #9ca3af;
+    margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.otp-timer i { color: #7c3aed; }
+</style>
+}
+
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+<div class="otp-page">
+    <div class="otp-card">
+        <div class="otp-card__strip"></div>
+
+        <div class="otp-card__header">
+            <div class="otp-shield-icon"><i class="fa fa-shield-halved"></i></div>
+            <h3 class="otp-card__title">Xác nhận OTP</h3>
+            @if (TempData["OtpSentTo"] != null)
+            {
+                <p class="otp-card__sub">
+                    Mã 6 chữ số đã được gửi đến hộp thư<br>
+                    <strong style="color:#4f46e5;">@TempData["OtpSentTo"]</strong>
+                    @if (TempData["IsEmailChange"]?.ToString() == "True")
+                    {
+                        <span class="badge bg-primary ms-1" style="font-size:11px;">email mới</span>
+                    }
+                </p>
+            }
+            else
+            {
+                <p class="otp-card__sub">Nhập mã 6 chữ số đã được gửi đến địa chỉ email của bạn</p>
+            }
+        </div>
+
+        @if (TempData["EmailError"] != null)
+        {
+            <div class="otp-alert otp-alert--info">
+                <i class="fa fa-circle-info"></i>
+                <span>⚠️ Lỗi gửi email. Nếu bạn không nhận được mã, hãy liên hệ thủ thư.</span>
+            </div>
+        }
+        @if (TempData["OtpSent"] != null)
+        {
+            <div class="otp-alert otp-alert--info">
+                <i class="fa fa-circle-info"></i>
+                <span>@TempData["OtpSent"]</span>
+            </div>
+        }
+        @if (TempData["error"] != null)
+        {
+            <div class="otp-alert otp-alert--error">
+                <i class="fa fa-circle-xmark"></i>
+                <span>@TempData["error"]</span>
+            </div>
+        }
+
+        <div class="otp-form-body">
+            <form method="post" asp-action="ConfirmOtp">
+                @Html.AntiForgeryToken()
+
+                <label class="otp-label">
+                    <i class="fa fa-key me-1"></i> MÃ OTP (6 CHỮ SỐ)
+                </label>
+
+                <!-- PROGRESS DOTS -->
+                <div class="otp-dots" id="otpDots">
+                    @for (int i = 0; i < 6; i++) { <div class="otp-dot"></div> }
+                </div>
+
+                <div class="otp-input-wrap">
+                    <input type="text" name="OtpInput" id="otpInput"
+                           class="otp-input-field"
+                           maxlength="6" placeholder="——————"
+                           required autofocus autocomplete="one-time-code"
+                           inputmode="numeric" pattern="[0-9]{6}" />
+                </div>
+
+                <button type="submit" class="otp-submit-btn" id="otpSubmitBtn" disabled>
+                    <i class="fa fa-check-circle"></i>
+                    Xác nhận thay đổi
+                </button>
+
+                <a asp-action="EditProfile" class="otp-resend-link">
+                    <i class="fa fa-rotate-right me-1"></i>Gửi lại mã OTP
+                </a>
+
+                <div class="otp-timer"><i class="fa fa-clock"></i> Mã OTP có hiệu lực trong <strong id="timerVal" style="color:#4f46e5;margin-left:4px;">10:00</strong></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// Dots feedback
+const input = document.getElementById('otpInput');
+const dots  = document.querySelectorAll('.otp-dot');
+const btn   = document.getElementById('otpSubmitBtn');
+
+input.addEventListener('input', function() {
+    const val = this.value.replace(/\D/g,'');
+    this.value = val;
+    dots.forEach((d, i) => d.classList.toggle('filled', i < val.length));
+    btn.disabled = val.length < 6;
+});
+
+// Countdown timer (10 min)
+let secs = 600;
+function tick() {
+    const m = String(Math.floor(secs / 60)).padStart(2,'0');
+    const s = String(secs % 60).padStart(2,'0');
+    document.getElementById('timerVal').textContent = m + ':' + s;
+    if (secs > 0) { secs--; setTimeout(tick, 1000); }
+    else { document.getElementById('timerVal').textContent = 'Hết hạn'; }
+}
+tick();
+</script>
+}

@@ -1,0 +1,384 @@
+@model SmartLib.Web.Models.DocGia
+@{ ViewData["Title"] = "Thông tin cá nhân"; }
+
+@section Styles {
+<style>
+:root {
+    --ep-indigo: #4f46e5; --ep-violet: #7c3aed; --ep-pink: #ec4899;
+    --ep-border: #e0e7ff; --ep-bg: #f4f3ff;
+}
+
+.ep-page { padding: 0 4px 60px; }
+
+/* PAGE HEADER */
+.ep-page-header {
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6d28d9 100%);
+    border-radius: 20px;
+    padding: 26px 28px;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 16px;
+    position: relative; overflow: hidden;
+}
+.ep-page-header::before {
+    content: ''; position: absolute;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(167,139,250,.25) 0%, transparent 70%);
+    top: -60px; right: -30px; pointer-events: none;
+}
+.ep-page-header__icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: #c4b5fd; flex-shrink: 0; position: relative; z-index: 1;
+}
+.ep-page-header__text { position: relative; z-index: 1; }
+.ep-page-header h4   { color: #fff; font-size: 20px; font-weight: 800; margin: 0 0 4px; }
+.ep-page-header p    { color: rgba(196,181,253,.75); font-size: 13px; margin: 0; }
+
+/* LAYOUT */
+.ep-row { display: flex; gap: 24px; }
+.ep-col-left  { width: 300px; flex-shrink: 0; }
+.ep-col-right { flex: 1; min-width: 0; }
+
+/* PROFILE CARD (left) */
+.ep-profile-card {
+    background: #fff;
+    border: 1.5px solid var(--ep-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(79,70,229,.09);
+    padding: 28px 20px;
+    text-align: center;
+    position: sticky; top: 80px;
+}
+.ep-avatar-ring {
+    width: 96px; height: 96px; border-radius: 50%;
+    margin: 0 auto 16px;
+    position: relative;
+    background: linear-gradient(135deg, #4f46e5, #ec4899);
+    padding: 3px;
+    display: flex; align-items: center; justify-content: center;
+}
+.ep-avatar-ring img {
+    width: 90px; height: 90px; border-radius: 50%;
+    object-fit: cover; border: 3px solid #fff;
+}
+.ep-avatar-initials {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; font-weight: 800; color: #fff; border: 3px solid #fff;
+}
+.ep-profile-name  { font-size: 17px; font-weight: 800; color: #1e1b4b; margin: 0 0 4px; }
+.ep-profile-email { font-size: 12px; color: #6b7280; margin: 0 0 10px; }
+.ep-profile-card-meta {
+    font-size: 12px; color: #6b7280;
+    display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 14px;
+}
+.ep-card-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 16px; border-radius: 100px;
+    font-size: 12px; font-weight: 700;
+}
+.ep-card-status--ok  { background: #d1fae5; color: #065f46; }
+.ep-card-status--exp { background: #fee2e2; color: #991b1b; }
+
+/* INFO ITEMS */
+.ep-info-items { margin-top: 20px; border-top: 1.5px solid #f0edff; padding-top: 18px; }
+.ep-info-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #f9f8ff;
+    text-align: left;
+}
+.ep-info-item:last-child { border-bottom: none; }
+.ep-info-item__icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+}
+.ep-info-item__icon--purple { background: #ede9fe; color: #7c3aed; }
+.ep-info-item__icon--blue   { background: #dbeafe; color: #2563eb; }
+.ep-info-item__icon--green  { background: #d1fae5; color: #059669; }
+.ep-info-item__label { font-size: 11px; color: #9ca3af; }
+.ep-info-item__value { font-size: 13px; font-weight: 600; color: #1e1b4b; }
+
+/* FORM CARD (right) */
+.ep-form-card {
+    background: #fff;
+    border: 1.5px solid var(--ep-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(79,70,229,.09);
+    overflow: hidden;
+}
+.ep-form-card__header {
+    padding: 20px 26px;
+    background: linear-gradient(90deg, #faf5ff 0%, #f3f0ff 100%);
+    border-bottom: 1.5px solid #ede9fe;
+    display: flex; align-items: center; gap: 10px;
+}
+.ep-form-card__header-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px;
+}
+.ep-form-card__header-text  { font-size: 15px; font-weight: 700; color: #1e1b4b; }
+.ep-form-card__header-sub   { font-size: 12px; color: #7c3aed; margin-top: 1px; }
+
+.ep-form-body { padding: 26px; }
+
+/* OTP NOTICE */
+.ep-otp-notice {
+    background: linear-gradient(90deg, #ede9fe 0%, #e0e7ff 100%);
+    border: 1.5px solid #c4b5fd;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 24px;
+}
+.ep-otp-notice__icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: #4f46e5; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 1px;
+}
+.ep-otp-notice__text { font-size: 12px; color: #4338ca; line-height: 1.5; }
+
+/* FORM CONTROLS */
+.ep-form-row  { display: flex; gap: 18px; }
+.ep-form-col  { flex: 1; }
+.ep-form-group { margin-bottom: 20px; }
+.ep-label {
+    display: block; font-size: 12px; font-weight: 700;
+    color: #4338ca; margin-bottom: 7px; letter-spacing: .3px;
+}
+.ep-label .req { color: #ec4899; margin-left: 3px; }
+.ep-input {
+    width: 100%; border: 1.5px solid #e0e7ff;
+    border-radius: 12px; padding: 12px 14px;
+    font-size: 14px; font-family: inherit; color: #1e1b4b;
+    background: #faf9ff; outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    box-sizing: border-box;
+}
+.ep-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    background: #fff;
+}
+.ep-file-input {
+    width: 100%; border: 2px dashed #c4b5fd;
+    border-radius: 12px; padding: 18px;
+    text-align: center; cursor: pointer;
+    background: #faf5ff;
+    color: #7c3aed; font-size: 13px;
+    transition: all .2s;
+    box-sizing: border-box;
+}
+.ep-file-input:hover { border-color: #7c3aed; background: #f3f0ff; }
+
+/* SUBMIT BUTTON */
+.ep-submit-btn {
+    width: 100%; padding: 15px 0;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #fff; border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 700; font-family: inherit;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 6px 20px rgba(79,70,229,.35);
+    margin-top: 8px;
+}
+.ep-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,.45); }
+.ep-submit-btn:active { transform: scale(.98); }
+
+@@media (max-width: 900px) {
+    .ep-row { flex-direction: column; }
+    .ep-col-left { width: 100%; }
+    .ep-profile-card { position: static; }
+    .ep-form-row { flex-direction: column; gap: 0; }
+}
+</style>
+}
+
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+<div class="ep-page">
+
+    <!-- PAGE HEADER -->
+    <div class="ep-page-header">
+        <div class="ep-page-header__icon"><i class="fa fa-user-pen"></i></div>
+        <div class="ep-page-header__text">
+            <h4>Thông tin cá nhân</h4>
+            <p>Quản lý hồ sơ và thông tin tài khoản của bạn</p>
+        </div>
+    </div>
+
+    <div class="ep-row">
+        <!-- LEFT: PROFILE CARD -->
+        <div class="ep-col-left">
+            <div class="ep-profile-card">
+                <div class="ep-avatar-ring">
+                    @if (!string.IsNullOrEmpty(Model.AnhDaiDien))
+                    {
+                        <img src="/uploads/readers/@Model.AnhDaiDien" alt="@Model.HoTen" />
+                    }
+                    else
+                    {
+                        <div class="ep-avatar-initials">@Model.HoTen.Substring(0, 1).ToUpper()</div>
+                    }
+                </div>
+                <div class="ep-profile-name">@Model.HoTen</div>
+                <div class="ep-profile-email">@Model.Email</div>
+                <div class="ep-profile-card-meta">
+                    <i class="fa fa-id-card" style="color:#7c3aed;"></i>
+                    Mã thẻ: <strong style="color:#1e1b4b;">@(Model.MaTheTV ?? "—")</strong>
+                </div>
+                <span class="ep-card-status @(Model.TrangThaiThe ? "ep-card-status--ok" : "ep-card-status--exp")">
+                    <i class="fa @(Model.TrangThaiThe ? "fa-shield-check" : "fa-circle-exclamation")"></i>
+                    @(Model.TrangThaiThe ? "Thẻ còn hạn" : "Thẻ hết hạn")
+                </span>
+
+                <div class="ep-info-items">
+                    <div class="ep-info-item">
+                        <div class="ep-info-item__icon ep-info-item__icon--purple"><i class="fa fa-envelope"></i></div>
+                        <div>
+                            <div class="ep-info-item__label">Email</div>
+                            <div class="ep-info-item__value" style="word-break:break-all;font-size:12px;">@Model.Email</div>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.SoDienThoai))
+                    {
+                        <div class="ep-info-item">
+                            <div class="ep-info-item__icon ep-info-item__icon--blue"><i class="fa fa-phone"></i></div>
+                            <div>
+                                <div class="ep-info-item__label">Điện thoại</div>
+                                <div class="ep-info-item__value">@Model.SoDienThoai</div>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.DiaChi))
+                    {
+                        <div class="ep-info-item">
+                            <div class="ep-info-item__icon ep-info-item__icon--green"><i class="fa fa-location-dot"></i></div>
+                            <div>
+                                <div class="ep-info-item__label">Địa chỉ</div>
+                                <div class="ep-info-item__value">@Model.DiaChi</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: FORM CARD -->
+        <div class="ep-col-right">
+            <div class="ep-form-card">
+                <div class="ep-form-card__header">
+                    <div class="ep-form-card__header-icon"><i class="fa fa-pen-to-square"></i></div>
+                    <div>
+                        <div class="ep-form-card__header-text">Chỉnh sửa thông tin</div>
+                        <div class="ep-form-card__header-sub">Cập nhật hồ sơ của bạn</div>
+                    </div>
+                </div>
+                <div class="ep-form-body">
+                    <!-- OTP NOTICE -->
+                    <div class="ep-otp-notice">
+                        <div class="ep-otp-notice__icon"><i class="fa fa-shield-halved"></i></div>
+                        <div class="ep-otp-notice__text">
+                            Sau khi nhấn lưu, <strong>mã OTP</strong> sẽ được gửi về hộp thư email của bạn để xác nhận thay đổi.
+                            Nếu bạn đổi email, mã sẽ gửi về <em>địa chỉ email mới</em>.
+                        </div>
+                    </div>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger small py-2 mb-3">
+                            <i class="fa fa-circle-exclamation me-1"></i>@ViewBag.Error
+                        </div>
+                    }
+
+                    <form method="post" asp-action="EditProfile" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div class="ep-form-group">
+                            <label class="ep-label">Họ tên <span class="req">*</span></label>
+                            <input type="text" name="HoTen" value="@Model.HoTen" class="ep-input" required placeholder="Nhập họ và tên đầy đủ" />
+                        </div>
+
+                        <div class="ep-form-group" id="emailSection">
+                            <label class="ep-label">
+                                Email hiện tại
+                                <span style="color:#7c3aed;font-weight:400;font-size:11px;margin-left:6px;">
+                                    (để trống nếu không muốn đổi)
+                                </span>
+                            </label>
+                            <div style="position:relative;">
+                                <input type="text" class="ep-input" value="@Model.Email" disabled
+                                       style="background:#f0edff;color:#6b7280;cursor:not-allowed;" />
+                            </div>
+                            <label class="ep-label" style="margin-top:10px;">
+                                Địa chỉ email mới
+                                <span style="color:#9ca3af;font-weight:400;font-size:11px;margin-left:4px;">(không bắt buộc)</span>
+                            </label>
+                            <div style="position:relative;">
+                                <input type="email" name="NewEmail" id="newEmailInput" class="ep-input"
+                                       placeholder="Nhập email mới để đổi..." />
+                                <div id="emailWarning" style="display:none;margin-top:6px;padding:8px 12px;background:#fef9c3;border:1.5px solid #fde047;border-radius:10px;font-size:12px;color:#713f12;">
+                                    ⚠️ Mã OTP sẽ gửi về email mới này để xác nhận. Hãy chắc chắn email hợp lệ.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ep-form-row">
+                            <div class="ep-form-col ep-form-group">
+                                <label class="ep-label">Số điện thoại</label>
+                                <input type="text" name="SoDienThoai" value="@Model.SoDienThoai" class="ep-input" placeholder="0xxx xxx xxx" />
+                            </div>
+                            <div class="ep-form-col ep-form-group">
+                                <label class="ep-label">Địa chỉ</label>
+                                <input type="text" name="DiaChi" value="@Model.DiaChi" class="ep-input" placeholder="Địa chỉ của bạn" />
+                            </div>
+                        </div>
+
+                        <div class="ep-form-group">
+                            <label class="ep-label">Ảnh đại diện mới</label>
+                            <label class="ep-file-input" for="avatarFile">
+                                <i class="fa fa-cloud-arrow-up fa-lg mb-2 d-block" style="font-size:24px;"></i>
+                                <div style="font-weight:700;">Chọn ảnh từ máy tính</div>
+                                <div style="font-size:11px;color:#9ca3af;margin-top:4px;">PNG, JPG, GIF tối đa 5MB</div>
+                                <input type="file" id="avatarFile" name="AnhDaiDienFile" accept="image/*" class="d-none" />
+                            </label>
+                        </div>
+
+                        <button type="submit" class="ep-submit-btn">
+                            <i class="fa fa-paper-plane"></i>
+                            Gửi OTP để xác nhận thay đổi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// Show filename when file selected
+document.getElementById('avatarFile').addEventListener('change', function() {
+    const label = this.closest('label');
+    if (this.files && this.files[0]) {
+        const name = this.files[0].name;
+        label.querySelector('div:nth-child(2)').textContent = '✅ ' + name;
+    }
+});
+
+// Show warning when user types new email
+const newEmailInput = document.getElementById('newEmailInput');
+const emailWarning  = document.getElementById('emailWarning');
+if (newEmailInput && emailWarning) {
+    newEmailInput.addEventListener('input', function() {
+        emailWarning.style.display = this.value.trim() ? 'block' : 'none';
+    });
+}
+</script>
+}

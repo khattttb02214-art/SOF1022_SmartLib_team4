@@ -1,0 +1,110 @@
+@{
+    ViewData["Title"] = "Không có quyền truy cập";
+}
+
+<div class="access-denied-wrap">
+    <div class="ad-card">
+        <div class="ad-icon">
+            <i class="fa fa-shield-halved"></i>
+        </div>
+
+        <h2 class="ad-title">Không có quyền truy cập</h2>
+
+        <p class="ad-msg">
+            Bạn không đủ quyền hạn để truy cập trang này.<br />
+            Vui lòng liên hệ quản trị viên nếu bạn cần hỗ trợ.
+        </p>
+
+        <div class="ad-actions">
+            @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+            {
+                <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                    <i class="fa fa-house me-2"></i>Về trang chủ
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Student"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                    <i class="fa fa-house me-2"></i>Về trang chủ
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .access-denied-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+        }
+
+        .ad-card {
+            background: white;
+            border-radius: 24px;
+            padding: 60px 48px;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+            max-width: 460px;
+            animation: adIn 0.5s ease-out;
+        }
+
+        @@keyframes adIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .ad-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            color: #dc2626;
+            margin: 0 auto 24px;
+        }
+
+        .ad-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 12px;
+        }
+
+        .ad-msg {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .ad-card {
+            background: #1e1e1e;
+            color: #eee;
+        }
+
+        body.dark-mode .ad-msg {
+            color: #aaa;
+        }
+    </style>
+}
+
+@section Scripts {
+    <!-- Nếu có JavaScript thì đặt ở đây -->
+}

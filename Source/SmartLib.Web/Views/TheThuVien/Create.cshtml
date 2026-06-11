@@ -1,0 +1,64 @@
+@model SmartLib.Web.ViewModels.TheThuVienViewModel
+@{ ViewData["Title"] = "Tạo thẻ thư viện"; }
+<div class="page-header-card"><h4><i class="fa fa-id-card me-2"></i>Tạo thẻ thư viện mới</h4></div>
+<form asp-action="Create" method="post" enctype="multipart/form-data">@Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-7"><div class="form-card"><div class="row g-3">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center gap-2 py-2">
+                    <i class="fa fa-magic"></i>
+                    <span>Mã thẻ được <strong>tự động sinh</strong>. Bạn có thể giữ nguyên hoặc nhập mã tùy chỉnh.</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Mã thẻ</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fa fa-barcode"></i></span>
+                    <input asp-for="MaThe" class="form-control font-monospace fw-bold"
+                           value="@ViewBag.MaTheTuSinh" placeholder="Tự động sinh..." />
+                    <button type="button" class="btn btn-outline-secondary" id="btnRefreshCode" title="Làm mới mã">
+                        <i class="fa fa-rotate-right"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="MaThe" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Sinh viên / Độc giả</label>
+                <select asp-for="MaDocGia" asp-items="ViewBag.DocGia" class="form-select"><option value="">-- Chưa liên kết --</option></select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label req">Ngày hết hạn</label>
+                <input asp-for="NgayHetHan" type="date" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ảnh thẻ sinh viên</label>
+                <input asp-for="AnhTheFile" type="file" accept="image/*" class="form-control" id="anhInput" />
+                <small class="text-muted">Ảnh sẽ được copy sang tài khoản sinh viên tự động</small>
+            </div>
+            <div class="col-12" id="previewBox" style="display:none">
+                <img id="previewImg" style="max-height:200px;border-radius:12px;border:2px solid #e8edf8" />
+            </div>
+            <div class="col-12"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" asp-for="TrangThai" checked /><label class="form-check-label">Còn hiệu lực</label></div></div>
+        </div></div></div>
+        <div class="col-lg-5"><div class="form-card d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-id-card me-2"></i>Tạo thẻ</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+        </div></div>
+    </div>
+</form>
+@section Scripts {
+<script>
+document.getElementById('anhInput').addEventListener('change',function(e){
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();r.onload=ev=>{document.getElementById('previewImg').src=ev.target.result;document.getElementById('previewBox').style.display='block';};r.readAsDataURL(f);
+});
+// Refresh mã thẻ
+document.getElementById('btnRefreshCode').addEventListener('click', async function(){
+    try {
+        const res = await fetch('/TheThuVien/GetNextCode');
+        const data = await res.json();
+        document.querySelector('input[name="MaThe"]').value = data.code;
+    } catch(e) { console.error(e); }
+});
+</script>
+}

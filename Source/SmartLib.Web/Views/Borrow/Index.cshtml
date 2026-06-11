@@ -1,0 +1,64 @@
+@model List<SmartLib.Web.Models.MuonTra>
+@{ ViewData["Title"] = "Quản lý mượn trả"; }
+<div class="page-header-card d-flex justify-content-between align-items-center">
+    <h4 class="mb-0"><i class="fa fa-right-left me-2"></i>Quản lý mượn trả</h4>
+    <a asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus me-1"></i>Tạo phiếu mượn</a>
+</div>
+<div class="card shadow-sm mb-3"><div class="card-body py-2">
+    <form method="get" class="d-flex gap-2 flex-wrap">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:260px" placeholder="Mã phiếu, tên độc giả..." />
+        <select name="status" class="form-select" style="max-width:180px">
+            <option value="">-- Tất cả --</option>
+            <option value="Đang Mượn" selected="@(ViewBag.Status=="Đang Mượn")">Đang mượn</option>
+            <option value="Đã Trả" selected="@(ViewBag.Status=="Đã Trả")">Đã trả</option>
+            <option value="OVERDUE" selected="@(ViewBag.Status=="OVERDUE")">Quá hạn</option>
+        </select>
+        <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+    </form>
+</div></div>
+<div class="card shadow-sm"><div class="card-body p-0">
+    <table class="table table-hover mb-0" id="borrowTable">
+        <thead class="table-light">
+            <tr><th>Mã phiếu</th><th>Độc giả</th><th>Ngày mượn</th><th>Hạn trả</th><th>Trạng thái</th><th>Tiền phạt</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                bool overdue = b.TrangThai == "Đang Mượn" && b.NgayHenTra < DateTime.Now;
+                <tr class="@(overdue?"table-danger":"")">
+                    <td><span class="fw-semibold">@b.MaPhieu</span></td>
+                    <td>@b.DocGia?.HoTen</td>
+                    <td>@($"{b.NgayMuon:dd/MM/yyyy}")</td>
+                    <td class="@(overdue?"text-danger fw-bold":"")">@($"{b.NgayHenTra:dd/MM/yyyy}") @(overdue?"⚠️":"")</td>
+                    <td>
+                        <span class="badge @(b.TrangThai=="Đã Trả"?"bg-success":overdue?"bg-danger":"bg-warning text-dark")">
+                            @(overdue ? "Quá hạn" : b.TrangThai)
+                        </span>
+                    </td>
+                    <td>@(b.TienPhat > 0 ? $"{b.TienPhat:N0} đ" : "—")</td>
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+                            @if (b.TrangThai == "Đang Mượn")
+                            {
+                                <a asp-action="ReturnBook" asp-route-id="@b.MaPhieu" class="btn btn-xs btn-success" title="Trả sách"><i class="fa fa-check"></i></a>
+                                @if (!b.DaGiaHan)
+                                {
+                                { <a asp-action="Renew" asp-route-id="@b.MaPhieu" class="btn btn-xs btn-info" title="Gia hạn"><i class="fa fa-rotate-right"></i></a> }
+                                }
+                            }
+                            <a asp-action="Edit" asp-route-id="@b.MaPhieu" class="btn btn-xs btn-outline-primary" title="Sửa"><i class="fa fa-pen"></i></a>
+                            <a asp-action="ExportPdf" asp-route-id="@b.MaPhieu" class="btn btn-xs btn-outline-secondary" title="PDF"><i class="fa fa-file-pdf"></i></a>
+                            <button onclick="confirmDelete('/Borrow/Delete/@b.MaPhieu')" class="btn btn-xs btn-outline-danger" title="Xóa"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div></div>
+@section Scripts {
+<script>
+$('#borrowTable').DataTable({language:{url:'//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'},pageLength:20,order:[[2,'desc']]});
+function confirmDelete(url){Swal.fire({title:'Xóa phiếu mượn?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
+</script>
+}

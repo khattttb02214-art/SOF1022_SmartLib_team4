@@ -1,0 +1,42 @@
+@model SmartLib.Web.Models.TacGia
+@{ ViewData["Title"] = Model.TenTacGia; }
+<div class="page-header-card d-flex justify-content-between align-items-center">
+    <h4 class="mb-0"><i class="fa fa-pen-nib me-2"></i>@Model.TenTacGia</h4>
+    <a asp-action="Edit" asp-route-id="@Model.MaTacGia" class="btn btn-outline-primary btn-sm"><i class="fa fa-pen me-1"></i>Sửa</a>
+</div>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="info-detail-card">
+            <div class="detail-avatar"><i class="fa fa-pen-nib fa-2x"></i></div>
+            <h5 class="mt-3 fw-bold">@Model.TenTacGia</h5>
+            <p class="text-muted">@(Model.QuocTich ?? "Không rõ quốc tịch")</p>
+            @if (!string.IsNullOrEmpty(Model.TieuSu))
+            {
+            { <p class="small">@Model.TieuSu</p> }
+            }
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold"><i class="fa fa-book me-2"></i>Sách của tác giả (@Model.SachTacGias.Count)</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Tên sách</th><th>Thể loại</th><th>Năm XB</th><th>Sẵn có</th></tr></thead>
+                    <tbody>
+                        @foreach (var st in Model.SachTacGias)
+                        {
+                            var s = st.Sach;
+                            if (s == null) continue;
+                            <tr>
+                                <td><a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="text-decoration-none fw-semibold">@s.TenSach</a></td>
+                                <td><span class="badge bg-primary-soft">@(s.TheLoai?.TenTheLoai ?? "—")</span></td>
+                                <td>@s.NamXuatBan</td>
+                                <td><span class="badge @(s.SoLuongKhaDung>0?"bg-success":"bg-danger")">@s.SoLuongKhaDung</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+@model IEnumerable<SmartLib.Web.Models.NhatKyHoatDong>
+@{ ViewData["Title"] = "Nhật ký hoạt động"; }
+
+<div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h4 class="mb-0"><i class="fa fa-clipboard-list me-2 text-primary"></i>Nhật Ký Hoạt Động</h4>
+    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 fs-6">
+        @Model.Count() bản ghi
+    </span>
+</div>
+
+@* Bộ lọc *@
+<div class="card shadow-sm mb-3 border-0">
+    <div class="card-body py-2">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-sm-4 col-md-3">
+                <label class="form-label small text-muted mb-1">Nhân viên</label>
+                <input type="text" name="maNV" value="@ViewBag.MaNV" class="form-control form-control-sm" placeholder="Mã NV hoặc tên..." />
+            </div>
+            <div class="col-sm-4 col-md-3">
+                <label class="form-label small text-muted mb-1">Hành động</label>
+                <input type="text" name="hanhDong" value="@ViewBag.HanhDong" class="form-control form-control-sm" placeholder="Tìm hành động..." />
+            </div>
+            <div class="col-sm-6 col-md-2">
+                <label class="form-label small text-muted mb-1">Từ ngày</label>
+                <input type="date" name="tuNgay" value="@ViewBag.TuNgay" class="form-control form-control-sm" />
+            </div>
+            <div class="col-sm-6 col-md-2">
+                <label class="form-label small text-muted mb-1">Đến ngày</label>
+                <input type="date" name="denNgay" value="@ViewBag.DenNgay" class="form-control form-control-sm" />
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary btn-sm"><i class="fa fa-search me-1"></i>Lọc</button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-1"><i class="fa fa-rotate-left me-1"></i>Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="auditTable">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3" width="160">Thời gian</th>
+                        <th width="130">Nhân viên</th>
+                        <th width="160">Hành động</th>
+                        <th>Mô tả chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-3">
+                                <div class="fw-semibold text-nowrap">@($"{item.ThoiGian:HH:mm:ss}")</div>
+                                <small class="text-muted">@($"{item.ThoiGian:dd/MM/yyyy}")</small>
+                            </td>
+                            <td>
+                                @if (item.NhanVien != null)
+                                {
+                                    <div class="fw-semibold small">@item.NhanVien.HoTen</div>
+                                    <small class="text-muted font-monospace">@item.MaNV</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted font-monospace">@item.MaNV</span>
+                                }
+                            </td>
+                            <td>
+                                @{
+                                    var (badgeClass, icon) = item.HanhDong switch {
+                                        "Đăng nhập"       => ("bg-success-subtle text-success", "fa-right-to-bracket"),
+                                        "Đăng xuất"       => ("bg-secondary-subtle text-secondary", "fa-right-from-bracket"),
+                                        var x when x != null && x.StartsWith("Thêm")   => ("bg-primary-subtle text-primary", "fa-plus"),
+                                        var x when x != null && x.StartsWith("Sửa")    => ("bg-warning-subtle text-warning", "fa-pen"),
+                                        var x when x != null && x.StartsWith("Xóa")    => ("bg-danger-subtle text-danger", "fa-trash"),
+                                        var x when x != null && x.StartsWith("Import") => ("bg-info-subtle text-info", "fa-file-excel"),
+                                        var x when x != null && x.StartsWith("Duyệt")  => ("bg-success-subtle text-success", "fa-check"),
+                                        var x when x != null && x.StartsWith("Từ chối")=> ("bg-danger-subtle text-danger", "fa-xmark"),
+                                        _ => ("bg-light text-muted", "fa-circle-info")
+                                    };
+                                }
+                                <span class="badge @badgeClass rounded-pill px-2 py-1">
+                                    <i class="fa @icon me-1"></i>@item.HanhDong
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-break small">@item.MoTa</span>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="4" class="text-center text-muted py-5">
+                            <i class="fa fa-clipboard-list fa-3x mb-3 opacity-25 d-block"></i>Chưa có nhật ký nào
+                        </td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+$("#auditTable").DataTable({
+    order: [[0, "desc"]],
+    pageLength: 25,
+    language: {
+        search: "Tìm:",
+        lengthMenu: "Hiển thị _MENU_ dòng",
+        info: "Hiển thị _START_–_END_ / _TOTAL_",
+        paginate: { next: "›", previous: "‹" },
+        zeroRecords: "Không có kết quả"
+    },
+    columnDefs: [{ orderable: false, targets: 3 }]
+});
+</script>
+}

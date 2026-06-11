@@ -1,0 +1,128 @@
+@model List<SmartLib.Web.Models.Sach>
+@{ ViewData["Title"] = "Quản lý sách"; }
+
+<div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h4 class="mb-0"><i class="fa fa-book me-2"></i>Quản lý sách</h4>
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="DownloadTemplate" class="btn btn-outline-success btn-sm">
+            <i class="fa fa-file-excel me-1"></i>Tải template Excel
+        </a>
+        <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+            <i class="fa fa-file-import me-1"></i>Import Excel
+        </button>
+        <a asp-action="ExportExcel" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-download me-1"></i>Xuất Excel
+        </a>
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus me-1"></i>Thêm sách
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-3 border-0">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex flex-wrap gap-2">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:280px" placeholder="Tên sách, ISBN..." />
+            <select name="theLoai" class="form-select" style="max-width:200px">
+                <option value="">-- Tất cả thể loại --</option>
+                @foreach (var tl in (ViewBag.TheLoais as List<SmartLib.Web.Models.TheLoai> ?? new()))
+                {
+                { <option value="@tl.MaTheLoai" selected="@(tl.MaTheLoai==ViewBag.TheLoai?"selected":null)">@tl.TenTheLoai</option> }
+                }
+            </select>
+            <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="booksTable">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Sách</th>
+                        <th>Thể loại</th>
+                        <th>NXB</th>
+                        <th class="text-center">Kho</th>
+                        <th class="text-center">Khả dụng</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td class="ps-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    @if (!string.IsNullOrEmpty(s.AnhBia))
+                                    {
+                                    { <img src="/uploads/books/@s.AnhBia" width="40" height="54" style="object-fit:cover;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.12)" /> }
+                                    }
+                                    else
+                                    { <div style="width:40px;height:54px;background:var(--bs-primary-bg-subtle);border-radius:4px;display:grid;place-items:center"><i class="fa fa-book text-primary opacity-50"></i></div> }
+                                    <div>
+                                        <div class="fw-semibold">@s.TenSach</div>
+                                        <small class="text-muted font-monospace">@s.MaSach @(!string.IsNullOrEmpty(s.ISBN) ? $"· ISBN: {s.ISBN}" : "")</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-primary-subtle text-primary">@(s.TheLoai?.TenTheLoai ?? "—")</span></td>
+                            <td><small>@(s.NhaXuatBan?.TenNXB ?? "—")</small></td>
+                            <td class="text-center fw-semibold">@s.SoLuongKho</td>
+                            <td class="text-center">
+                                <span class="badge @(s.SoLuongKhaDung > 0 ? "bg-success" : "bg-danger")">
+                                    @s.SoLuongKhaDung
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a asp-action="Detail" asp-route-id="@s.MaSach" class="btn btn-xs btn-outline-info" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                                    <a asp-action="Edit"   asp-route-id="@s.MaSach" class="btn btn-xs btn-outline-primary" title="Sửa"><i class="fa fa-pen"></i></a>
+                                    <button onclick="confirmDelete('/Books/Delete/@s.MaSach')" class="btn btn-xs btn-outline-danger" title="Xóa"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* Modal Import Excel *@
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-file-import me-2 text-info"></i>Import sách từ Excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="alert alert-info small">
+                        <i class="fa fa-circle-info me-1"></i>
+                        File Excel cần có các cột: <strong>Tên sách, ISBN, Thể loại, NXB, Tác giả, Năm XB, Ngôn ngữ, Số trang, Số lượng</strong>.
+                        <a asp-action="DownloadTemplate" class="alert-link">Tải file mẫu</a>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label req">Chọn file Excel (.xlsx)</label>
+                        <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-info text-white"><i class="fa fa-upload me-1"></i>Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+$("#booksTable").DataTable({ pageLength: 25, order:[[0,"asc"]], language:{search:"Tìm:",lengthMenu:"Hiển thị _MENU_",info:"_START_–_END_ / _TOTAL_",paginate:{next:"›",previous:"‹"}} });
+function confirmDelete(url){Swal.fire({title:'Xóa sách này?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
+</script>
+}

@@ -1,0 +1,409 @@
+@model SmartLib.Web.Models.MuonTra
+@{
+    ViewData["Title"] = "Sửa phiếu mượn";
+    bool coTheThemSach = (bool)(ViewBag.CoTheThemSach ?? false);
+    bool dangMuon = Model.TrangThai == "Đang Mượn";
+}
+
+<div class="page-header-card d-flex justify-content-between align-items-center">
+    <h4 class="mb-0"><i class="fa fa-pen me-2"></i>Sửa phiếu — <span class="text-primary">@Model.MaPhieu</span></h4>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i>Quay lại</a>
+</div>
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="fa fa-circle-check me-2"></i>@TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="fa fa-circle-xmark me-2"></i>@TempData["error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row g-4">
+
+    @* ── CỘT TRÁI: Thông tin + Danh sách sách ─────────────────── *@
+    <div class="col-lg-8">
+
+        @* Thông tin phiếu *@
+        <div class="form-card mb-3">
+            <h6 class="form-card-title"><i class="fa fa-circle-info me-2 text-primary"></i>Thông tin phiếu</h6>
+            <div class="row g-2 text-sm mb-3">
+                <div class="col-sm-6">
+                    <span class="text-muted">Độc giả:</span>
+                    <strong class="ms-2">@(Model.DocGia?.HoTen ?? Model.MaDocGia)</strong>
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-muted">Ngày mượn:</span>
+                    <strong class="ms-2">@Model.NgayMuon.ToString("dd/MM/yyyy HH:mm")</strong>
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-muted">Trạng thái:</span>
+                    <span class="badge ms-2 @(Model.TrangThai == "Đã Trả" ? "bg-success" : Model.TrangThai == "Đang Mượn" ? "bg-warning text-dark" : "bg-secondary")">
+                        @Model.TrangThai
+                    </span>
+                </div>
+                <div class="col-sm-6">
+                    <span class="text-muted">Số sách:</span>
+                    <strong class="ms-2">@Model.ChiTietMuonTras.Count cuốn</strong>
+                </div>
+            </div>
+
+            @* Form sửa ngày hẹn trả + ghi chú *@
+            <form asp-action="Edit" asp-route-id="@Model.MaPhieu" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label req fw-semibold">Ngày hẹn trả</label>
+                        <input type="date" name="NgayHenTra"
+                               value="@($"{Model.NgayHenTra:yyyy-MM-dd}")"
+                               class="form-control" required />
+                    </div>
+                    <div class="col-md-7">
+                        <label class="form-label fw-semibold">Ghi chú</label>
+                        <textarea name="GhiChu" class="form-control" rows="2">@Model.GhiChu</textarea>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-save me-1"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        @* Danh sách sách trong phiếu *@
+        <div class="form-card">
+            <h6 class="form-card-title">
+                <i class="fa fa-books me-2 text-primary"></i>Sách trong phiếu
+                <span class="badge bg-primary ms-2">@Model.ChiTietMuonTras.Count cuốn</span>
+                @if (coTheThemSach)
+                {
+                    <span class="badge bg-success-soft text-success ms-2 small">
+                        <i class="fa fa-pen me-1"></i>Có thể chỉnh sửa hôm nay
+                    </span>
+                }
+            </h6>
+
+            @if (!Model.ChiTietMuonTras.Any())
+            {
+                <p class="text-muted text-center py-3"><i class="fa fa-box-open me-2"></i>Phiếu chưa có sách nào</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Tên sách</th>
+                                <th>Mã cuốn</th>
+                                @if (coTheThemSach)
+                                {
+                                    <th></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int stt = 1;
+                            }
+                            @foreach (var ct in Model.ChiTietMuonTras)
+                            {
+                                <tr>
+                                    <td class="text-muted">@(stt++)</td>
+                                    <td>
+                                        <i class="fa fa-book text-primary me-2"></i>
+                                        <strong>@(ct.Sach?.TenSach ?? ct.MaSach)</strong>
+                                        @if (!string.IsNullOrEmpty(ct.CuonSach?.Barcode))
+                                        {
+                                            <small class="text-muted ms-2">· @ct.CuonSach.Barcode</small>
+                                        }
+                                    </td>
+                                    <td><code class="small">@ct.MaCuonSach</code></td>
+                                    @if (coTheThemSach)
+                                    {
+                                        <td>
+                                            <form asp-action="RemoveBookFromPhieu"
+                                                  asp-route-id="@Model.MaPhieu" method="post"
+                                                  onsubmit="return confirm('Xóa cuốn này khỏi phiếu?')">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="chiTietId" value="@ct.Id" />
+                                                <button class="btn btn-xs btn-outline-danger" title="Xóa khỏi phiếu">
+                                                    <i class="fa fa-xmark"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        @* ── KHU VỰC THÊM SÁCH (chỉ hiện nếu phiếu tạo hôm nay & đang mượn) ──────── *@
+        @if (coTheThemSach)
+        {
+            <div class="form-card mt-3" id="addBooksSection">
+                <h6 class="form-card-title">
+                    <i class="fa fa-plus-circle me-2 text-success"></i>Thêm sách vào phiếu
+                    <span class="text-muted small fw-normal">— Tìm theo tên sách, mã sách, ISBN</span>
+                </h6>
+
+                <div class="d-flex gap-2 mb-3">
+                    <input type="text" id="editBookSearch" class="form-control"
+                           placeholder="Nhập tên sách, mã sách, ISBN..." autocomplete="off" />
+                    <button type="button" class="btn btn-outline-primary" onclick="doEditSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                @* Kết quả tìm kiếm *@
+                <div id="editSearchResults" class="search-results-list mb-3"></div>
+
+                @* Panel chọn cuốn *@
+                <div id="editCuonPanel" class="mb-3" style="display:none">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa fa-book text-primary"></i>
+                        <span class="fw-semibold" id="editCuonTitle">—</span>
+                        <button type="button" class="btn btn-xs btn-outline-secondary ms-auto"
+                                onclick="closeEditCuonPanel()">
+                            <i class="fa fa-xmark me-1"></i>Đóng
+                        </button>
+                    </div>
+                    <div id="editCuonList" class="d-flex flex-wrap gap-2"></div>
+                </div>
+
+                @* Sách sẽ thêm *@
+                <div id="newBooksSection">
+                    <h6 class="fw-semibold text-success mb-2">
+                        <i class="fa fa-cart-plus me-1"></i>Sách sẽ thêm
+                        (<span id="newBookCount">0</span>)
+                    </h6>
+                    <div id="newBooksList"></div>
+                </div>
+
+                @* Form submit thêm sách *@
+                <form asp-action="AddBooksToPhieu" asp-route-id="@Model.MaPhieu"
+                      method="post" id="addBooksForm">
+                    @Html.AntiForgeryToken()
+                    <div id="newBooksHidden"></div>
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success" id="addBooksBtn" disabled>
+                            <i class="fa fa-plus me-2"></i>Thêm vào phiếu mượn
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+        else if (dangMuon && Model.NgayMuon.Date != DateTime.Today)
+        {
+            <div class="alert alert-info mt-3">
+                <i class="fa fa-circle-info me-2"></i>
+                Chỉ có thể thêm sách vào phiếu được tạo <strong>trong ngày hôm nay</strong>.
+                Phiếu này được tạo ngày <strong>@Model.NgayMuon.ToString("dd/MM/yyyy")</strong>.
+            </div>
+        }
+
+    </div>
+
+    @* ── CỘT PHẢI: Tóm tắt ────────────────────────────────────── *@
+    <div class="col-lg-4">
+        <div class="form-card sticky-top" style="top:80px">
+            <h6 class="form-card-title"><i class="fa fa-circle-info me-2"></i>Tóm tắt phiếu</h6>
+            <dl class="row mb-0 small">
+                <dt class="col-5 text-muted">Mã phiếu</dt>
+                <dd class="col-7 fw-semibold">@Model.MaPhieu</dd>
+                <dt class="col-5 text-muted">Độc giả</dt>
+                <dd class="col-7">@(Model.DocGia?.HoTen ?? "—")</dd>
+                <dt class="col-5 text-muted">Ngày mượn</dt>
+                <dd class="col-7">@Model.NgayMuon.ToString("dd/MM/yyyy")</dd>
+                <dt class="col-5 text-muted">Hạn trả</dt>
+                <dd class="col-7">@Model.NgayHenTra.ToString("dd/MM/yyyy")</dd>
+                <dt class="col-5 text-muted">Số sách</dt>
+                <dd class="col-7">
+                    <span id="summaryCount">@Model.ChiTietMuonTras.Count</span> cuốn
+                </dd>
+                <dt class="col-5 text-muted">Tiền phạt</dt>
+                <dd class="col-7">@(Model.TienPhat > 0 ? $"{Model.TienPhat:N0} đ" : "—")</dd>
+            </dl>
+            <hr />
+            <div class="d-grid gap-2">
+                <a asp-action="ExportPdf" asp-route-id="@Model.MaPhieu"
+                       class="btn btn-outline-secondary btn-sm">
+                    <i class="fa fa-file-pdf me-2"></i>Xuất PDF
+                </a>
+                @if (dangMuon)
+                {
+                    <a asp-action="ReturnBook" asp-route-id="@Model.MaPhieu"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Xác nhận trả sách?')">
+                        <i class="fa fa-check me-2"></i>Trả sách
+                    </a>
+                    @if (!Model.DaGiaHan)
+                    {
+                        <a asp-action="Renew" asp-route-id="@Model.MaPhieu"
+                               class="btn btn-info btn-sm"
+                               onclick="return confirm('Gia hạn thêm 7 ngày?')">
+                            <i class="fa fa-rotate-right me-2"></i>Gia hạn (+7 ngày)
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+@if (coTheThemSach)
+{
+    <script>
+            /* ── Trạng thái sách sẽ thêm ── */
+            let newSelected = {};  // maCuonSach → { maCuon, tenSach, maSach }
+            let editTimer   = null;
+            const PHIEU_ID  = '@Model.MaPhieu';
+
+            function escHtml(s) {
+                if (!s) return '';
+                return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+            }
+
+            /* ── Tìm kiếm sách (loại trừ cuốn đã có trong phiếu) ── */
+            async function doEditSearch() {
+                const kw  = document.getElementById('editBookSearch').value.trim();
+                const div = document.getElementById('editSearchResults');
+                if (!kw) { div.innerHTML = ''; return; }
+
+                div.innerHTML = '<p class="text-muted small"><i class="fa fa-spinner fa-spin me-1"></i>Đang tìm...</p>';
+                try {
+                    const res  = await fetch('/Borrow/SearchSachForEdit?q=' + encodeURIComponent(kw) + '&maPhieu=' + encodeURIComponent(PHIEU_ID));
+                    if (!res.ok) { div.innerHTML = '<p class="text-danger small">Lỗi kết nối máy chủ</p>'; return; }
+                    const list = await res.json();
+
+                    if (!list.length) {
+                        div.innerHTML = '<p class="text-muted small"><i class="fa fa-circle-info me-1"></i>Không tìm thấy sách nào phù hợp.</p>';
+                        return;
+                    }
+
+                    window._editSachResults = list;
+                    div.innerHTML = list.map((s, i) => `
+                        <div class="search-result-item" style="cursor:pointer" onclick="showEditCuons(${i})">
+                            <i class="fa fa-book text-primary me-2"></i>
+                            <div class="flex-fill">
+                                <span class="fw-semibold">${escHtml(s.tenSach)}</span>
+                                <small class="text-muted ms-2">${escHtml(s.maSach)}</small>
+                                ${s.isbn ? `<small class="text-muted ms-1">· ${escHtml(s.isbn)}</small>` : ''}
+                            </div>
+                            ${s.soLuongCoSan > 0
+                                ? `<span class="badge bg-success ms-2">${s.soLuongCoSan} cuốn sẵn</span>`
+                                : `<span class="badge bg-warning text-dark ms-2">Hết sẵn</span>`}
+                        </div>`).join('');
+                } catch (e) {
+                    div.innerHTML = '<p class="text-danger small">Lỗi: ' + e.message + '</p>';
+                }
+            }
+
+            /* ── Hiện danh sách cuốn để chọn ── */
+            function showEditCuons(idx) {
+                const s = (window._editSachResults || [])[idx];
+                if (!s) return;
+
+                document.getElementById('editCuonTitle').textContent = s.tenSach;
+                const listEl = document.getElementById('editCuonList');
+
+                if (!s.cuons || !s.cuons.length) {
+                    listEl.innerHTML = '<span class="text-muted small">Không có cuốn nào sẵn có (hoặc đã có trong phiếu).</span>';
+                } else {
+                    listEl.innerHTML = s.cuons.map(c => {
+                        const alreadyPicked = !!newSelected[c.maCuonSach];
+                        return `
+                        <button type="button"
+                                class="btn btn-sm ${alreadyPicked ? 'btn-success' : 'btn-outline-primary'}"
+                                onclick="toggleEditCuon('${escHtml(c.maCuonSach)}','${escHtml(s.tenSach)}','${escHtml(s.maSach)}')"
+                                id="editCuonBtn_${escHtml(c.maCuonSach)}">
+                            <i class="fa fa-${alreadyPicked ? 'check' : 'plus'} me-1"></i>
+                            ${escHtml(c.maCuonSach)}
+                            ${c.barcode ? `<small class="opacity-75">· ${escHtml(c.barcode)}</small>` : ''}
+                        </button>`;
+                    }).join('');
+                }
+
+                document.getElementById('editCuonPanel').style.display = '';
+                document.getElementById('editSearchResults').innerHTML = '';
+                document.getElementById('editBookSearch').value = '';
+            }
+
+            function closeEditCuonPanel() {
+                document.getElementById('editCuonPanel').style.display = 'none';
+            }
+
+            /* ── Chọn / bỏ chọn cuốn ── */
+            function toggleEditCuon(maCuon, tenSach, maSach) {
+                if (newSelected[maCuon]) {
+                    delete newSelected[maCuon];
+                } else {
+                    newSelected[maCuon] = { maCuon, tenSach, maSach };
+                }
+                const btn = document.getElementById('editCuonBtn_' + maCuon);
+                if (btn) {
+                    const picked = !!newSelected[maCuon];
+                    btn.className = 'btn btn-sm ' + (picked ? 'btn-success' : 'btn-outline-primary');
+                    btn.innerHTML = `<i class="fa fa-${picked ? 'check' : 'plus'} me-1"></i>${maCuon}`;
+                }
+                renderNewBooks();
+            }
+
+            function removeNewBook(maCuon) {
+                delete newSelected[maCuon];
+                const btn = document.getElementById('editCuonBtn_' + maCuon);
+                if (btn) {
+                    btn.className = 'btn btn-sm btn-outline-primary';
+                    btn.innerHTML = `<i class="fa fa-plus me-1"></i>${maCuon}`;
+                }
+                renderNewBooks();
+            }
+
+            /* ── Render danh sách sẽ thêm ── */
+            function renderNewBooks() {
+                const items = Object.values(newSelected);
+                const count = items.length;
+                document.getElementById('newBookCount').textContent  = count;
+                document.getElementById('addBooksBtn').disabled      = count === 0;
+
+                document.getElementById('newBooksList').innerHTML = items.map(b => `
+                    <div class="selected-book-item">
+                        <i class="fa fa-book text-success me-2"></i>
+                        <span class="flex-fill">${escHtml(b.tenSach)}</span>
+                        <small class="text-muted me-2">${escHtml(b.maCuon)}</small>
+                        <button type="button" class="btn btn-xs btn-outline-danger"
+                                onclick="removeNewBook('${escHtml(b.maCuon)}')">
+                            <i class="fa fa-xmark"></i>
+                        </button>
+                    </div>`).join('');
+
+                // Sync hidden inputs
+                document.getElementById('newBooksHidden').innerHTML = items.map(b =>
+                    `<input type="hidden" name="NewBooks" value="${escHtml(b.maCuon)}" />`
+                ).join('');
+            }
+
+            /* ── Sự kiện input ── */
+            document.getElementById('editBookSearch').addEventListener('input', () => {
+                clearTimeout(editTimer);
+                editTimer = setTimeout(doEditSearch, 400);
+            });
+            document.getElementById('editBookSearch').addEventListener('keydown', e => {
+                if (e.key === 'Enter') { e.preventDefault(); clearTimeout(editTimer); doEditSearch(); }
+            });
+        </script>
+}
+}

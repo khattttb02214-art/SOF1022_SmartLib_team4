@@ -1,0 +1,15 @@
+@model SmartLib.Web.Models.Reservation
+@{ ViewData["Title"] = "Sửa đặt trước"; }
+<div class="page-header-card"><h4><i class="fa fa-pen me-2"></i>Sửa đặt trước #@Model.MaReservation</h4></div>
+<form asp-action="Edit" asp-route-id="@Model.MaReservation" method="post">@Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-7"><div class="form-card">
+            <label class="form-label req">Trạng thái</label>
+            <select name="TrangThai" asp-items="ViewBag.StatusList" class="form-select"></select>
+        </div></div>
+        <div class="col-lg-5"><div class="form-card d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+        </div></div>
+    </div>
+</form>

@@ -1,0 +1,187 @@
+@{ ViewData["Title"] = "Xác minh email"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@section Styles {
+<style>
+.ve-page {
+    min-height: 65vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 16px;
+}
+.ve-card {
+    background: #fff;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 28px;
+    box-shadow: 0 8px 48px rgba(79,70,229,.16);
+    width: 100%; max-width: 460px;
+    overflow: hidden;
+}
+.ve-card__strip { height: 6px; background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899); }
+.ve-card__header { text-align: center; padding: 36px 32px 20px; }
+.ve-icon {
+    width: 72px; height: 72px; border-radius: 20px;
+    background: linear-gradient(135deg, #ede9fe, #e0e7ff);
+    border: 2px solid #c4b5fd;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: #7c3aed;
+    margin: 0 auto 18px;
+}
+.ve-card__title { font-size: 22px; font-weight: 800; color: #1e1b4b; margin: 0 0 8px; }
+.ve-card__sub { font-size: 13px; color: #6b7280; line-height: 1.6; margin: 0; max-width: 320px; margin-inline: auto; }
+.ve-email-badge {
+    display: inline-block; background: #ede9fe; border: 1.5px solid #c4b5fd;
+    border-radius: 100px; padding: 6px 18px;
+    font-size: 14px; font-weight: 700; color: #4f46e5;
+    margin: 10px 0;
+}
+.ve-alert {
+    margin: 0 28px 8px;
+    padding: 12px 16px; border-radius: 12px;
+    font-size: 13px; display: flex; align-items: flex-start; gap: 8px;
+}
+.ve-alert--success { background: #d1fae5; border: 1.5px solid #6ee7b7; color: #065f46; }
+.ve-alert--error   { background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; }
+.ve-alert--info    { background: #ede9fe; border: 1.5px solid #c4b5fd; color: #4338ca; }
+.ve-form-body { padding: 20px 32px 32px; }
+.ve-label {
+    display: block; font-size: 12px; font-weight: 700;
+    color: #4338ca; margin-bottom: 10px; letter-spacing: .4px; text-align: center;
+}
+.ve-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.ve-dot { width: 10px; height: 10px; border-radius: 50%; background: #e0e7ff; transition: all .2s; }
+.ve-dot.filled { background: #7c3aed; transform: scale(1.2); }
+.ve-otp-input {
+    width: 100%; border: 2px solid #e0e7ff;
+    border-radius: 16px; padding: 18px;
+    font-size: 32px; font-weight: 800; font-family: 'Courier New', monospace;
+    text-align: center; letter-spacing: 12px;
+    color: #1e1b4b; background: #faf9ff; outline: none;
+    box-sizing: border-box; margin-bottom: 20px;
+    transition: border-color .2s, box-shadow .2s;
+}
+.ve-otp-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 4px rgba(124,58,237,.12); background: #fff; }
+.ve-otp-input::placeholder { color: #d1d5db; letter-spacing: 8px; font-size: 24px; }
+.ve-submit-btn {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff; border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 6px 20px rgba(79,70,229,.35);
+    transition: transform .15s, box-shadow .15s;
+}
+.ve-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,.45); }
+.ve-submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.ve-resend-btn {
+    width: 100%; padding: 12px;
+    border: 1.5px solid #e0e7ff; border-radius: 12px;
+    background: #faf9ff; color: #6b7280;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all .15s;
+}
+.ve-resend-btn:hover { border-color: #c4b5fd; color: #7c3aed; background: #f3f0ff; }
+.ve-timer { text-align: center; font-size: 11px; color: #9ca3af; margin-top: 14px; }
+.ve-timer strong { color: #4f46e5; }
+</style>
+}
+
+<div class="ve-page">
+    <div class="ve-card">
+        <div class="ve-card__strip"></div>
+
+        <div class="ve-card__header">
+            <div class="ve-icon"><i class="fa fa-envelope-circle-check"></i></div>
+            <h3 class="ve-card__title">Xác minh địa chỉ email</h3>
+            <p class="ve-card__sub">Mã xác minh 6 chữ số đã được gửi đến</p>
+            <div class="ve-email-badge">
+                <i class="fa fa-envelope me-1"></i>@(ViewBag.Email ?? "email của bạn")
+            </div>
+            <p class="ve-card__sub" style="margin-top:8px;font-size:12px;">
+                Kiểm tra cả thư mục Spam nếu không thấy email trong Hộp thư đến.
+            </p>
+        </div>
+
+        @if (TempData["ResendSuccess"] != null)
+        {
+            <div class="ve-alert ve-alert--success">
+                <i class="fa fa-circle-check"></i><span>@TempData["ResendSuccess"]</span>
+            </div>
+        }
+        @if (TempData["ResendError"] != null)
+        {
+            <div class="ve-alert ve-alert--error">
+                <i class="fa fa-circle-xmark"></i><span>@TempData["ResendError"]</span>
+            </div>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <div class="ve-alert ve-alert--error">
+                <i class="fa fa-circle-xmark"></i><span>@ViewBag.Error</span>
+            </div>
+        }
+
+        <div class="ve-form-body">
+            <form method="post" asp-action="VerifyEmail">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="email" value="@ViewBag.Email" />
+
+                <label class="ve-label"><i class="fa fa-key me-1"></i> MÃ XÁC MINH (6 CHỮ SỐ)</label>
+
+                <div class="ve-dots" id="veDots">
+                    @for (int i = 0; i < 6; i++) { <div class="ve-dot"></div> }
+                </div>
+
+                <input type="text" name="OtpInput" id="veOtpInput"
+                       class="ve-otp-input"
+                       maxlength="6" placeholder="——————"
+                       required autofocus autocomplete="one-time-code"
+                       inputmode="numeric" pattern="[0-9]{6}" />
+
+                <button type="submit" class="ve-submit-btn" id="veSubmitBtn" disabled>
+                    <i class="fa fa-check-circle"></i>
+                    Xác minh & Hoàn tất đăng ký
+                </button>
+            </form>
+
+            <form method="post" asp-action="ResendVerifyOtp">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="email" value="@ViewBag.Email" />
+                <button type="submit" class="ve-resend-btn">
+                    <i class="fa fa-rotate-right"></i>Gửi lại mã xác minh
+                </button>
+            </form>
+
+            <div class="ve-timer">
+                <i class="fa fa-clock" style="color:#7c3aed;margin-right:4px;"></i>
+                Mã có hiệu lực trong <strong id="veTimer">10:00</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const inp  = document.getElementById('veOtpInput');
+const dots = document.querySelectorAll('.ve-dot');
+const btn  = document.getElementById('veSubmitBtn');
+
+inp.addEventListener('input', function () {
+    const val = this.value.replace(/\D/g, '');
+    this.value = val;
+    dots.forEach((d, i) => d.classList.toggle('filled', i < val.length));
+    btn.disabled = val.length < 6;
+});
+
+// Countdown 10 min
+let secs = 600;
+(function tick() {
+    const m = String(Math.floor(secs / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
+    const el = document.getElementById('veTimer');
+    if (el) el.textContent = m + ':' + s;
+    if (secs > 0) { secs--; setTimeout(tick, 1000); }
+    else if (el)  { el.textContent = 'Hết hạn — vui lòng gửi lại'; el.style.color = '#dc2626'; }
+})();
+</script>
+}

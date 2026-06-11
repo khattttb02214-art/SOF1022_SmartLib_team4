@@ -1,0 +1,243 @@
+@model SmartLib.Web.ViewModels.BorrowViewModel
+@{ ViewData["Title"] = "Tạo phiếu mượn"; }
+
+<div class="page-header-card">
+    <h4><i class="fa fa-plus me-2"></i>Tạo phiếu mượn</h4>
+</div>
+
+<form asp-action="Create" method="post" id="borrowForm">
+    @Html.AntiForgeryToken()
+    <div class="row g-4">
+
+        
+        <div class="col-lg-8">
+
+            
+            <div class="form-card">
+                <h6 class="form-card-title">Thông tin phiếu</h6>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label req">Độc giả</label>
+                        <select asp-for="MaDocGia" asp-items="ViewBag.DocGia"
+                                class="form-select" required>
+                            <option value="">-- Chọn độc giả --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ghi chú</label>
+                        <input asp-for="GhiChu" class="form-control" placeholder="Ghi chú..." />
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="form-card mt-3">
+                <h6 class="form-card-title">
+                    Tìm &amp; chọn sách
+                    <span class="text-muted small fw-normal">
+                        – Tìm theo tên sách, mã sách, ISBN
+                    </span>
+                </h6>
+
+                <div class="d-flex gap-2 mb-3">
+                    <input type="text" id="bookSearch" class="form-control"
+                           placeholder="Nhập tên sách, mã sách, ISBN..." autocomplete="off" />
+                    <button type="button" class="btn btn-outline-primary" onclick="doSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                
+                <div id="searchResults" class="search-results-list mb-3"></div>
+
+                
+                <div id="cuonPanel" class="mb-3" style="display:none">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa fa-book text-primary"></i>
+                        <span class="fw-semibold" id="cuonSachTitle">—</span>
+                        <button type="button" class="btn btn-xs btn-outline-secondary ms-auto"
+                                onclick="closeCuonPanel()">
+                            <i class="fa fa-xmark me-1"></i>Đóng
+                        </button>
+                    </div>
+                    <div id="cuonList" class="d-flex flex-wrap gap-2"></div>
+                </div>
+
+                
+                <div id="selectedBooks">
+                    <h6 class="fw-semibold text-primary mb-2">
+                        <i class="fa fa-list me-1"></i>Sách đã chọn
+                        (<span id="bookCount">0</span>)
+                    </h6>
+                    <div id="selectedList" class="selected-book-list"></div>
+                    <span asp-validation-for="SelectedBooks" class="text-danger small"></span>
+                    @if (ViewData.ModelState["SelectedBooks"]?.Errors.Any() == true)
+                    {
+                        <div class="alert alert-danger py-1 mt-1 small">
+                            <i class="fa fa-triangle-exclamation me-1"></i>Vui lòng chọn ít nhất 1 cuốn sách
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col-lg-4">
+            <div class="form-card sticky-top" style="top:80px">
+                <div id="borrowSummary" class="mb-3 text-muted small">Chưa chọn sách nào</div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg"
+                            id="submitBtn" disabled>
+                        <i class="fa fa-save me-2"></i>Tạo phiếu mượn
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+<script>
+/* ── Trạng thái ── */
+let selected   = {};   // maCuonSach → { maCuon, tenSach, maSach }
+let searchTimer = null;
+
+/* ── Util ── */
+function escHtml(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── Tìm kiếm theo tên / mã / ISBN sách ── */
+async function doSearch() {
+    const kw  = document.getElementById('bookSearch').value.trim();
+    const div = document.getElementById('searchResults');
+    if (!kw) { div.innerHTML = ''; return; }
+
+    div.innerHTML = '<p class="text-muted small"><i class="fa fa-spinner fa-spin me-1"></i>Đang tìm...</p>';
+    try {
+        const res  = await fetch('/Borrow/SearchSachForBorrow?q=' + encodeURIComponent(kw));
+        if (!res.ok) { div.innerHTML = '<p class="text-danger small">Lỗi kết nối máy chủ</p>'; return; }
+        const list = await res.json();
+
+        if (!list.length) {
+            div.innerHTML = '<p class="text-muted small"><i class="fa fa-circle-info me-1"></i>Không tìm thấy sách nào phù hợp.</p>';
+            return;
+        }
+
+        window._sachResults = list;
+        div.innerHTML = list.map((s, i) => `
+            <div class="search-result-item" style="cursor:pointer" onclick="showCuons(${i})">
+                <i class="fa fa-book text-primary me-2"></i>
+                <div class="flex-fill">
+                    <span class="fw-semibold">${escHtml(s.tenSach)}</span>
+                    <small class="text-muted ms-2">${escHtml(s.maSach)}</small>
+                    ${s.isbn ? `<small class="text-muted ms-1">· ${escHtml(s.isbn)}</small>` : ''}
+                </div>
+                ${s.soLuongCoSan > 0
+                    ? `<span class="badge bg-success ms-2">${s.soLuongCoSan} cuốn sẵn</span>`
+                    : `<span class="badge bg-warning text-dark ms-2">Hết sẵn</span>`}
+            </div>`).join('');
+    } catch (e) {
+        div.innerHTML = '<p class="text-danger small">Lỗi: ' + e.message + '</p>';
+    }
+}
+
+/* ── Hiện danh sách cuốn của sách vừa chọn ── */
+function showCuons(idx) {
+    const s = (window._sachResults || [])[idx];
+    if (!s) return;
+
+    document.getElementById('cuonSachTitle').textContent = s.tenSach;
+    const listEl = document.getElementById('cuonList');
+
+    if (!s.cuons || !s.cuons.length) {
+        listEl.innerHTML = '<span class="text-muted small">Không có cuốn nào sẵn có.</span>';
+    } else {
+        listEl.innerHTML = s.cuons.map(c => {
+            const alreadyPicked = !!selected[c.maCuonSach];
+            return `
+            <button type="button"
+                    class="btn btn-sm ${alreadyPicked ? 'btn-success' : 'btn-outline-primary'}"
+                    onclick="toggleCuon('${escHtml(c.maCuonSach)}','${escHtml(s.tenSach)}','${escHtml(s.maSach)}')"
+                    id="cuonBtn_${escHtml(c.maCuonSach)}">
+                <i class="fa fa-${alreadyPicked ? 'check' : 'plus'} me-1"></i>
+                ${escHtml(c.maCuonSach)}
+                ${c.barcode ? `<small class="opacity-75">· ${escHtml(c.barcode)}</small>` : ''}
+            </button>`;
+        }).join('');
+    }
+
+    document.getElementById('cuonPanel').style.display = '';
+    document.getElementById('searchResults').innerHTML = '';
+    document.getElementById('bookSearch').value = '';
+}
+
+function closeCuonPanel() {
+    document.getElementById('cuonPanel').style.display = 'none';
+}
+
+/* ── Chọn / bỏ chọn cuốn ── */
+function toggleCuon(maCuon, tenSach, maSach) {
+    if (selected[maCuon]) {
+        delete selected[maCuon];
+    } else {
+        selected[maCuon] = { maCuon, tenSach, maSach };
+    }
+    // Refresh nút trong cuonPanel
+    const btn = document.getElementById('cuonBtn_' + maCuon);
+    if (btn) {
+        const picked = !!selected[maCuon];
+        btn.className = 'btn btn-sm ' + (picked ? 'btn-success' : 'btn-outline-primary');
+        btn.innerHTML = `<i class="fa fa-${picked ? 'check' : 'plus'} me-1"></i>${maCuon}`;
+    }
+    renderSelected();
+}
+
+/* ── Xóa cuốn khỏi danh sách đã chọn ── */
+function removeCuon(maCuon) {
+    delete selected[maCuon];
+    // Sync nút trong panel nếu đang mở
+    const btn = document.getElementById('cuonBtn_' + maCuon);
+    if (btn) {
+        btn.className = 'btn btn-sm btn-outline-primary';
+        btn.innerHTML = `<i class="fa fa-plus me-1"></i>${maCuon}`;
+    }
+    renderSelected();
+}
+
+/* ── Render danh sách đã chọn ── */
+function renderSelected() {
+    const items = Object.values(selected);
+    const count = items.length;
+    document.getElementById('bookCount').textContent = count;
+    document.getElementById('submitBtn').disabled    = count === 0;
+    document.getElementById('borrowSummary').textContent =
+        count > 0 ? `Đã chọn ${count} cuốn sách` : 'Chưa chọn sách nào';
+
+    document.getElementById('selectedList').innerHTML = items.map(b => `
+        <div class="selected-book-item">
+            <input type="hidden" name="SelectedBooks" value="${escHtml(b.maCuon)}" />
+            <i class="fa fa-book text-primary me-2"></i>
+            <span class="flex-fill">${escHtml(b.tenSach)}</span>
+            <small class="text-muted me-2">${escHtml(b.maCuon)}</small>
+            <button type="button" class="btn btn-xs btn-outline-danger"
+                    onclick="removeCuon('${escHtml(b.maCuon)}')">
+                <i class="fa fa-xmark"></i>
+            </button>
+        </div>`).join('');
+}
+
+/* ── Sự kiện input ── */
+document.getElementById('bookSearch').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(doSearch, 400);
+});
+document.getElementById('bookSearch').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); clearTimeout(searchTimer); doSearch(); }
+});
+</script>
+}

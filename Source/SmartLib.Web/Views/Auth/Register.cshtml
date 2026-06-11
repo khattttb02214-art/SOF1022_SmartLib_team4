@@ -1,0 +1,156 @@
+@{ ViewData["Title"] = "Đăng ký tài khoản"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="auth-page">
+    <div class="auth-card" style="max-width:520px">
+        <div class="auth-logo"><i class="fa fa-user-plus"></i></div>
+        <h3 class="auth-title">Đăng ký tài khoản sinh viên</h3>
+
+        @if (ViewBag.Success != null)
+        {
+            <div class="alert alert-success text-center">
+                <i class="fa fa-check-circle me-2"></i>@ViewBag.Success
+            </div>
+            <div class="text-center mt-2">
+                <a asp-action="Login" class="btn btn-primary"><i class="fa fa-right-to-bracket me-1"></i>Đăng nhập</a>
+            </div>
+        }
+        else
+        {
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger text-center small">
+                    <i class="fa fa-circle-exclamation me-1"></i>@ViewBag.Error
+                </div>
+            }
+
+            <form asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-3">
+
+                    <div class="col-12">
+                        <label class="form-label req">Họ và tên</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            <input type="text" name="HoTen" class="form-control" placeholder="Nguyễn Văn A" required />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label req">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            <input type="email" name="Email" class="form-control" placeholder="email@example.com" required />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                            <input type="text" name="SoDienThoai" class="form-control" placeholder="0912 345 678" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Lớp</label>
+                        <input type="text" name="Lop" class="form-control" placeholder="VD: CNTT01" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Khoa</label>
+                        <input type="text" name="Khoa" class="form-control" placeholder="VD: Công nghệ thông tin" />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label req">
+                            Mã thẻ thư viện
+                            <span class="text-muted small fw-normal">(yêu cầu có thẻ từ thủ thư)</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                            <input type="text" name="MaTheTV" id="maTheInput" class="form-control font-monospace text-uppercase"
+                                   placeholder="VD: THE00001" required />
+                            <button type="button" class="btn btn-outline-secondary" id="btnCheckThe" title="Kiểm tra thẻ">
+                                <i class="fa fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                        <div id="theStatus" class="mt-1 small"></div>
+                        <small class="text-muted">Nhập mã thẻ thư viện được cấp. Liên hệ thủ thư nếu chưa có.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label req">Mật khẩu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            <input type="password" name="MatKhau" id="pwInput" class="form-control" placeholder="Tối thiểu 6 ký tự" required />
+                            <button type="button" class="btn btn-outline-secondary" id="togglePw"><i class="fa fa-eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label req">Xác nhận mật khẩu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-lock-open"></i></span>
+                            <input type="password" name="XacNhanMatKhau" id="pw2Input" class="form-control" placeholder="Nhập lại mật khẩu" required />
+                        </div>
+                        <div id="pwMatch" class="mt-1 small"></div>
+                    </div>
+
+                    <div class="col-12 mt-2">
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">
+                            <i class="fa fa-user-plus me-2"></i>Đăng ký
+                        </button>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <small>Đã có tài khoản? <a asp-action="Login">Đăng nhập</a></small>
+                    </div>
+
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// Toggle password
+document.getElementById('togglePw').addEventListener('click', function(){
+    const inp = document.getElementById('pwInput');
+    const eye = this.querySelector('i');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    eye.classList.toggle('fa-eye'); eye.classList.toggle('fa-eye-slash');
+});
+
+// Check password match
+document.getElementById('pw2Input').addEventListener('input', function(){
+    const p1 = document.getElementById('pwInput').value;
+    const el = document.getElementById('pwMatch');
+    if (!this.value) { el.textContent = ''; return; }
+    if (this.value === p1) { el.innerHTML = '<span class="text-success"><i class="fa fa-check me-1"></i>Mật khẩu khớp</span>'; }
+    else                   { el.innerHTML = '<span class="text-danger"><i class="fa fa-xmark me-1"></i>Mật khẩu không khớp</span>'; }
+});
+
+// Check card code (simple front-end validation)
+document.getElementById('maTheInput').addEventListener('input', function(){
+    this.value = this.value.toUpperCase();
+    document.getElementById('theStatus').textContent = '';
+});
+
+document.getElementById('btnCheckThe').addEventListener('click', async function(){
+    const ma = document.getElementById('maTheInput').value.trim();
+    const el = document.getElementById('theStatus');
+    if (!ma) { el.innerHTML = '<span class="text-warning">Vui lòng nhập mã thẻ.</span>'; return; }
+    el.innerHTML = '<span class="text-muted"><i class="fa fa-spinner fa-spin me-1"></i>Đang kiểm tra...</span>';
+    try {
+        const res = await fetch(`/Auth/CheckCard?ma=${encodeURIComponent(ma)}`);
+        const data = await res.json();
+        if (data.ok)
+            el.innerHTML = '<span class="text-success"><i class="fa fa-check me-1"></i>' + data.message + '</span>';
+        else
+            el.innerHTML = '<span class="text-danger"><i class="fa fa-xmark me-1"></i>' + data.message + '</span>';
+    } catch {
+        el.innerHTML = '<span class="text-danger">Lỗi kiểm tra thẻ.</span>';
+    }
+});
+</script>
+}

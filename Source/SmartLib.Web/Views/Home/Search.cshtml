@@ -1,0 +1,64 @@
+@model List<SmartLib.Web.Models.Sach>
+@{ ViewData["Title"] = "Tìm kiếm sách"; }
+<div class="page-header-card">
+    <h4><i class="fa fa-magnifying-glass me-2"></i>Kết quả tìm kiếm</h4>
+</div>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Search" class="d-flex gap-2 flex-wrap">
+            <input type="text" name="q" value="@ViewBag.Query" placeholder="Tìm tên sách, tác giả, ISBN..." class="form-control" style="max-width:360px" />
+            <select name="theLoai" class="form-select" style="max-width:200px">
+                <option value="">-- Tất cả thể loại --</option>
+                @foreach (var tl in (List<SmartLib.Web.Models.TheLoai>)ViewBag.TheLoais)
+                {
+                { <option value="@tl.MaTheLoai" selected="@(ViewBag.TheLoai==tl.MaTheLoai)">@tl.TenTheLoai</option> }
+                }
+            </select>
+            <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+        </form>
+    </div>
+</div>
+@if (!Model.Any())
+{
+    <div class="empty-state"><i class="fa fa-magnifying-glass fa-3x mb-3"></i><p>Không tìm thấy sách phù hợp</p></div>
+}
+else
+{
+    <p class="text-muted mb-3">Tìm thấy <strong>@Model.Count</strong> kết quả</p>
+    <div class="book-grid">
+        @foreach (var s in Model)
+        {
+            <div class="book-card">
+                <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="book-cover-link">
+                    @if (!string.IsNullOrEmpty(s.AnhBia))
+                    {
+                    { <img src="/uploads/books/@s.AnhBia" class="book-cover" alt="@s.TenSach" /> }
+                    }
+                    else
+                    { <div class="book-cover-placeholder"><i class="fa fa-book fa-3x"></i></div> }
+                </a>
+                <div class="book-info">
+                    <div class="book-genre">@(s.TheLoai?.TenTheLoai ?? "Chưa phân loại")</div>
+                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="book-title-link">
+                        <h6 class="book-title">@s.TenSach</h6>
+                    </a>
+                    <div class="book-avail @(s.SoLuongKhaDung>0?"avail-yes":"avail-no")">
+                        <i class="fa @(s.SoLuongKhaDung>0?"fa-circle-check":"fa-circle-xmark")"></i>
+                        @(s.SoLuongKhaDung>0?$"Còn {s.SoLuongKhaDung} cuốn":"Hết sách")
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="btn btn-sm btn-outline-primary flex-fill"><i class="fa fa-eye me-1"></i>Chi tiết</a>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <a asp-controller="Wishlist" asp-action="Add" asp-route-sachId="@s.MaSach" class="btn btn-sm btn-outline-danger"><i class="fa fa-heart"></i></a>
+                        }
+                        else
+                        {
+                            <a href="/Auth/Login" class="btn btn-sm btn-outline-danger" title="Đăng nhập để yêu thích"><i class="fa fa-heart"></i></a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

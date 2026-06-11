@@ -1,0 +1,175 @@
+@model SmartLib.Web.Models.Sach
+@{
+    ViewData["Title"] = "Quản lý cuốn - " + Model.TenSach;
+    var coSan  = Model.CuonSaches.Count(c => c.TrangThai == "Có Sẵn");
+    var muon   = Model.CuonSaches.Count(c => c.TrangThai == "Đang Mượn");
+    var mat    = Model.CuonSaches.Count(c => c.TrangThai == "Mất");
+    var hu     = Model.CuonSaches.Count(c => c.TrangThai == "Hỏng");
+}
+
+<div class="page-header-card d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div>
+        <h4 class="mb-0"><i class="fa fa-layer-group me-2"></i>Quản lý cuốn sách</h4>
+        <p class="text-muted small mb-0">@Model.TenSach — <code>@Model.MaSach</code></p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+        <i class="fa fa-arrow-left me-1"></i>Quay lại kho
+    </a>
+</div>
+
+<!-- Thống kê nhanh  -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="kho-stat-card kho-stat-green">
+            <div class="kho-stat-num">@coSan</div>
+            <div class="kho-stat-lbl">Có sẵn</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="kho-stat-card kho-stat-orange">
+            <div class="kho-stat-num">@muon</div>
+            <div class="kho-stat-lbl">Đang mượn</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="kho-stat-card kho-stat-red">
+            <div class="kho-stat-num">@mat</div>
+            <div class="kho-stat-lbl">Mất</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="kho-stat-card kho-stat-gray">
+            <div class="kho-stat-num">@hu</div>
+            <div class="kho-stat-lbl">Hỏng</div>
+        </div>
+    </div>
+</div>
+
+<!-- Nhập thêm cuốn  -->
+<div class="form-card mb-4">
+    <h6 class="form-card-title"><i class="fa fa-plus me-2"></i>Nhập thêm cuốn</h6>
+    <form asp-action="NhapThem" method="post" class="d-flex gap-2 align-items-end">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="maSach" value="@Model.MaSach" />
+        <div>
+            <label class="form-label small mb-1">Số cuốn nhập thêm</label>
+            <input type="number" name="soLuong" class="form-control" style="width:130px"
+                   min="1" max="100" value="1" required />
+        </div>
+        <button type="submit" class="btn btn-success">
+            <i class="fa fa-plus me-1"></i>Nhập kho
+        </button>
+    </form>
+    <p class="text-muted small mt-2 mb-0">
+        <i class="fa fa-circle-info me-1"></i>
+        Mỗi cuốn được tạo tự động với mã <code>@Model.MaSach-001</code>, <code>@Model.MaSach-002</code>...
+    </p>
+</div>
+
+<!-- Danh sách cuốn  -->
+<div class="form-card">
+    <h6 class="form-card-title">
+        Danh sách cuốn
+        <span class="badge bg-secondary ms-2">@Model.CuonSaches.Count tổng</span>
+    </h6>
+
+    @if (!Model.CuonSaches.Any())
+    {
+        <div class="alert alert-warning">
+            <i class="fa fa-triangle-exclamation me-2"></i>
+            Chưa có cuốn nào. Hãy nhập kho phía trên.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Mã cuốn</th>
+                        <th>Barcode</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày nhập</th>
+                        <th class="text-end">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var c in Model.CuonSaches.OrderBy(x => x.MaCuonSach))
+                {
+                    <tr>
+                        <td><code>@c.MaCuonSach</code></td>
+                        <td><small class="text-muted">@(c.Barcode ?? "—")</small></td>
+                        <td>
+                            @{
+                                var (cls, ico) = c.TrangThai switch
+                                {
+                                    "Có Sẵn"     => ("bg-success", "fa-check"),
+                                    "Đang Mượn"  => ("bg-warning text-dark", "fa-arrow-right"),
+                                    "Mất"        => ("bg-danger", "fa-xmark"),
+                                    "Hỏng"       => ("bg-secondary", "fa-wrench"),
+                                    _            => ("bg-light text-dark", "fa-question")
+                                };
+                            }
+                            <span class="badge @cls">
+                                <i class="fa @ico me-1"></i>@c.TrangThai
+                            </span>
+                        </td>
+                        <td><small>@c.NgayNhap.ToString("dd/MM/yyyy")</small></td>
+                        <td class="text-end">
+                            @if (c.TrangThai != "Đang Mượn")
+                            {
+                                <div class="d-flex justify-content-end gap-1 flex-wrap">
+                                    @foreach (var ts in new[] { "Có Sẵn", "Hỏng", "Mất" })
+                                    {
+                                        if (c.TrangThai != ts)
+                                        {
+                                            <form asp-action="DoiTrangThaiCuon" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="maCuon" value="@c.MaCuonSach" />
+                                                <input type="hidden" name="trangThai" value="@ts" />
+                                                <button type="submit" class="btn btn-xs btn-outline-secondary"
+                                                        title="Đổi sang @ts">@ts</button>
+                                            </form>
+                                        }
+                                    }
+                                    <form asp-action="XoaCuon" method="post" class="d-inline"
+                                          onsubmit="return confirm('Xóa cuốn @c.MaCuonSach?')">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="maCuon" value="@c.MaCuonSach" />
+                                        <button type="submit" class="btn btn-xs btn-outline-danger"
+                                                title="Xóa cuốn này">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Đang mượn</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Styles {
+<style>
+.kho-stat-card {
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    border: 1.5px solid transparent;
+}
+.kho-stat-num { font-size: 2rem; font-weight: 700; line-height: 1; }
+.kho-stat-lbl { font-size: .8rem; margin-top: 4px; opacity: .8; }
+.kho-stat-green  { background: #dcfce7; border-color: #86efac; color: #166534; }
+.kho-stat-orange { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+.kho-stat-red    { background: #fee2e2; border-color: #fca5a5; color: #7f1d1d; }
+.kho-stat-gray   { background: #f3f4f6; border-color: #d1d5db; color: #374151; }
+.btn-xs { padding: 2px 8px; font-size: .75rem; }
+</style>
+}
