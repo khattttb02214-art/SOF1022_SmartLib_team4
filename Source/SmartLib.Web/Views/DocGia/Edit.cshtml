@@ -1,0 +1,28 @@
+@model SmartLib.Web.ViewModels.DocGiaViewModel
+@{ ViewData["Title"] = "Sửa độc giả"; }
+<div class="page-header-card"><h4><i class="fa fa-user-pen me-2"></i>Sửa độc giả — @Model.HoTen</h4></div>
+<form asp-action="Edit" asp-route-id="@Model.MaDocGia" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="form-card">
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label req">Họ tên</label><input asp-for="HoTen" class="form-control" required /></div>
+                    <div class="col-md-3"><label class="form-label">Lớp</label><input asp-for="Lop" class="form-control" /></div>
+                    <div class="col-md-3"><label class="form-label">Khoa</label><input asp-for="Khoa" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Email</label><input asp-for="Email" type="email" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">SĐT</label><input asp-for="SoDienThoai" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Ngày sinh</label><input asp-for="NgaySinh" type="date" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Ngày hết hạn thẻ</label><input asp-for="NgayHetHan" type="date" class="form-control" /></div>
+                    <div class="col-12"><label class="form-label">Ảnh đại diện mới</label><input asp-for="AnhDaiDienFile" type="file" accept="image/*" class="form-control" /></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-card d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu thay đổi</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+            </div>
+        </div>
+    </div>
+</form>

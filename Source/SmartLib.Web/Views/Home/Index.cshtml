@@ -1,0 +1,215 @@
+@model PublicHomeViewModel
+@{
+    ViewData["Title"] = "SmartLib - Thư viện số";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* ===== HERO ===== *@
+<div class="sl-hero" id="slHero">
+    <div class="sl-hero__orb sl-hero__orb--a"></div>
+    <div class="sl-hero__orb sl-hero__orb--b"></div>
+    <div class="sl-hero__grid-lines"></div>
+
+    <div class="sl-hero__inner">
+        <div class="sl-hero__left">
+            <div class="sl-badge">
+                <i class="fa fa-star fa-xs"></i> Thư viện số hiện đại
+            </div>
+            <h1 class="sl-hero__title">
+                Kho tri thức<br><span class="sl-hero__title--accent">vô tận</span><br>trong tầm tay bạn
+            </h1>
+            <p class="sl-hero__sub">
+                Tìm kiếm, khám phá và mượn sách dễ dàng —
+                <strong>@Model.TongSach</strong> đầu sách &middot;
+                <strong>@Model.TongTheLoai</strong> thể loại &middot;
+                <strong>@Model.SachKhaDung</strong> cuốn sẵn có
+            </p>
+
+            @* SEARCH *@
+            <div class="sl-search-wrap" id="slSearchWrap">
+                <form method="get" asp-controller="Home" asp-action="Search" class="sl-search">
+                    <i class="fa fa-magnifying-glass sl-search__icon"></i>
+                    <input type="text" name="q" id="slSearchInput"
+                           placeholder="Tìm tên sách, tác giả, ISBN..."
+                           value="@ViewBag.Query"
+                           autocomplete="off" class="sl-search__input" />
+                    <button type="submit" class="sl-search__btn">Tìm kiếm</button>
+                </form>
+                <div class="sl-search__drop" id="slSearchDrop"></div>
+            </div>
+
+            <div class="sl-hero__actions">
+                @if (User.Identity?.IsAuthenticated != true)
+                {
+                    <a href="/Auth/Register" class="sl-btn sl-btn--ghost">
+                        <i class="fa fa-user-plus"></i> Đăng ký ngay
+                    </a>
+                    <a href="/Auth/Login" class="sl-btn sl-btn--gold">
+                        <i class="fa fa-right-to-bracket"></i> Đăng nhập
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Wishlist" asp-action="Index" class="sl-btn sl-btn--ghost">
+                        <i class="fa fa-heart"></i> Yêu thích của tôi
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="sl-hero__stats">
+            <div class="sl-stat-card sl-anim-up" style="animation-delay:.1s">
+                <div class="sl-stat-card__icon sl-stat-card__icon--gold"><i class="fa fa-book"></i></div>
+                <div>
+                    <div class="sl-stat-card__num" data-target="@Model.TongSach">0</div>
+                    <div class="sl-stat-card__label">Đầu sách</div>
+                </div>
+            </div>
+            <div class="sl-stat-card sl-anim-up" style="animation-delay:.2s">
+                <div class="sl-stat-card__icon sl-stat-card__icon--blue"><i class="fa fa-layer-group"></i></div>
+                <div>
+                    <div class="sl-stat-card__num" data-target="@Model.TongTheLoai">0</div>
+                    <div class="sl-stat-card__label">Thể loại</div>
+                </div>
+            </div>
+            <div class="sl-stat-card sl-anim-up" style="animation-delay:.3s">
+                <div class="sl-stat-card__icon sl-stat-card__icon--green"><i class="fa fa-circle-check"></i></div>
+                <div>
+                    <div class="sl-stat-card__num" data-target="@Model.SachKhaDung">0</div>
+                    <div class="sl-stat-card__label">Sẵn có</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ===== QUICK NAV — lọc theo thể loại ===== *@
+<div class="sl-quicknav" id="slQuicknav">
+    <button class="sl-qn active" data-filter="all">Tất cả</button>
+    @foreach (var tl in Model.DanhSachTheLoai)
+    {
+        <button class="sl-qn" data-filter="@tl.MaTheLoai">@tl.TenTheLoai</button>
+    }
+</div>
+
+@* ===== NỘI DUNG CHÍNH ===== *@
+<div class="sl-content">
+
+    @* THỂ LOẠI *@
+    <section class="sl-section sl-anim-up" style="animation-delay:.1s">
+        <div class="sl-section__head">
+            <h2 class="sl-section__title"><i class="fa fa-layer-group"></i> Thể loại nổi bật</h2>
+            <a asp-controller="Home" asp-action="Search" class="sl-see-all">
+                Xem tất cả <i class="fa fa-arrow-right fa-xs"></i>
+            </a>
+        </div>
+        <div class="sl-cat-grid">
+            @{
+                var catIcons = new[] { "📖", "🔬", "💻", "🏛️", "📊", "🧠", "🎨", "⚖️", "🌱", "⚛️", "⚗️", "📐" };
+                int ci = 0;
+            }
+            @foreach (var tl in Model.DanhSachTheLoai)
+            {
+                var icon = catIcons[ci % catIcons.Length];
+                ci++;
+                <a asp-controller="Home" asp-action="Search"
+                       asp-route-theLoai="@tl.MaTheLoai" class="sl-cat-card">
+                    <div class="sl-cat-card__icon">@icon</div>
+                    <div class="sl-cat-card__name">@tl.TenTheLoai</div>
+                    <div class="sl-cat-card__count">@tl.SoLuongSach cuốn</div>
+                </a>
+            }
+        </div>
+    </section>
+
+    @* SÁCH MỚI NHẤT *@
+    <section class="sl-section sl-anim-up" style="animation-delay:.2s">
+        <div class="sl-section__head">
+            <h2 class="sl-section__title"><i class="fa fa-clock-rotate-left"></i> Sách mới nhất</h2>
+            <a asp-controller="Home" asp-action="Search" class="sl-see-all">
+                Xem tất cả <i class="fa fa-arrow-right fa-xs"></i>
+            </a>
+        </div>
+        <div class="sl-book-grid" id="slBookGrid">
+            @foreach (var s in Model.SachMoiNhat)
+            {
+                @* data-genre dùng TenTheLoai vì SachMoiItem không có MaTheLoai *@
+                <div class="sl-book-card" data-genre="@(s.TenTheLoai ?? "")">
+                    <a asp-controller="Books" asp-action="Detail"
+                           asp-route-id="@s.MaSach" class="sl-book-card__cover-link">
+                        <div class="sl-book-card__cover">
+                            @if (!string.IsNullOrEmpty(s.AnhBia))
+                            {
+                                <img src="/uploads/books/@s.AnhBia"
+                                     alt="@s.TenSach" class="sl-book-card__cover-img" />
+                            }
+                            else
+                            {
+                                <span class="sl-book-card__cover-ph">
+                                    <i class="fa fa-book fa-3x"></i>
+                                </span>
+                            }
+                            <span class="sl-book-card__badge @(s.SoLuongKhaDung > 0 ? "sl-book-card__badge--yes" : "sl-book-card__badge--no")">
+                                @(s.SoLuongKhaDung > 0 ? $"Còn {s.SoLuongKhaDung}" : "Hết sách")
+                            </span>
+                        </div>
+                    </a>
+                    <div class="sl-book-card__body">
+                        @if (!string.IsNullOrEmpty(s.TenTheLoai))
+                        {
+                            <span class="sl-book-card__genre">@s.TenTheLoai</span>
+                        }
+                        <a asp-controller="Books" asp-action="Detail"
+                               asp-route-id="@s.MaSach" class="sl-book-card__title-link">
+                            <h6 class="sl-book-card__title">@s.TenSach</h6>
+                        </a>
+                        <div class="sl-book-card__actions">
+                            <a asp-controller="Books" asp-action="Detail"
+                                   asp-route-id="@s.MaSach" class="sl-btn-detail">
+                                <i class="fa fa-eye"></i> Chi tiết
+                            </a>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-controller="Wishlist" asp-action="Add"
+                                       asp-route-sachId="@s.MaSach"
+                                       class="sl-btn-wish" title="Thêm yêu thích">
+                                    <i class="fa fa-heart"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/Auth/Login" class="sl-btn-wish"
+                                       title="Đăng nhập để yêu thích">
+                                    <i class="fa fa-heart"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    @* WISHLIST TEASER — chỉ hiện khi chưa đăng nhập *@
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <section class="sl-teaser sl-anim-up" style="animation-delay:.3s">
+            <div class="sl-teaser__icon"><i class="fa fa-heart"></i></div>
+            <div class="sl-teaser__text">
+                <h3>Danh sách yêu thích của bạn</h3>
+                <p>
+                    Tạo danh mục yêu thích riêng — Giáo dục, Truyện tranh, Khoa học…
+                    Mượn sách dễ dàng hơn bao giờ hết.
+                </p>
+            </div>
+            <a href="/Auth/Login" class="sl-btn sl-btn--gold sl-teaser__cta">
+                <i class="fa fa-right-to-bracket"></i> Đăng nhập để dùng tính năng này
+            </a>
+        </section>
+    }
+
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/home.js"></script>
+}

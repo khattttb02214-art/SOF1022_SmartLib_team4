@@ -1,0 +1,338 @@
+@model SmartLib.Web.Models.Sach
+@{ ViewData["Title"] = Model.TenSach; }
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Search">Tìm kiếm</a></li>
+            <li class="breadcrumb-item active">@Model.TenSach</li>
+        </ol>
+    </nav>
+    <div class="row g-4">
+
+        @* ── Ảnh bìa + nút hành động ──────────────────────────────── *@
+        <div class="col-md-3 text-center">
+            @if (!string.IsNullOrEmpty(Model.AnhBia))
+            {
+                <img src="/uploads/books/@Model.AnhBia"
+                     class="img-fluid rounded-4 shadow"
+                     style="max-height:380px;object-fit:cover" />
+            }
+            else
+            {
+                <div class="book-cover-placeholder-lg rounded-4 shadow">
+                    <i class="fa fa-book fa-5x"></i>
+                </div>
+            }
+            <div class="mt-3 d-grid gap-2">
+                @if (User.Identity?.IsAuthenticated == true && User.IsInRole("STU"))
+                {
+                    if (Model.SoLuongKhaDung > 0)
+                    {
+                        <a asp-controller="Reservation" asp-action="StuCreate"
+                           asp-route-id="@Model.MaSach" class="btn btn-primary">
+                            <i class="fa fa-bookmark me-2"></i>Đặt mượn sách
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary" disabled>
+                            <i class="fa fa-xmark me-2"></i>Hết sách
+                        </button>
+                    }
+                    @if ((bool)(ViewBag.DaYeuThich ?? false))
+                    {
+                        <button class="btn btn-danger" disabled>
+                            <i class="fa fa-heart me-2"></i>Đã yêu thích
+                        </button>
+                    }
+                    else
+                    {
+                        <a asp-controller="Wishlist" asp-action="Add"
+                           asp-route-sachId="@Model.MaSach" class="btn btn-outline-danger">
+                            <i class="fa fa-heart me-2"></i>Thêm yêu thích
+                        </a>
+                    }
+                }
+                else if (User.Identity?.IsAuthenticated != true)
+                {
+                    <a href="/Auth/Login" class="btn btn-primary">
+                        <i class="fa fa-right-to-bracket me-2"></i>Đăng nhập để mượn sách
+                    </a>
+                    <a href="/Auth/Login" class="btn btn-outline-danger">
+                        <i class="fa fa-heart me-2"></i>Đăng nhập để yêu thích
+                    </a>
+                }
+            </div>
+        </div>
+
+        @* ── Thông tin sách ──────────────────────────────────────── *@
+        <div class="col-md-9">
+            <h2 class="fw-bold mb-1">@Model.TenSach</h2>
+
+            @if (Model.SachTacGias.Any())
+            {
+                <p class="text-muted mb-3">
+                    <i class="fa fa-pen-nib me-1"></i>
+                    @string.Join(", ", Model.SachTacGias.Select(st => st.TacGia?.TenTacGia).Where(t => t != null))
+                </p>
+            }
+
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="badge bg-primary-soft">
+                    <i class="fa fa-layer-group me-1"></i>@(Model.TheLoai?.TenTheLoai ?? "N/A")
+                </span>
+                <span class="badge bg-info-soft">
+                    <i class="fa fa-building me-1"></i>@(Model.NhaXuatBan?.TenNXB ?? "N/A")
+                </span>
+                @if (Model.NamXuatBan.HasValue)
+                {
+                    <span class="badge bg-secondary-soft">
+                        <i class="fa fa-calendar me-1"></i>@Model.NamXuatBan
+                    </span>
+                }
+                @if (!string.IsNullOrEmpty(Model.NgonNgu))
+                {
+                    <span class="badge bg-success-soft">
+                        <i class="fa fa-language me-1"></i>@Model.NgonNgu
+                    </span>
+                }
+            </div>
+
+            @* Thông số nhanh *@
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="info-chip">
+                        <div class="info-chip-label">ISBN</div>
+                        <div class="info-chip-val">@(Model.ISBN ?? "—")</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="info-chip">
+                        <div class="info-chip-label">Số trang</div>
+                        <div class="info-chip-val">@(Model.SoTrang?.ToString() ?? "—")</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="info-chip @(Model.SoLuongKhaDung > 0 ? "chip-green" : "chip-red")">
+                        <div class="info-chip-label">Sẵn có</div>
+                        <div class="info-chip-val">@Model.SoLuongKhaDung / @Model.SoLuongKho cuốn</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="info-chip chip-orange">
+                        <div class="info-chip-label">Đang mượn</div>
+                        <div class="info-chip-val">@ViewBag.SoDangMuon cuốn</div>
+                    </div>
+                </div>
+            </div>
+
+            @* ── VỊ TRÍ KỆ SÁCH (đầy đủ thông tin) ─────────────────── *@
+            @if (Model.KeSach != null)
+            {
+                <div class="shelf-location-card mb-4">
+                    <div class="shelf-location-header">
+                        <i class="fa fa-map-location-dot me-2"></i>
+                        <span class="fw-semibold">Vị trí kệ sách</span>
+                        <span class="badge bg-primary ms-2">@Model.KeSach.MaKe</span>
+                    </div>
+                    <div class="shelf-location-body">
+                        <div class="row g-3">
+                            @* Tên kệ *@
+                            <div class="col-sm-6 col-md-4">
+                                <div class="shelf-info-item">
+                                    <div class="shelf-info-icon">
+                                        <i class="fa fa-bookmark text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="shelf-info-label">Tên kệ</div>
+                                        <div class="shelf-info-val fw-semibold">@Model.KeSach.TenKe</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* Vị trí *@
+                            @if (!string.IsNullOrEmpty(Model.KeSach.ViTri))
+                            {
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="shelf-info-item">
+                                        <div class="shelf-info-icon">
+                                            <i class="fa fa-location-dot text-danger"></i>
+                                        </div>
+                                        <div>
+                                            <div class="shelf-info-label">Vị trí</div>
+                                            <div class="shelf-info-val fw-semibold">@Model.KeSach.ViTri</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @* Tầng *@
+                            @if (Model.KeSach.Tang.HasValue)
+                            {
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="shelf-info-item">
+                                        <div class="shelf-info-icon">
+                                            <i class="fa fa-layer-group text-info"></i>
+                                        </div>
+                                        <div>
+                                            <div class="shelf-info-label">Tầng</div>
+                                            <div class="shelf-info-val fw-semibold">Tầng @Model.KeSach.Tang</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @* Phòng / Khu vực *@
+                            @if (!string.IsNullOrEmpty(Model.KeSach.Phong))
+                            {
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="shelf-info-item">
+                                        <div class="shelf-info-icon">
+                                            <i class="fa fa-door-open text-warning"></i>
+                                        </div>
+                                        <div>
+                                            <div class="shelf-info-label">Phòng / Khu vực</div>
+                                            <div class="shelf-info-val fw-semibold">@Model.KeSach.Phong</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @* Thể loại kệ phụ trách *@
+                            @if (Model.KeSach.TheLoaiPhuTrach != null)
+                            {
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="shelf-info-item">
+                                        <div class="shelf-info-icon">
+                                            <i class="fa fa-tag text-success"></i>
+                                        </div>
+                                        <div>
+                                            <div class="shelf-info-label">Kệ chuyên về</div>
+                                            <div class="shelf-info-val fw-semibold">@Model.KeSach.TheLoaiPhuTrach.TenTheLoai</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @* Mô tả kệ *@
+                        @if (!string.IsNullOrEmpty(Model.KeSach.MoTa))
+                        {
+                            <div class="shelf-note mt-2">
+                                <i class="fa fa-circle-info me-1 text-muted"></i>
+                                <span class="text-muted small">@Model.KeSach.MoTa</span>
+                            </div>
+                        }
+
+                        @* Hướng dẫn tìm sách *@
+                        @{
+                            var hdParts = new System.Collections.Generic.List<string>();
+                            if (Model.KeSach.Tang.HasValue)
+                                hdParts.Add("lên <strong>tầng " + Model.KeSach.Tang + "</strong>");
+                            if (!string.IsNullOrEmpty(Model.KeSach.Phong))
+                                hdParts.Add("vào <strong>" + Html.Encode(Model.KeSach.Phong) + "</strong>");
+                            if (!string.IsNullOrEmpty(Model.KeSach.ViTri))
+                                hdParts.Add("tìm khu <strong>" + Html.Encode(Model.KeSach.ViTri) + "</strong>");
+                            hdParts.Add("tìm kệ <strong>\"" + Html.Encode(Model.KeSach.TenKe) + "\"</strong>");
+                            var hdText = "Hãy " + string.Join(" → ", hdParts);
+                        }
+                        <div class="shelf-guide mt-3">
+                            <i class="fa fa-route me-2 text-primary"></i>
+                            <span class="small">
+                                <strong>Cách tìm:</strong>
+                                @Html.Raw(hdText)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-light border mb-4">
+                    <i class="fa fa-circle-question me-2 text-muted"></i>
+                    <span class="text-muted small">Chưa có thông tin vị trí kệ cho sách này. Vui lòng hỏi nhân viên thư viện.</span>
+                </div>
+            }
+
+            @* Mô tả sách *@
+            @if (!string.IsNullOrEmpty(Model.MoTa))
+            {
+                <div class="book-desc-card">
+                    <h6 class="fw-semibold mb-2"><i class="fa fa-align-left me-2"></i>Mô tả</h6>
+                    <p class="mb-0">@Model.MoTa</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+<style>
+/* ── Shelf location card ──────────────────────────────── */
+.shelf-location-card {
+    border: 1.5px solid var(--bs-primary, #6366f1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+}
+.shelf-location-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.shelf-location-body {
+    padding: 16px;
+}
+.shelf-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+.shelf-info-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+}
+.shelf-info-label {
+    font-size: 0.72rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 2px;
+}
+.shelf-info-val {
+    font-size: 0.9rem;
+    color: #111827;
+}
+.shelf-note {
+    padding: 8px 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+.shelf-guide {
+    padding: 8px 12px;
+    background: #eff6ff;
+    border-radius: 8px;
+    border-left: 3px solid #6366f1;
+}
+
+@@media (prefers-color-scheme: dark) {
+    .shelf-location-card { background: #1e1e2e; border-color: #7c3aed; }
+    .shelf-info-icon { background: #2d2d3f; }
+    .shelf-info-val { color: #f1f5f9; }
+    .shelf-note { background: #2d2d3f; }
+    .shelf-guide { background: #1e2a45; border-left-color: #818cf8; }
+}
+</style>
+}

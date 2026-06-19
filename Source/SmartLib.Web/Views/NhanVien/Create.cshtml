@@ -1,0 +1,28 @@
+@model SmartLib.Web.ViewModels.NhanVienViewModel
+@{ ViewData["Title"] = User.IsInRole("ADMIN") ? "Thêm nhân viên" : "Thêm tài khoản sinh viên"; }
+<div class="page-header-card"><h4><i class="fa fa-user-plus me-2"></i>@ViewData["Title"]</h4></div>
+@if (!User.IsInRole("ADMIN") && User.IsInRole("LIB"))
+{
+    <div class="alert alert-info mb-3">
+        <i class="fa fa-circle-info me-2"></i>Với vai trò thủ thư, bạn chỉ có thể tạo tài khoản sinh viên.
+    </div>
+}
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-8"><div class="form-card"><div class="row g-3">
+            <div class="col-md-8"><label class="form-label req">Họ tên</label><input asp-for="HoTen" class="form-control" required /></div>
+            <div class="col-md-4"><label class="form-label">Chức vụ</label><select asp-for="MaChucVu" asp-items="ViewBag.ChucVu" class="form-select"><option value="">--</option></select></div>
+            <div class="col-md-6"><label class="form-label req">Email</label><input asp-for="Email" type="email" class="form-control" required /></div>
+            <div class="col-md-6"><label class="form-label req">Mật khẩu</label><input asp-for="MatKhau" type="password" class="form-control" required /></div>
+            <div class="col-md-6"><label class="form-label">SĐT</label><input asp-for="SoDienThoai" class="form-control" /></div>
+            <div class="col-md-6"><label class="form-label">Địa chỉ</label><input asp-for="DiaChi" class="form-control" /></div>
+            <div class="col-12"><label class="form-label">Ảnh đại diện</label><input asp-for="AnhDaiDienFile" type="file" accept="image/*" class="form-control" /></div>
+            <div class="col-12"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" asp-for="TrangThai" checked /><label class="form-check-label">Hoạt động</label></div></div>
+        </div></div></div>
+        <div class="col-lg-4"><div class="form-card d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+        </div></div>
+    </div>
+</form>

@@ -1,0 +1,275 @@
+@model List<SmartLib.Web.Models.MuonTra>
+@{ ViewData["Title"] = "Lịch sử mượn sách"; }
+
+@section Styles {
+<style>
+:root {
+    --stu-indigo: #4f46e5; --stu-violet: #7c3aed;
+    --stu-border: #e0e7ff; --stu-light: #f4f3ff;
+}
+.ls-page { padding: 0 4px 48px; }
+
+/* HEADER CARD */
+.ls-header {
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6d28d9 100%);
+    border-radius: 20px;
+    padding: 28px 28px 32px;
+    margin-bottom: 28px;
+    position: relative; overflow: hidden;
+}
+.ls-header::before {
+    content: ''; position: absolute;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(167,139,250,.3) 0%, transparent 70%);
+    top: -60px; right: -40px;
+}
+.ls-header__icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: #c4b5fd; margin-bottom: 14px;
+}
+.ls-header h4 { color: #fff; font-size: 22px; font-weight: 800; margin: 0 0 6px; }
+.ls-header p  { color: rgba(196,181,253,.75); font-size: 13px; margin: 0; }
+
+/* EMPTY STATE */
+.ls-empty {
+    background: #fff;
+    border: 2px dashed #c4b5fd;
+    border-radius: 20px;
+    padding: 60px 24px;
+    text-align: center;
+}
+.ls-empty__icon {
+    width: 72px; height: 72px; border-radius: 20px;
+    background: #ede9fe;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: #7c3aed;
+    margin: 0 auto 18px;
+}
+.ls-empty h5 { font-size: 17px; font-weight: 700; color: #1e1b4b; margin: 0 0 8px; }
+.ls-empty p  { font-size: 13px; color: #6b7280; margin: 0; }
+
+/* TABLE CARD */
+.ls-table-card {
+    background: #fff;
+    border-radius: 20px;
+    border: 1.5px solid #e0e7ff;
+    box-shadow: 0 4px 24px rgba(79,70,229,.09);
+    overflow: hidden;
+}
+.ls-table-card__head {
+    padding: 16px 22px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1.5px solid #f3f0ff;
+    background: #faf9ff;
+}
+.ls-table-card__head-title {
+    font-size: 13px; font-weight: 700; color: #4338ca;
+    display: flex; align-items: center; gap: 8px;
+}
+.ls-table-card__head-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: #ede9fe; color: #7c3aed;
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+}
+
+/* TABLE */
+.ls-table { width: 100%; border-collapse: collapse; }
+.ls-table thead th {
+    padding: 12px 16px;
+    font-size: 11px; font-weight: 700; letter-spacing: .6px;
+    text-transform: uppercase; color: #6d28d9;
+    background: #f5f3ff;
+    border-bottom: 1.5px solid #ede9fe;
+    white-space: nowrap;
+}
+.ls-table tbody td {
+    padding: 14px 16px;
+    font-size: 13px; color: #374151;
+    border-bottom: 1px solid #f9f8ff;
+    vertical-align: middle;
+}
+.ls-table tbody tr:last-child td { border-bottom: none; }
+.ls-table tbody tr:hover td   { background: #faf8ff; }
+.ls-table tbody tr.row-over td { background: #fff1f2; }
+
+.ls-ma-phieu {
+    font-weight: 800; color: #4f46e5;
+    font-size: 13px;
+}
+.ls-book-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; color: #374151; margin-bottom: 4px;
+}
+.ls-book-item:last-child { margin-bottom: 0; }
+.ls-book-icon {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: #ede9fe; color: #7c3aed;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; flex-shrink: 0;
+}
+
+/* BADGES */
+.ls-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 11px; border-radius: 100px;
+    font-size: 11px; font-weight: 700;
+}
+.ls-badge--ok   { background: #d1fae5; color: #065f46; }
+.ls-badge--over { background: #fee2e2; color: #991b1b; }
+.ls-badge--warn { background: #fef3c7; color: #92400e; }
+
+.ls-fine {
+    font-weight: 700; color: #dc2626;
+}
+.ls-date-over { color: #991b1b; font-weight: 700; }
+
+/* STATS ROW */
+.ls-stats-row {
+    display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.ls-stat-pill {
+    background: #fff;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 14px;
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    flex: 1; min-width: 130px;
+    box-shadow: 0 2px 10px rgba(79,70,229,.07);
+}
+.ls-stat-pill__icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+}
+.ls-stat-pill__icon--indigo { background: #ede9fe; color: #7c3aed; }
+.ls-stat-pill__icon--green  { background: #d1fae5; color: #059669; }
+.ls-stat-pill__icon--rose   { background: #fee2e2; color: #dc2626; }
+.ls-stat-pill__num   { font-size: 20px; font-weight: 800; color: #1e1b4b; line-height: 1; }
+.ls-stat-pill__label { font-size: 11px; color: #6b7280; margin-top: 2px; }
+
+@@media (max-width: 768px) {
+    .ls-table { display: block; overflow-x: auto; }
+    .ls-stats-row { gap: 9px; }
+}
+</style>
+}
+
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+@{
+    int tongPhieu = Model.Count;
+    int daTra     = Model.Count(m => m.TrangThai == "Đã Trả");
+    int quaHan    = Model.Count(m => m.TrangThai == "Đang Mượn" && m.NgayHenTra < DateTime.Now);
+}
+
+<div class="ls-page">
+
+    <!-- HEADER -->
+    <div class="ls-header">
+        <div class="ls-header__icon"><i class="fa fa-clock-rotate-left"></i></div>
+        <h4>Lịch sử mượn sách</h4>
+        <p>Toàn bộ lịch sử mượn trả sách của bạn</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="ls-empty">
+            <div class="ls-empty__icon"><i class="fa fa-book-open"></i></div>
+            <h5>Chưa có lịch sử mượn sách</h5>
+            <p>Bạn chưa mượn cuốn sách nào. Hãy khám phá thư viện ngay!</p>
+        </div>
+    }
+    else
+    {
+        <!-- STATS ROW -->
+        <div class="ls-stats-row">
+            <div class="ls-stat-pill">
+                <div class="ls-stat-pill__icon ls-stat-pill__icon--indigo"><i class="fa fa-list"></i></div>
+                <div><div class="ls-stat-pill__num">@tongPhieu</div><div class="ls-stat-pill__label">Tổng phiếu</div></div>
+            </div>
+            <div class="ls-stat-pill">
+                <div class="ls-stat-pill__icon ls-stat-pill__icon--green"><i class="fa fa-check-circle"></i></div>
+                <div><div class="ls-stat-pill__num">@daTra</div><div class="ls-stat-pill__label">Đã trả</div></div>
+            </div>
+            <div class="ls-stat-pill">
+                <div class="ls-stat-pill__icon ls-stat-pill__icon--rose"><i class="fa fa-triangle-exclamation"></i></div>
+                <div><div class="ls-stat-pill__num">@quaHan</div><div class="ls-stat-pill__label">Quá hạn</div></div>
+            </div>
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="ls-table-card">
+            <div class="ls-table-card__head">
+                <div class="ls-table-card__head-title">
+                    <div class="ls-table-card__head-icon"><i class="fa fa-table"></i></div>
+                    Chi tiết các phiếu mượn
+                </div>
+                <span style="font-size:12px;color:#9ca3af;">@Model.Count phiếu</span>
+            </div>
+            <table class="ls-table" id="histTable">
+                <thead>
+                    <tr>
+                        <th><i class="fa fa-hashtag me-1"></i>Mã phiếu</th>
+                        <th><i class="fa fa-book me-1"></i>Sách đã mượn</th>
+                        <th><i class="fa fa-calendar me-1"></i>Ngày mượn</th>
+                        <th><i class="fa fa-calendar-xmark me-1"></i>Hạn trả</th>
+                        <th><i class="fa fa-calendar-check me-1"></i>Ngày trả</th>
+                        <th><i class="fa fa-sack-dollar me-1"></i>Tiền phạt</th>
+                        <th><i class="fa fa-circle-dot me-1"></i>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        bool over = m.TrangThai == "Đang Mượn" && m.NgayHenTra < DateTime.Now;
+                        <tr class="@(over ? "row-over" : "")">
+                            <td><span class="ls-ma-phieu">@m.MaPhieu</span></td>
+                            <td>
+                                @foreach (var ct in m.ChiTietMuonTras)
+                                {
+                                    <div class="ls-book-item">
+                                        <div class="ls-book-icon"><i class="fa fa-book"></i></div>
+                                        @(ct.Sach?.TenSach ?? ct.MaSach)
+                                    </div>
+                                }
+                            </td>
+                            <td>@($"{m.NgayMuon:dd/MM/yyyy}")</td>
+                            <td class="@(over ? "ls-date-over" : "")">
+                                @($"{m.NgayHenTra:dd/MM/yyyy}") @(over ? "⚠️" : "")
+                            </td>
+                            <td>@(m.NgayTraThucTe.HasValue ? $"{m.NgayTraThucTe.Value:dd/MM/yyyy}" : "—")</td>
+                            <td>
+                                @if (m.TienPhat > 0)
+                                {
+                                    <span class="ls-fine">@($"{m.TienPhat:N0}") đ</span>
+                                }
+                                else { <span style="color:#9ca3af;">—</span> }
+                            </td>
+                            <td>
+                                <span class="ls-badge @(m.TrangThai == "Đã Trả" ? "ls-badge--ok" : over ? "ls-badge--over" : "ls-badge--warn")">
+                                    <i class="fa @(m.TrangThai == "Đã Trả" ? "fa-check" : over ? "fa-triangle-exclamation" : "fa-rotate-left")"></i>
+                                    @(over ? "Quá hạn" : m.TrangThai)
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+$('#histTable').DataTable({
+    language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json' },
+    order: [[2, 'desc']],
+    pageLength: 15,
+    dom: '<"ls-dt-top d-flex align-items-center justify-content-between mb-3"lf>rt<"ls-dt-bot d-flex align-items-center justify-content-between mt-3"ip>'
+});
+</script>
+}

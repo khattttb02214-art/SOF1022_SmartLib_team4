@@ -1,0 +1,52 @@
+@model SmartLib.Web.ViewModels.DocGiaViewModel
+@{ ViewData["Title"] = "Thêm độc giả"; }
+<div class="page-header-card"><h4><i class="fa fa-user-plus me-2"></i>Thêm độc giả</h4></div>
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="form-card">
+                <h6 class="form-card-title">Thông tin độc giả</h6>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label req">Họ tên</label><input asp-for="HoTen" class="form-control" required /></div>
+                    <div class="col-md-3"><label class="form-label">Lớp</label><input asp-for="Lop" class="form-control" /></div>
+                    <div class="col-md-3"><label class="form-label">Khoa</label><input asp-for="Khoa" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Email</label><input asp-for="Email" type="email" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Số điện thoại</label><input asp-for="SoDienThoai" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Ngày sinh</label><input asp-for="NgaySinh" type="date" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Ngày hết hạn thẻ</label><input asp-for="NgayHetHan" type="date" class="form-control" /></div>
+                    <div class="col-md-6"><label class="form-label">Mã thẻ thư viện</label><input asp-for="MaTheTV" class="form-control" placeholder="VD: THE001" /></div>
+                    <div class="col-12"><label class="form-label">Địa chỉ</label><input asp-for="DiaChi" class="form-control" /></div>
+                    <div class="col-12"><label class="form-label">Ảnh đại diện</label><input asp-for="AnhDaiDienFile" type="file" accept="image/*" class="form-control" /></div>
+                </div>
+            </div>
+            <div class="form-card mt-3">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" asp-for="TaoTaiKhoan" id="taoTK" />
+                    <label class="form-check-label fw-semibold" for="taoTK">Tạo tài khoản đăng nhập</label>
+                </div>
+                <div id="tkSection" style="display:none">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Email tài khoản</label><input asp-for="EmailTaiKhoan" type="email" class="form-control" /></div>
+                        <div class="col-md-6"><label class="form-label">Mật khẩu (mặc định: smartlib123)</label><input asp-for="MatKhau" type="password" class="form-control" placeholder="smartlib123" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-card">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+<script>
+document.getElementById('taoTK').addEventListener('change',function(){
+    document.getElementById('tkSection').style.display=this.checked?'block':'none';
+});
+</script>
+}

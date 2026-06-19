@@ -1,0 +1,23 @@
+@model SmartLib.Web.ViewModels.TacGiaViewModel
+@{ ViewData["Title"] = "Thêm tác giả"; }
+<div class="page-header-card"><h4><i class="fa fa-pen-nib me-2"></i>Thêm tác giả</h4></div>
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-7"><div class="form-card"><div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Mã tác giả</label>
+                <input asp-for="MaTacGia" class="form-control" placeholder="Tự động tạo nếu để trống" />
+                <span asp-validation-for="MaTacGia" class="text-danger small"></span>
+                <div class="form-text text-muted"><i class="fa fa-info-circle me-1"></i>Để trống để tự động tạo mã (TG001, TG002...)</div>
+            </div>
+            <div class="col-md-8"><label class="form-label req">Tên tác giả</label><input asp-for="TenTacGia" class="form-control" required /><span asp-validation-for="TenTacGia" class="text-danger small"></span></div>
+            <div class="col-md-6"><label class="form-label">Quốc tịch</label><input asp-for="QuocTich" class="form-control" /></div>
+            <div class="col-12"><label class="form-label">Tiểu sử</label><textarea asp-for="TieuSu" class="form-control" rows="5"></textarea></div>
+        </div></div></div>
+        <div class="col-lg-5"><div class="form-card d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+        </div></div>
+    </div>
+</form>

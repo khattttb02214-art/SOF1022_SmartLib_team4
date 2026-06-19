@@ -1,0 +1,17 @@
+@model SmartLib.Web.ViewModels.TheThuVienViewModel
+@{ ViewData["Title"] = "Sửa thẻ thư viện"; }
+<div class="page-header-card"><h4><i class="fa fa-id-card me-2"></i>Sửa thẻ — @Model.MaThe</h4></div>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">@Html.AntiForgeryToken()
+    <div class="row g-4">
+        <div class="col-lg-7"><div class="form-card"><div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Mã thẻ</label><input asp-for="MaThe" class="form-control bg-light" readonly /></div>
+            <div class="col-md-6"><label class="form-label req">Ngày hết hạn</label><input asp-for="NgayHetHan" type="date" class="form-control" required /></div>
+            <div class="col-12"><label class="form-label">Ảnh thẻ mới</label><input asp-for="AnhTheFile" type="file" accept="image/*" class="form-control" /></div>
+            <div class="col-12"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" asp-for="TrangThai" /><label class="form-check-label">Còn hiệu lực</label></div></div>
+        </div></div></div>
+        <div class="col-lg-5"><div class="form-card d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+        </div></div>
+    </div>
+</form>

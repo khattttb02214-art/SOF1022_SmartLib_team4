@@ -1,0 +1,513 @@
+@model SmartLib.Web.ViewModels.WishlistViewModel
+@{ ViewData["Title"] = "Yêu thích & Gợi ý"; }
+
+@section Styles {
+<style>
+/* ── Wishlist Page Styles ── */
+.wish-tabs { display:flex; gap:4px; background:#f0f2f5; border-radius:14px; padding:4px; margin-bottom:24px; }
+.wish-tab  { flex:1; padding:9px 0; text-align:center; border-radius:10px; border:none; background:transparent;
+             font-weight:600; font-size:13px; color:#6b7280; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+.wish-tab.active { background:white; color:#2a5298; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.wish-tab .badge-count { background:#ef4444; color:white; border-radius:30px; padding:1px 7px; font-size:11px; font-weight:700; }
+
+/* Folder chips */
+.folder-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.folder-chip  { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:30px;
+                font-size:12.5px; font-weight:600; border:1.5px solid #e2e8f0; color:#4b5563;
+                text-decoration:none; background:white; cursor:pointer; transition:all .2s; }
+.folder-chip:hover, .folder-chip.active { background:#2a5298; color:white; border-color:#2a5298; }
+.folder-chip-wrap { position:relative; }
+.folder-chip-menu { display:none; position:absolute; top:100%; left:0; z-index:99; background:white;
+                    border:1px solid #e2e8f0; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.12); padding:4px; min-width:100px; }
+.folder-chip-wrap:hover .folder-chip-menu { display:flex; flex-direction:column; gap:2px; }
+.folder-chip-menu a, .folder-chip-menu button { display:flex; align-items:center; gap:6px; padding:6px 10px; border-radius:7px;
+    font-size:12px; color:#374151; text-decoration:none; background:none; border:none; cursor:pointer; white-space:nowrap; }
+.folder-chip-menu a:hover, .folder-chip-menu button:hover { background:#f3f4f6; }
+
+/* Book grid */
+.book-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:18px; }
+.book-card  { background:white; border-radius:16px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.07);
+              transition:transform .2s, box-shadow .2s; display:flex; flex-direction:column; }
+.book-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.13); }
+.book-cover-link { display:block; height:200px; overflow:hidden; flex-shrink:0; }
+.book-cover  { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.book-card:hover .book-cover { transform:scale(1.04); }
+.book-cover-placeholder { width:100%; height:100%; background:linear-gradient(135deg,#e8edf8,#c9d7f0);
+                           display:flex; align-items:center; justify-content:center; color:#7998cc; }
+.book-info  { padding:12px; flex:1; display:flex; flex-direction:column; gap:6px; }
+.book-genre { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#6b7280; }
+.book-title { font-size:13px; font-weight:700; color:#1f2937; line-height:1.4; margin:0;
+              display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.book-title-link { text-decoration:none; }
+.goi-y-badge { font-size:10.5px; color:#6b7280; font-style:italic; margin-top:2px;
+               display:flex; align-items:center; gap:4px; }
+
+/* Sở thích tags */
+.pref-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.pref-tag  { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:30px;
+             font-size:12px; font-weight:600; }
+.pref-tag.tl  { background:#eff6ff; color:#1d4ed8; }
+.pref-tag.tg  { background:#f0fdf4; color:#15803d; }
+.pref-tag.nxb { background:#fff7ed; color:#c2410c; }
+.pref-tag .del { background:none; border:none; cursor:pointer; color:inherit; opacity:.6; padding:0; line-height:1; font-size:12px; }
+.pref-tag .del:hover { opacity:1; }
+
+/* Notification items */
+.notif-list { display:flex; flex-direction:column; gap:10px; }
+.notif-item { display:flex; align-items:flex-start; gap:14px; background:white; border-radius:14px;
+              padding:14px 16px; box-shadow:0 1px 6px rgba(0,0,0,0.07); transition:all .2s; }
+.notif-item:hover { box-shadow:0 3px 12px rgba(0,0,0,0.11); }
+.notif-item.unread { border-left:3px solid #2a5298; background:#f5f8ff; }
+.notif-icon { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+              font-size:18px; flex-shrink:0; }
+.notif-icon.sach-moi { background:#eff6ff; color:#2563eb; }
+.notif-body { flex:1; min-width:0; }
+.notif-title { font-weight:700; font-size:13.5px; color:#111827; margin-bottom:3px; }
+.notif-text  { font-size:12.5px; color:#6b7280; line-height:1.5; }
+.notif-time  { font-size:11px; color:#9ca3af; margin-top:4px; }
+.notif-cover { width:48px; height:64px; object-fit:cover; border-radius:8px; flex-shrink:0; }
+
+/* Empty state */
+.empty-state { text-align:center; padding:60px 20px; color:#9ca3af; }
+.empty-state i { display:block; margin-bottom:14px; }
+
+/* Panel header */
+.panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.panel-title  { font-size:15px; font-weight:700; color:#1f2937; display:flex; align-items:center; gap:8px; }
+</style>
+}
+
+
+<!-- Header -->
+<div class="page-header-card d-flex justify-content-between align-items-center">
+    <h4 class="mb-0"><i class="fa fa-heart me-2 text-danger"></i>Yêu thích & Gợi ý</h4>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+        <i class="fa fa-folder-plus me-1"></i>Tạo danh mục
+    </button>
+</div>
+
+<!-- Tabs -->
+<div class="wish-tabs">
+    <button class="wish-tab active" onclick="showTab('tab-yeuthich',this)">
+        <i class="fa fa-heart text-danger"></i> Yêu thích
+        <span class="badge-count">@Model.DanhSachYeuThich.Count</span>
+    </button>
+    <button class="wish-tab" onclick="showTab('tab-goiy',this)">
+        <i class="fa fa-wand-magic-sparkles text-warning"></i> Gợi ý cho bạn
+        <span class="badge-count">@Model.SachGoiY.Count</span>
+    </button>
+    <button class="wish-tab" onclick="showTab('tab-soThich',this)">
+        <i class="fa fa-sliders text-info"></i> Sở thích
+    </button>
+    <button class="wish-tab" onclick="showTab('tab-thongbao',this)">
+        @{ var bellCls = ViewBag.SoThongBaoChuaDoc > 0 ? "text-warning" : ""; }
+        <i class="fa fa-bell @bellCls"></i> Thông báo
+        @if (ViewBag.SoThongBaoChuaDoc > 0)
+        {
+        { <span class="badge-count">@ViewBag.SoThongBaoChuaDoc</span> }
+        }
+    </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TAB 1: YÊU THÍCH                                      -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-yeuthich">
+    <!-- Folders -->
+    <div class="folder-chips">
+        @{ var allActive = Model.FolderIdDangChon == null ? "active" : ""; }
+        <a asp-action="Index" class="folder-chip @allActive">
+            <i class="fa fa-heart"></i> Tất cả (@Model.DanhSachYeuThich.Count)
+        </a>
+        @foreach (var f in Model.Folders)
+        {
+            var fActive = Model.FolderIdDangChon?.ToString() == f.Id.ToString() ? "active" : "";
+            <div class="folder-chip-wrap">
+                <a asp-action="Index" asp-route-folderId="@f.Id" class="folder-chip @fActive">
+                    <i class="fa fa-folder"></i> @f.TenDanhMuc
+                    <span class="opacity-60 ms-1">(@Model.DanhSachYeuThich.Count(w=>w.FolderId==f.Id))</span>
+                </a>
+                <div class="folder-chip-menu">
+                    <button onclick="renameFolder(@f.Id,'@f.TenDanhMuc')"><i class="fa fa-pen"></i> Đổi tên</button>
+                    <a asp-action="DeleteFolder" asp-route-id="@f.Id"
+                       onclick="return confirm('Xóa danh mục này? Sách sẽ về Tất cả.')">
+                        <i class="fa fa-trash text-danger"></i> Xóa
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.DanhSachYeuThich.Any())
+    {
+        <div class="empty-state">
+            <i class="fa fa-heart fa-3x"></i>
+            <p class="fw-semibold fs-6">Chưa có sách yêu thích</p>
+            <p class="small text-muted">Thêm sách từ mục Tìm kiếm hoặc xem Gợi ý bên cạnh</p>
+            <a asp-controller="Home" asp-action="Search" class="btn btn-primary mt-2">
+                <i class="fa fa-magnifying-glass me-1"></i>Khám phá sách
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="book-grid">
+            @foreach (var w in Model.DanhSachYeuThich)
+            {
+                <div class="book-card">
+                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@w.MaSach" class="book-cover-link">
+                        @if (!string.IsNullOrEmpty(w.Sach?.AnhBia))
+                        {
+                        { <img src="/uploads/books/@w.Sach.AnhBia" class="book-cover" alt="@w.Sach.TenSach" /> }
+                        }
+                        else
+                        { <div class="book-cover-placeholder"><i class="fa fa-book fa-3x"></i></div> }
+                    </a>
+                    <div class="book-info">
+                        <div class="book-genre">@(w.Sach?.TheLoai?.TenTheLoai ?? "—")</div>
+                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@w.MaSach" class="book-title-link">
+                            <h6 class="book-title">@w.Sach?.TenSach</h6>
+                        </a>
+                        <div class="text-muted" style="font-size:11.5px">
+                            @(w.Sach?.NhaXuatBan?.TenNXB)
+                            @if (w.Sach?.SachTacGias?.Any() == true)
+                            {
+                            { <span>· @string.Join(", ", w.Sach.SachTacGias.Select(st => st.TacGia?.TenTacGia).Take(2))</span> }
+                            }
+                        </div>
+                        <!-- Move to folder -->
+                        <select class="form-select form-select-sm" style="font-size:12px"
+                                onchange="moveToFolder(@w.Id, this.value)">
+                            <option value="">📁 Chưa phân loại</option>
+                            @foreach (var f in Model.Folders)
+                            {
+                                if (w.FolderId == f.Id)
+                                {
+                                    <option value="@f.Id" selected>📁 @f.TenDanhMuc</option>
+                                }
+                                else
+                                {
+                                    <option value="@f.Id">📁 @f.TenDanhMuc</option>
+                                }
+                            }
+                        </select>
+                        <div class="d-flex gap-2 mt-1">
+                            @if (w.Sach?.SoLuongKhaDung > 0 && User.IsInRole("STU"))
+                            {
+                                <a asp-controller="Reservation" asp-action="StuCreate" asp-route-id="@w.MaSach"
+                                   class="btn btn-sm btn-primary flex-fill" style="font-size:12px">
+                                    <i class="fa fa-bookmark me-1"></i>Đặt mượn
+                                </a>
+                            }
+                            else if (w.Sach?.SoLuongKhaDung == 0)
+                            {
+                                <span class="btn btn-sm btn-outline-secondary flex-fill disabled" style="font-size:12px">Hết sách</span>
+                            }
+                            <a asp-action="Remove" asp-route-id="@w.Id"
+                               onclick="return confirm('Xóa khỏi yêu thích?')"
+                               class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-heart-crack"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TAB 2: GỢI Ý                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-goiy" style="display:none">
+    <div class="panel-header">
+        <div class="panel-title">
+            <i class="fa fa-wand-magic-sparkles text-warning"></i>
+            Sách gợi ý dựa trên sở thích của bạn
+        </div>
+    </div>
+
+    @if (!Model.SachGoiY.Any())
+    {
+        <div class="empty-state">
+            <i class="fa fa-wand-magic-sparkles fa-3x text-warning"></i>
+            <p class="fw-semibold fs-6">Chưa có gợi ý</p>
+            <p class="small text-muted">Thêm sở thích (tác giả, thể loại, NXB) để nhận gợi ý phù hợp</p>
+            <button class="btn btn-warning mt-2" onclick="showTab('tab-soThich',document.querySelectorAll('.wish-tab')[2])">
+                <i class="fa fa-sliders me-1"></i>Thêm sở thích
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="book-grid">
+            @foreach (var g in Model.SachGoiY)
+            {
+                <div class="book-card">
+                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@g.Sach.MaSach" class="book-cover-link">
+                        @if (!string.IsNullOrEmpty(g.Sach.AnhBia))
+                        {
+                        { <img src="/uploads/books/@g.Sach.AnhBia" class="book-cover" alt="@g.Sach.TenSach" /> }
+                        }
+                        else
+                        { <div class="book-cover-placeholder"><i class="fa fa-book fa-3x"></i></div> }
+                    </a>
+                    <div class="book-info">
+                        <div class="book-genre">@(g.Sach.TheLoai?.TenTheLoai ?? "—")</div>
+                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@g.Sach.MaSach" class="book-title-link">
+                            <h6 class="book-title">@g.Sach.TenSach</h6>
+                        </a>
+                        <div class="goi-y-badge">
+                            <i class="fa fa-circle-check text-success" style="font-size:10px"></i>
+                            @g.LyDo
+                        </div>
+                        <div class="mt-auto pt-1">
+                            @if (!g.DaYeuThich)
+                            {
+                                <a asp-action="Add" asp-route-sachId="@g.Sach.MaSach"
+                                   class="btn btn-sm btn-outline-danger w-100" style="font-size:12px">
+                                    <i class="fa fa-heart me-1"></i>Yêu thích
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-sm btn-danger w-100 disabled" style="font-size:12px">
+                                    <i class="fa fa-heart me-1"></i>Đã yêu thích
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TAB 3: SỞ THÍCH                                       -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-soThich" style="display:none">
+    <div class="row g-4">
+        <!-- Sở thích hiện tại -->
+        <div class="col-12">
+            <div class="panel-title mb-3"><i class="fa fa-tags text-primary"></i> Sở thích đang theo dõi</div>
+            @if (!Model.SoThich.Any())
+            {
+                <p class="text-muted small">Chưa có sở thích. Thêm bên dưới để nhận gợi ý sách phù hợp.</p>
+            }
+            else
+            {
+                <div class="pref-tags">
+                    @foreach (var p in Model.SoThich)
+                    {
+                        var (cls, icon, ten) = p.LoaiSoThich switch {
+                            "THELOAI" => ("tl", "fa-layer-group", Model.DanhSachTheLoai.FirstOrDefault(t=>t.MaTheLoai==p.MaRef)?.TenTheLoai ?? p.MaRef),
+                            "TACGIA"  => ("tg", "fa-pen-nib", Model.DanhSachTacGia.FirstOrDefault(t=>t.MaTacGia==p.MaRef)?.TenTacGia ?? p.MaRef),
+                            _         => ("nxb", "fa-building", Model.DanhSachNXB.FirstOrDefault(n=>n.MaNXB==p.MaRef)?.TenNXB ?? p.MaRef)
+                        };
+                        <span class="pref-tag @cls">
+                            <i class="fa @icon fa-xs"></i>
+                            @ten
+                            <a href="/Wishlist/XoaSoThich/@p.Id" class="del" onclick="return confirm('Xóa sở thích này?')" title="Xóa">
+                                <i class="fa fa-xmark"></i>
+                            </a>
+                        </span>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Form thêm sở thích -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-primary text-white fw-semibold py-2 px-3" style="border-radius:12px 12px 0 0;font-size:13.5px">
+                    <i class="fa fa-layer-group me-2"></i>Theo thể loại
+                </div>
+                <div class="card-body">
+                    <form asp-action="ThemSoThich" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="loai" value="THELOAI" />
+                        <select name="maRef" class="form-select form-select-sm mb-2" required>
+                            <option value="">-- Chọn thể loại --</option>
+                            @foreach (var tl in Model.DanhSachTheLoai)
+                            {
+                            { <option value="@tl.MaTheLoai">@tl.TenTheLoai</option> }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="fa fa-plus me-1"></i>Theo dõi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header fw-semibold py-2 px-3" style="background:#15803d;color:white;border-radius:12px 12px 0 0;font-size:13.5px">
+                    <i class="fa fa-pen-nib me-2"></i>Theo tác giả
+                </div>
+                <div class="card-body">
+                    <form asp-action="ThemSoThich" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="loai" value="TACGIA" />
+                        <select name="maRef" class="form-select form-select-sm mb-2" required>
+                            <option value="">-- Chọn tác giả --</option>
+                            @foreach (var tg in Model.DanhSachTacGia)
+                            {
+                            { <option value="@tg.MaTacGia">@tg.TenTacGia</option> }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm w-100" style="background:#15803d;color:white">
+                            <i class="fa fa-plus me-1"></i>Theo dõi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header fw-semibold py-2 px-3" style="background:#c2410c;color:white;border-radius:12px 12px 0 0;font-size:13.5px">
+                    <i class="fa fa-building me-2"></i>Theo nhà xuất bản
+                </div>
+                <div class="card-body">
+                    <form asp-action="ThemSoThich" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="loai" value="NXB" />
+                        <select name="maRef" class="form-select form-select-sm mb-2" required>
+                            <option value="">-- Chọn NXB --</option>
+                            @foreach (var nxb in Model.DanhSachNXB)
+                            {
+                            { <option value="@nxb.MaNXB">@nxb.TenNXB</option> }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm w-100" style="background:#c2410c;color:white">
+                            <i class="fa fa-plus me-1"></i>Theo dõi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TAB 4: THÔNG BÁO                                      -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-thongbao" style="display:none">
+    <div class="panel-header">
+        <div class="panel-title">
+            <i class="fa fa-bell text-warning"></i>
+            Thông báo sách mới
+            @if (ViewBag.SoThongBaoChuaDoc > 0)
+            {
+            { <span class="badge bg-danger ms-1">@ViewBag.SoThongBaoChuaDoc mới</span> }
+            }
+        </div>
+        @if (Model.ThongBaoMoi.Any(t => !t.DaDoc))
+        {
+            <a asp-action="DocTatCa" class="btn btn-sm btn-outline-secondary">
+                <i class="fa fa-check-double me-1"></i>Đọc tất cả
+            </a>
+        }
+    </div>
+
+    @if (!Model.ThongBaoMoi.Any())
+    {
+        <div class="empty-state">
+            <i class="fa fa-bell-slash fa-3x"></i>
+            <p class="fw-semibold fs-6">Chưa có thông báo</p>
+            <p class="small text-muted">Thêm sở thích để nhận thông báo khi có sách mới phù hợp</p>
+        </div>
+    }
+    else
+    {
+        <div class="notif-list">
+            @foreach (var tb in Model.ThongBaoMoi)
+            {
+                var unreadCls = !tb.DaDoc ? "unread" : "";
+                <div class="notif-item @unreadCls"
+                     onclick="danhDauDaDoc(@tb.MaThongBao, this)">
+                    <div class="notif-icon sach-moi">
+                        <i class="fa fa-book-open"></i>
+                    </div>
+                    <div class="notif-body">
+                        <div class="notif-title">@(tb.TieuDe ?? "Thông báo mới")</div>
+                        <div class="notif-text">@tb.NoiDung</div>
+                        <div class="notif-time">
+                            <i class="fa fa-clock fa-xs me-1"></i>
+                            @($"{tb.NgayTao:HH:mm - dd/MM/yyyy}")
+                            @if (!tb.DaDoc) { <span class="badge bg-primary ms-1" style="font-size:9px">Mới</span> }
+                        </div>
+                    </div>
+                    @if (tb.Sach?.AnhBia != null)
+                    {
+                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@tb.MaSach">
+                            <img src="/uploads/books/@tb.Sach.AnhBia" class="notif-cover" alt="@tb.Sach.TenSach" />
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(tb.MaSach))
+                    {
+                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@tb.MaSach"
+                           class="btn btn-sm btn-outline-primary align-self-center" style="white-space:nowrap;font-size:12px">
+                            Xem sách
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="addFolderModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header"><h5 class="modal-title fs-6 fw-bold">Tạo danh mục mới</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form asp-action="CreateFolder" method="post">@Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <input type="text" name="TenDanhMuc" class="form-control" placeholder="VD: Giáo dục, Truyện tranh…" required />
+                </div>
+                <div class="modal-footer"><button type="submit" class="btn btn-primary w-100"><i class="fa fa-folder-plus me-1"></i>Tạo</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="renameFolderModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header"><h5 class="modal-title fs-6 fw-bold">Đổi tên danh mục</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form asp-action="RenameFolder" method="post" id="renameForm">@Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="renameId" />
+                <div class="modal-body"><input type="text" name="TenDanhMuc" id="renameName" class="form-control" required /></div>
+                <div class="modal-footer"><button type="submit" class="btn btn-primary w-100">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display='none');
+    document.getElementById(id).style.display='block';
+    document.querySelectorAll('.wish-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+function moveToFolder(wid, fid) {
+    window.location.href = '/Wishlist/MoveToFolder/' + wid + '?folderId=' + (fid || '');
+}
+function renameFolder(id, name) {
+    document.getElementById('renameId').value = id;
+    document.getElementById('renameName').value = name;
+    new bootstrap.Modal(document.getElementById('renameFolderModal')).show();
+}
+async function danhDauDaDoc(id, el) {
+    if (!el.classList.contains('unread')) return;
+    el.classList.remove('unread');
+    el.querySelector('.badge.bg-primary')?.remove();
+    await fetch('/Wishlist/DanhDauDaDoc/' + id, { method:'POST', headers:{'RequestVerificationToken': document.querySelector('[name=__RequestVerificationToken]')?.value} });
+}
+</script>
+}

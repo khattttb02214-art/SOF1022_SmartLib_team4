@@ -1,0 +1,107 @@
+@model SmartLib.Web.ViewModels.KeSachViewModel
+@{
+    ViewData["Title"] = "Sửa kệ — " + Model.TenKe;
+}
+
+<div class="page-header-card d-flex align-items-center gap-3">
+    <a asp-action="KeSach" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left"></i></a>
+    <h4 class="mb-0"><i class="fa fa-pen me-2 text-warning"></i>Sửa kệ sách — @Model.MaKe</h4>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width:700px">
+    <div class="card-body p-4">
+        <form asp-action="SuaKe" asp-route-id="@Model.MaKe" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Mã kệ</label>
+                    <input class="form-control" value="@Model.MaKe" disabled />
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">Tên kệ *</label>
+                    <input name="TenKe" class="form-control" value="@Model.TenKe" maxlength="100" required />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Tầng</label>
+                    <input name="Tang" type="number" min="1" max="20" class="form-control" value="@Model.Tang" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Phòng / Khu</label>
+                    <input name="Phong" class="form-control" value="@Model.Phong" maxlength="50" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Sức chứa</label>
+                    <input name="SucChua" type="number" min="1" class="form-control" value="@Model.SucChua" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Trạng thái</label>
+                    <select name="TrangThai" class="form-select">
+                        @* Dùng if thay vì ternary trong attribute để tránh RZ1031 *@
+                        @if (Model.TrangThai)
+                        {
+                            <option value="true" selected>✅ Đang dùng</option>
+                            <option value="false">⛔ Ngưng dùng</option>
+                        }
+                        else
+                        {
+                            <option value="true">✅ Đang dùng</option>
+                            <option value="false" selected>⛔ Ngưng dùng</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Vị trí chi tiết</label>
+                    <input name="ViTri" class="form-control" value="@Model.ViTri" maxlength="200" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Thể loại phụ trách</label>
+                    <select name="MaTheLoaiPhuTrach" class="form-select">
+                        <option value="">-- Không chỉ định --</option>
+                        @foreach (var tl in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.DanhSachTheLoai)
+                        {
+                            @* Dùng if để set selected, tránh RZ1031 *@
+                            if (Model.MaTheLoaiPhuTrach == tl.Value)
+                            {
+                                <option value="@tl.Value" selected>@tl.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@tl.Value">@tl.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">NXB phụ trách</label>
+                    <select name="MaNXBPhuTrach" class="form-select">
+                        <option value="">-- Không chỉ định --</option>
+                        @foreach (var nxb in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.DanhSachNXB)
+                        {
+                            if (Model.MaNXBPhuTrach == nxb.Value)
+                            {
+                                <option value="@nxb.Value" selected>@nxb.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@nxb.Value">@nxb.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Mô tả thêm</label>
+                    <textarea name="MoTa" class="form-control" rows="2" maxlength="200">@Model.MoTa</textarea>
+                </div>
+            </div>
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-warning px-4"><i class="fa fa-save me-1"></i>Lưu thay đổi</button>
+                <a asp-action="KeSach" class="btn btn-light">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>

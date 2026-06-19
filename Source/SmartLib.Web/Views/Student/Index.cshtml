@@ -1,0 +1,525 @@
+@model SmartLib.Web.ViewModels.StudentHomeViewModel
+@{ ViewData["Title"] = "Thư viện sinh viên"; }
+
+@section Styles {
+<style>
+/* ── STUDENT DASHBOARD TOKENS ── */
+:root {
+    --stu-indigo:    #4f46e5;
+    --stu-indigo2:   #6366f1;
+    --stu-violet:    #7c3aed;
+    --stu-pink:      #ec4899;
+    --stu-amber:     #f59e0b;
+    --stu-emerald:   #10b981;
+    --stu-sky:       #0ea5e9;
+    --stu-rose:      #f43f5e;
+    --stu-light:     #f8f7ff;
+    --stu-white:     #ffffff;
+    --stu-text:      #1e1b4b;
+    --stu-text2:     #4338ca;
+    --stu-border:    #e0e7ff;
+    --stu-radius:    14px;
+    --stu-radius2:   20px;
+    --stu-shadow:    0 4px 24px rgba(79,70,229,.10);
+    --stu-shadow2:   0 8px 40px rgba(79,70,229,.18);
+}
+
+/* ── PAGE WRAPPER ── */
+.stu-page {
+    background: #f4f3ff;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    padding: 0 0 48px;
+}
+
+/* ── WELCOME BANNER ── */
+.stu-banner {
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 45%, #6d28d9 100%);
+    border-radius: 0 0 32px 32px;
+    padding: 32px 32px 64px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: -36px;
+}
+.stu-banner::before {
+    content: '';
+    position: absolute;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(167,139,250,.3) 0%, transparent 70%);
+    top: -80px; right: -60px;
+    border-radius: 50%;
+}
+.stu-banner::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(236,72,153,.2) 0%, transparent 70%);
+    bottom: 0; left: 20%;
+    border-radius: 50%;
+}
+.stu-banner__inner { position: relative; z-index: 2; }
+.stu-banner__greeting {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(199,210,254,.8);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.stu-banner__title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 16px;
+}
+.stu-banner__title span { color: #c4b5fd; }
+
+/* ── STAT PILLS ── */
+.stu-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+.stu-stat {
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 130px;
+    transition: transform .2s;
+}
+.stu-stat:hover { transform: translateY(-2px); }
+.stu-stat__icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.stu-stat__icon--blue   { background: rgba(14,165,233,.25); color: #7dd3fc; }
+.stu-stat__icon--green  { background: rgba(16,185,129,.25); color: #6ee7b7; }
+.stu-stat__icon--amber  { background: rgba(245,158,11,.25); color: #fcd34d; }
+.stu-stat__num  { font-size: 22px; font-weight: 800; color: #fff; line-height: 1; }
+.stu-stat__lbl  { font-size: 11px; color: rgba(199,210,254,.75); margin-top: 2px; }
+
+/* ── CONTENT AREA ── */
+.stu-content { padding: 0 24px; }
+
+/* ── BORROW ALERT CARD ── */
+.stu-borrow-card {
+    background: var(--stu-white);
+    border-radius: var(--stu-radius2);
+    box-shadow: var(--stu-shadow);
+    overflow: hidden;
+    margin-bottom: 28px;
+    border: 1.5px solid var(--stu-border);
+}
+.stu-borrow-card__header {
+    background: linear-gradient(90deg, #fef3c7 0%, #fde68a 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1.5px solid #fcd34d;
+}
+.stu-borrow-card__header-icon {
+    width: 32px; height: 32px;
+    background: #f59e0b;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px;
+}
+.stu-borrow-card__header-text {
+    font-size: 14px; font-weight: 700; color: #92400e;
+}
+.stu-borrow-table { width: 100%; border-collapse: collapse; }
+.stu-borrow-table thead th {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6d28d9;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    background: #faf5ff;
+    border-bottom: 1.5px solid #ede9fe;
+}
+.stu-borrow-table tbody td {
+    padding: 13px 16px;
+    font-size: 13px;
+    color: #374151;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+.stu-borrow-table tbody tr:last-child td { border-bottom: none; }
+.stu-borrow-table tbody tr:hover td { background: #faf5ff; }
+.stu-borrow-table tbody tr.overdue td { background: #fff1f2; }
+.stu-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 100px;
+    font-size: 11px; font-weight: 700;
+}
+.stu-badge--warn  { background: #fef3c7; color: #92400e; }
+.stu-badge--over  { background: #fee2e2; color: #991b1b; }
+.stu-badge--ok    { background: #d1fae5; color: #065f46; }
+
+/* ── SEARCH BOX ── */
+.stu-search-wrap {
+    background: var(--stu-white);
+    border-radius: var(--stu-radius2);
+    box-shadow: var(--stu-shadow);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    border: 1.5px solid var(--stu-border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.stu-search-icon-wrap {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; flex-shrink: 0;
+}
+.stu-search-input {
+    flex: 1;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    color: #1e1b4b;
+    transition: border-color .2s, box-shadow .2s;
+    background: #faf9ff;
+}
+.stu-search-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    background: #fff;
+}
+.stu-search-btn {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    transition: transform .15s, box-shadow .15s;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(79,70,229,.3);
+}
+.stu-search-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(79,70,229,.4); }
+.stu-search-btn:active { transform: scale(.97); }
+
+/* ── SECTION HEADER ── */
+.stu-sec-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+}
+.stu-sec-title {
+    font-size: 16px; font-weight: 800; color: var(--stu-text);
+    display: flex; align-items: center; gap: 8px; margin: 0;
+}
+.stu-sec-title__icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+}
+.stu-sec-title__icon--purple { background: #ede9fe; color: #7c3aed; }
+.stu-sec-title__icon--amber  { background: #fef3c7; color: #d97706; }
+.stu-sec-see-all {
+    font-size: 12px; font-weight: 600; color: #6366f1;
+    text-decoration: none; display: flex; align-items: center; gap: 4px;
+    padding: 6px 12px; border-radius: 8px; border: 1.5px solid #e0e7ff;
+    transition: all .15s; background: #faf9ff;
+}
+.stu-sec-see-all:hover { background: #ede9fe; border-color: #c4b5fd; color: #4f46e5; }
+
+/* ── CATEGORY GRID ── */
+.stu-cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 36px;
+}
+.stu-cat-card {
+    background: var(--stu-white);
+    border: 1.5px solid var(--stu-border);
+    border-radius: var(--stu-radius);
+    padding: 18px 10px 14px;
+    text-align: center;
+    text-decoration: none;
+    transition: all .22s;
+    position: relative;
+    overflow: hidden;
+}
+.stu-cat-card:hover {
+    transform: translateY(-4px);
+    border-color: #a78bfa;
+    box-shadow: 0 8px 24px rgba(124,58,237,.15);
+}
+.stu-cat-card__emoji { font-size: 30px; margin-bottom: 8px; display: block; line-height: 1; }
+.stu-cat-card__name  { font-size: 12px; font-weight: 700; color: #1e1b4b; margin-bottom: 4px; }
+.stu-cat-card__count {
+    font-size: 10px; color: #6d28d9;
+    background: #ede9fe; padding: 2px 8px; border-radius: 100px;
+    display: inline-block; font-weight: 600;
+}
+
+/* Category color tints */
+.stu-cat-card:nth-child(6n+1) { border-top: 3px solid #6366f1; }
+.stu-cat-card:nth-child(6n+2) { border-top: 3px solid #ec4899; }
+.stu-cat-card:nth-child(6n+3) { border-top: 3px solid #f59e0b; }
+.stu-cat-card:nth-child(6n+4) { border-top: 3px solid #10b981; }
+.stu-cat-card:nth-child(6n+5) { border-top: 3px solid #0ea5e9; }
+.stu-cat-card:nth-child(6n+6) { border-top: 3px solid #f43f5e; }
+
+/* ── BOOK GRID ── */
+.stu-book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
+    margin-bottom: 48px;
+}
+.stu-book-card {
+    background: var(--stu-white);
+    border: 1.5px solid var(--stu-border);
+    border-radius: var(--stu-radius2);
+    overflow: hidden;
+    transition: all .22s;
+    display: flex; flex-direction: column;
+}
+.stu-book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--stu-shadow2);
+    border-color: #a78bfa;
+}
+.stu-book-cover {
+    height: 190px;
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 100%);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+}
+.stu-book-cover img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .3s;
+}
+.stu-book-card:hover .stu-book-cover img { transform: scale(1.06); }
+.stu-book-cover-ph { color: rgba(255,255,255,.25); font-size: 48px; }
+.stu-book-avail {
+    position: absolute; top: 8px; right: 8px;
+    font-size: 10px; font-weight: 700;
+    padding: 3px 9px; border-radius: 100px;
+}
+.stu-book-avail--yes { background: rgba(16,185,129,.9); color: #fff; }
+.stu-book-avail--no  { background: rgba(244,63,94,.9);  color: #fff; }
+.stu-book-body {
+    padding: 14px 14px 16px;
+    display: flex; flex-direction: column; flex: 1;
+}
+.stu-book-genre {
+    font-size: 10px; font-weight: 700; color: #7c3aed;
+    text-transform: uppercase; letter-spacing: .7px; margin-bottom: 5px;
+}
+.stu-book-title {
+    font-size: 13px; font-weight: 700; color: #1e1b4b;
+    line-height: 1.35; margin: 0 0 12px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    text-decoration: none;
+    transition: color .15s;
+}
+.stu-book-title:hover { color: #4f46e5; }
+.stu-book-actions { display: flex; gap: 7px; margin-top: auto; }
+.stu-btn-view {
+    flex: 1; padding: 8px 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff; border: none;
+    font-size: 12px; font-weight: 600;
+    font-family: inherit; cursor: pointer;
+    text-decoration: none;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    transition: opacity .15s, transform .15s;
+}
+.stu-btn-view:hover { opacity: .9; transform: translateY(-1px); color: #fff; }
+.stu-btn-wish {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    border: 1.5px solid #fce7f3;
+    background: #fff0f8;
+    color: #ec4899;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; flex-shrink: 0;
+    transition: all .15s;
+}
+.stu-btn-wish:hover { background: #fce7f3; border-color: #ec4899; color: #ec4899; transform: scale(1.1); }
+
+/* ── RESPONSIVE ── */
+@@media (max-width: 768px) {
+    .stu-stats { gap: 8px; }
+    .stu-stat { min-width: 110px; padding: 10px 14px; }
+    .stu-content { padding: 0 14px; }
+    .stu-book-grid { grid-template-columns: repeat(2, 1fr); }
+    .stu-cat-grid  { grid-template-columns: repeat(3, 1fr); }
+}
+@@media (max-width: 480px) {
+    .stu-search-wrap { flex-wrap: wrap; }
+    .stu-cat-grid  { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+}
+
+<div class="stu-page">
+    <!-- BANNER -->
+    <div class="stu-banner">
+        <div class="stu-banner__inner">
+            <div class="stu-banner__greeting"><i class="fa fa-graduation-cap me-2"></i>Chào mừng trở lại</div>
+            <h2 class="stu-banner__title">Thư viện <span>SmartLib</span> của bạn 📚</h2>
+            <div class="stu-stats">
+                <div class="stu-stat">
+                    <div class="stu-stat__icon stu-stat__icon--blue"><i class="fa fa-book"></i></div>
+                    <div><div class="stu-stat__num">@Model.TongSach</div><div class="stu-stat__lbl">Đầu sách</div></div>
+                </div>
+                <div class="stu-stat">
+                    <div class="stu-stat__icon stu-stat__icon--green"><i class="fa fa-circle-check"></i></div>
+                    <div><div class="stu-stat__num">@Model.SachKhaDung</div><div class="stu-stat__lbl">Sẵn có</div></div>
+                </div>
+                <div class="stu-stat">
+                    <div class="stu-stat__icon stu-stat__icon--amber"><i class="fa fa-rotate-left"></i></div>
+                    <div><div class="stu-stat__num">@Model.PhieuDangMuon.Count</div><div class="stu-stat__lbl">Đang mượn</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stu-content" style="padding-top: 52px;">
+
+        <!-- ĐANG MƯỢN -->
+        @if (Model.PhieuDangMuon.Any())
+        {
+            <div class="stu-borrow-card mb-4">
+                <div class="stu-borrow-card__header">
+                    <div class="stu-borrow-card__header-icon"><i class="fa fa-clock"></i></div>
+                    <div class="stu-borrow-card__header-text">Sách đang mượn của bạn</div>
+                    <span class="ms-auto badge" style="background:#f59e0b;color:#fff;border-radius:8px;padding:5px 12px;font-size:12px;">
+                        @Model.PhieuDangMuon.Count phiếu
+                    </span>
+                </div>
+                <table class="stu-borrow-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fa fa-hashtag me-1"></i>Mã phiếu</th>
+                            <th><i class="fa fa-book me-1"></i>Sách</th>
+                            <th><i class="fa fa-calendar me-1"></i>Ngày mượn</th>
+                            <th><i class="fa fa-calendar-xmark me-1"></i>Hạn trả</th>
+                            <th><i class="fa fa-circle-dot me-1"></i>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.PhieuDangMuon)
+                        {
+                            bool over = p.NgayHenTra < DateTime.Now;
+                            <tr class="@(over ? "overdue" : "")">
+                                <td><span style="font-weight:700;color:#4f46e5;">@p.MaPhieu</span></td>
+                                <td>@string.Join(", ", p.ChiTietMuonTras.Select(ct => ct.Sach?.TenSach).Where(t => t != null))</td>
+                                <td>@($"{p.NgayMuon:dd/MM/yyyy}")</td>
+                                <td class="@(over ? "fw-bold" : "")" style="color:@(over ? "#991b1b" : "inherit")">
+                                    @($"{p.NgayHenTra:dd/MM/yyyy}") @(over ? " ⚠️" : "")
+                                </td>
+                                <td>
+                                    <span class="stu-badge @(over ? "stu-badge--over" : "stu-badge--warn")">
+                                        <i class="fa @(over ? "fa-triangle-exclamation" : "fa-rotate-left")"></i>
+                                        @(over ? "Quá hạn" : "Đang mượn")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <!-- SEARCH -->
+        <form method="get" asp-controller="Home" asp-action="Search" class="stu-search-wrap">
+            <div class="stu-search-icon-wrap"><i class="fa fa-magnifying-glass"></i></div>
+            <input type="text" name="q" class="stu-search-input" placeholder="Tìm tên sách, tác giả, ISBN..." />
+            <button type="submit" class="stu-search-btn"><i class="fa fa-magnifying-glass"></i>Tìm kiếm</button>
+        </form>
+
+        <!-- THỂ LOẠI -->
+        <div class="stu-sec-header mb-3">
+            <h5 class="stu-sec-title">
+                <span class="stu-sec-title__icon stu-sec-title__icon--purple"><i class="fa fa-layer-group"></i></span>
+                Thể loại
+            </h5>
+        </div>
+        <div class="stu-cat-grid">
+            @{
+                var catEmojis = new[] { "📚", "🔬", "💡", "🌍", "🎨", "💻", "📖", "🧠", "🌿", "⚗️", "🎯", "🏆" };
+                int catIdx = 0;
+            }
+            @foreach (var tl in Model.DanhSachTheLoai)
+            {
+                <a asp-controller="Home" asp-action="Search" asp-route-theLoai="@tl.MaTheLoai" class="stu-cat-card">
+                    <span class="stu-cat-card__emoji">@catEmojis[catIdx % catEmojis.Length]</span>
+                    <div class="stu-cat-card__name">@tl.TenTheLoai</div>
+                    <div class="stu-cat-card__count">@tl.SoLuongSach cuốn</div>
+                </a>
+                catIdx++;
+            }
+        </div>
+
+        <!-- SÁCH MỚI -->
+        <div class="stu-sec-header mb-3">
+            <h5 class="stu-sec-title">
+                <span class="stu-sec-title__icon stu-sec-title__icon--amber"><i class="fa fa-star"></i></span>
+                Sách mới nhất
+            </h5>
+            <a asp-controller="Home" asp-action="Search" class="stu-sec-see-all">
+                Xem tất cả <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="stu-book-grid">
+            @foreach (var s in Model.SachMoiNhat)
+            {
+                <div class="stu-book-card">
+                    <div class="stu-book-cover">
+                        @if (!string.IsNullOrEmpty(s.AnhBia))
+                        {
+                            <img src="/uploads/books/@s.AnhBia" alt="@s.TenSach" />
+                        }
+                        else
+                        {
+                            <i class="fa fa-book stu-book-cover-ph"></i>
+                        }
+                        <span class="stu-book-avail @(s.SoLuongKhaDung > 0 ? "stu-book-avail--yes" : "stu-book-avail--no")">
+                            <i class="fa @(s.SoLuongKhaDung > 0 ? "fa-check" : "fa-xmark") me-1"></i>
+                            @(s.SoLuongKhaDung > 0 ? $"Còn {s.SoLuongKhaDung}" : "Hết")
+                        </span>
+                    </div>
+                    <div class="stu-book-body">
+                        <div class="stu-book-genre">@s.TenTheLoai</div>
+                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="stu-book-title">@s.TenSach</a>
+                        <div class="stu-book-actions">
+                            <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="stu-btn-view">
+                                <i class="fa fa-eye"></i>Xem
+                            </a>
+                            <a asp-controller="Wishlist" asp-action="Add" asp-route-sachId="@s.MaSach" class="stu-btn-wish">
+                                <i class="fa fa-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
