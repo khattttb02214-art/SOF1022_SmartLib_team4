@@ -1,59 +1,168 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 using Serilog;
 using SmartLib.Web.Data;
 using SmartLib.Web.Hubs;
 using SmartLib.Web.Interfaces;
 using SmartLib.Web.Middleware;
+using SmartLib.Web.Models;
 using SmartLib.Web.Services;
 using SmartLib.Web.Services.Pdf;
-using QuestPDF.Infrastructure;
 
 QuestPDF.Settings.License = LicenseType.Community;
 
+
+// Logging
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File(
+        "logs/log-.txt",
+        rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Host.UseSerilog();
 
+
+// MVC + SignalR
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 
-builder.Services.AddDbContext<SmartLibDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(opt => {
-        opt.LoginPath  = "/Auth/Login";
-        opt.LogoutPath = "/Auth/Logout";
-        opt.AccessDeniedPath = "/Auth/AccessDenied";
-        opt.ExpireTimeSpan = TimeSpan.FromHours(8);
-        opt.SlidingExpiration = true;
-    });
-
-builder.Services.AddSession(opt => {
-    opt.IdleTimeout = TimeSpan.FromMinutes(30);
-    opt.Cookie.HttpOnly = true;
-    opt.Cookie.IsEssential = true;
+// Database
+builder.Services.AddDbContext<SmartLibDbContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
+// Authentication
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme)
+
+.AddCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.LogoutPath = "/Auth/Logout";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+
+    options.ExpireTimeSpan =
+        TimeSpan.FromHours(8);
+
+    options.SlidingExpiration = true;
+});
+
+
+// Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout =
+        TimeSpan.FromMinutes(30);
+
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+// Services
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
 builder.Services.AddScoped<BorrowReceiptPdfService>();
-builder.Services.AddScoped<SmartLib.Web.Services.AuditService>();
-builder.Services.AddScoped<SmartLib.Web.Services.EmailService>();
+
+builder.Services.AddScoped<AuditService>();
+
+builder.Services.AddScoped<EmailService>();
+
+
+
 var app = builder.Build();
 
+
+
+// ===============================
+// AUTO MIGRATE + CREATE ADMIN
+// ===============================
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider
+        .GetRequiredService<SmartLibDbContext>();
+
+
+    // chạy migration
+    db.Database.Migrate();
+
+
+    // tạo admin nếu chưa có
+    if (!db.NhanViens.Any(x => x.Email == "admin@smartlib.com"))
+    {
+
+        var admin = new NhanVien
+        {
+            MaNV = "NV001",
+
+            HoTen = "Admin System",
+
+            Email = "admin@smartlib.com",
+
+            // BCrypt password
+            MatKhau = BCrypt.Net.BCrypt.HashPassword("123456"),
+
+            MaChucVu = "ADMIN",
+
+            TrangThai = true,
+
+            EmailVerified = true,
+
+            NgayTao = DateTime.Now,
+
+            NgayCapNhat = DateTime.Now
+        };
+
+
+        db.NhanViens.Add(admin);
+
+        db.SaveChanges();
+    }
+}
+
+// Middleware
+
 app.UseStaticFiles();
-app.UseRouting();
-app.UseSession();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseMiddleware<RequestLoggingMiddleware>();
 
-app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-app.MapHub<NotificationHub>("/notificationHub");
 
-app.Run();
+    app.UseRouting();
+
+
+    app.UseSession();
+
+
+    app.UseAuthentication();
+
+
+    app.UseAuthorization();
+
+
+    app.UseMiddleware<RequestLoggingMiddleware>();
+
+
+
+    // Route
+
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
+
+
+    app.MapHub<NotificationHub>(
+        "/notificationHub"
+    );
+
+
+
+    app.Run();
