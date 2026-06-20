@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartLib.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac81c936f47aae87898907b055fc6f25117683a1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f52c8f903adc55e36eec91ffb5988cf60a02f7f")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartLib.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartLib.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
