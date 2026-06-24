@@ -97,8 +97,27 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 
 
+    // tạo chức vụ ADMIN nếu chưa có
+    if (!db.ChucVus.Any(x => x.MaChucVu == "ADMIN"))
+    {
+        db.ChucVus.Add(new ChucVu
+        {
+            MaChucVu = "ADMIN",
+            TenChucVu = "Quản trị viên"
+        });
+
+        db.SaveChanges();
+    }
+
+
+
     // tạo admin nếu chưa có
-    if (!db.NhanViens.Any(x => x.Email == "admin@smartlib.com"))
+    var adminExists = db.NhanViens
+        .Any(x => x.MaNV == "NV001"
+               || x.Email == "admin@smartlib.com");
+
+
+    if (!adminExists)
     {
 
         var admin = new NhanVien
@@ -109,7 +128,6 @@ using (var scope = app.Services.CreateScope())
 
             Email = "admin@smartlib.com",
 
-            // BCrypt password
             MatKhau = BCrypt.Net.BCrypt.HashPassword("123456"),
 
             MaChucVu = "ADMIN",
@@ -130,39 +148,45 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+
+// ===============================
 // Middleware
+// ===============================
 
 app.UseStaticFiles();
 
 
-    app.UseRouting();
+app.UseRouting();
 
 
-    app.UseSession();
+app.UseSession();
 
 
-    app.UseAuthentication();
+app.UseAuthentication();
 
 
-    app.UseAuthorization();
+app.UseAuthorization();
 
 
-    app.UseMiddleware<RequestLoggingMiddleware>();
-
-
-
-    // Route
-
-    app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}"
-    );
-
-
-    app.MapHub<NotificationHub>(
-        "/notificationHub"
-    );
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 
 
-    app.Run();
+// ===============================
+// Route
+// ===============================
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
+
+
+app.MapHub<NotificationHub>(
+    "/notificationHub"
+);
+
+
+
+app.Run();
