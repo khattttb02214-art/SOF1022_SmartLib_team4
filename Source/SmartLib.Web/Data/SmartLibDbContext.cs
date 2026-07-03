@@ -98,5 +98,7 @@ public class SmartLibDbContext : DbContext
             .WithMany()
             .HasForeignKey(x => x.MaSach)
             .OnDelete(DeleteBehavior.SetNull);
+            
     }
+
 }

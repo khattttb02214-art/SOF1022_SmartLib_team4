@@ -133,13 +133,109 @@ public class DocGiaController : Controller
 
     public async Task<IActionResult> Delete(string id)
     {
-        var d = await _db.DocGias.FindAsync(id);
-        if (d == null) return NotFound();
-        if (await _db.MuonTras.AnyAsync(m => m.MaDocGia == id && m.TrangThai == "Đang Mượn"))
-        { TempData["error"] = "Không thể xóa: độc giả đang mượn sách"; return RedirectToAction(nameof(Index)); }
+        var d = await _db.DocGias
+            .FirstOrDefaultAsync(x => x.MaDocGia == id);
+
+        if (d == null)
+            return NotFound();
+
+
+        // Không cho xóa khi đang mượn
+        bool dangMuon = await _db.MuonTras
+            .AnyAsync(m =>
+                m.MaDocGia == id
+                && m.TrangThai == "Đang Mượn");
+
+
+        if (dangMuon)
+        {
+            TempData["error"] =
+                "Không thể xóa: độc giả đang mượn sách";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // Xóa dữ liệu liên quan trước
+
+        var muonTras = await _db.MuonTras
+            .Where(x => x.MaDocGia == id)
+            .ToListAsync();
+
+
+        foreach (var mt in muonTras)
+        {
+            var chiTiet = await _db.ChiTietMuonTras
+                .Where(x => x.MaPhieu == mt.MaPhieu)
+                .ToListAsync();
+
+            _db.ChiTietMuonTras.RemoveRange(chiTiet);
+
+        }
+
+
+        _db.MuonTras.RemoveRange(muonTras);
+
+
+
+        var wishlist = await _db.Wishlists
+            .Where(x => x.MaDocGia == id)
+            .ToListAsync();
+
+        _db.Wishlists.RemoveRange(wishlist);
+
+
+
+        var reservation = await _db.Reservations
+            .Where(x => x.MaDocGia == id)
+            .ToListAsync();
+
+        _db.Reservations.RemoveRange(reservation);
+
+
+
+        var thongBao = await _db.ThongBaos
+            .Where(x => x.MaDocGia == id)
+            .ToListAsync();
+
+        _db.ThongBaos.RemoveRange(thongBao);
+
+
+
+        var theThuVien = await _db.TheThuViens
+            .Where(x => x.MaDocGia == id)
+            .ToListAsync();
+
+        _db.TheThuViens.RemoveRange(theThuVien);
+
+
+
+        // Xóa tài khoản nhân viên nếu có
+
+        var account = await _db.NhanViens
+            .FirstOrDefaultAsync(x => x.MaDocGia == id);
+
+
+        if (account != null)
+        {
+            _db.NhanViens.Remove(account);
+        }
+
+
+
+        // cuối cùng xóa độc giả
+
         _db.DocGias.Remove(d);
+
+
         await _db.SaveChangesAsync();
-        TempData["success"] = "Xóa độc giả thành công";
+
+
+
+        TempData["success"] =
+            "Xóa độc giả thành công";
+
+
         return RedirectToAction(nameof(Index));
     }
 
