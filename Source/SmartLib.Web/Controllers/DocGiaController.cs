@@ -133,109 +133,31 @@ public class DocGiaController : Controller
 
     public async Task<IActionResult> Delete(string id)
     {
-        var d = await _db.DocGias
-            .FirstOrDefaultAsync(x => x.MaDocGia == id);
+        var d = await _db.DocGias.FindAsync(id);
+        if (d == null) return NotFound();
+        if (await _db.MuonTras.AnyAsync(m => m.MaDocGia == id && m.TrangThai == "Đang Mượn"))
+        { TempData["error"] = "Không thể xóa: độc giả đang mượn sách"; return RedirectToAction(nameof(Index)); }
 
-        if (d == null)
-            return NotFound();
+        // Ngoài đang mượn, độc giả có LỊCH SỬ mượn (đã trả), đánh giá, đặt trước,
+        // hoặc wishlist cũng không xóa được (ràng buộc khóa ngoại Restrict) — báo
+        // rõ lý do thay vì để lỗi CSDL văng ra.
+        var lyDo = new List<string>();
+        if (await _db.MuonTras.AnyAsync(m => m.MaDocGia == id)) lyDo.Add("đã có lịch sử mượn trả");
+        if (await _db.DanhGiaSaches.AnyAsync(r => r.MaDocGia == id)) lyDo.Add("đã có đánh giá sách");
+        if (await _db.Reservations.AnyAsync(r => r.MaDocGia == id)) lyDo.Add("đang có đặt trước");
+        if (await _db.Wishlists.AnyAsync(w => w.MaDocGia == id)) lyDo.Add("đang có wishlist");
+        if (await _db.WishlistFolders.AnyAsync(f => f.MaDocGia == id)) lyDo.Add("đang có danh mục wishlist");
+        if (await _db.WishlistPreferences.AnyAsync(p => p.MaDocGia == id)) lyDo.Add("đang có sở thích đã lưu");
 
-
-        // Không cho xóa khi đang mượn
-        bool dangMuon = await _db.MuonTras
-            .AnyAsync(m =>
-                m.MaDocGia == id
-                && m.TrangThai == "Đang Mượn");
-
-
-        if (dangMuon)
+        if (lyDo.Count > 0)
         {
-            TempData["error"] =
-                "Không thể xóa: độc giả đang mượn sách";
-
+            TempData["error"] = $"Không thể xóa độc giả {d.HoTen} vì {string.Join(", ", lyDo)}.";
             return RedirectToAction(nameof(Index));
         }
 
-
-        // Xóa dữ liệu liên quan trước
-
-        var muonTras = await _db.MuonTras
-            .Where(x => x.MaDocGia == id)
-            .ToListAsync();
-
-
-        foreach (var mt in muonTras)
-        {
-            var chiTiet = await _db.ChiTietMuonTras
-                .Where(x => x.MaPhieu == mt.MaPhieu)
-                .ToListAsync();
-
-            _db.ChiTietMuonTras.RemoveRange(chiTiet);
-
-        }
-
-
-        _db.MuonTras.RemoveRange(muonTras);
-
-
-
-        var wishlist = await _db.Wishlists
-            .Where(x => x.MaDocGia == id)
-            .ToListAsync();
-
-        _db.Wishlists.RemoveRange(wishlist);
-
-
-
-        var reservation = await _db.Reservations
-            .Where(x => x.MaDocGia == id)
-            .ToListAsync();
-
-        _db.Reservations.RemoveRange(reservation);
-
-
-
-        var thongBao = await _db.ThongBaos
-            .Where(x => x.MaDocGia == id)
-            .ToListAsync();
-
-        _db.ThongBaos.RemoveRange(thongBao);
-
-
-
-        var theThuVien = await _db.TheThuViens
-            .Where(x => x.MaDocGia == id)
-            .ToListAsync();
-
-        _db.TheThuViens.RemoveRange(theThuVien);
-
-
-
-        // Xóa tài khoản nhân viên nếu có
-
-        var account = await _db.NhanViens
-            .FirstOrDefaultAsync(x => x.MaDocGia == id);
-
-
-        if (account != null)
-        {
-            _db.NhanViens.Remove(account);
-        }
-
-
-
-        // cuối cùng xóa độc giả
-
         _db.DocGias.Remove(d);
-
-
         await _db.SaveChangesAsync();
-
-
-
-        TempData["success"] =
-            "Xóa độc giả thành công";
-
-
+        TempData["success"] = "Xóa độc giả thành công";
         return RedirectToAction(nameof(Index));
     }
 

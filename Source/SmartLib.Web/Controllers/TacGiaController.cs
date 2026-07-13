@@ -85,6 +85,13 @@ public class TacGiaController : Controller
     {
         var t = await _db.TacGias.FindAsync(id);
         if (t == null) return NotFound();
+
+        if (await _db.SachTacGias.AnyAsync(st => st.MaTacGia == id))
+        {
+            TempData["error"] = $"Không thể xóa: tác giả {t.TenTacGia} vẫn còn sách liên kết trong hệ thống.";
+            return RedirectToAction(nameof(Index));
+        }
+
         _db.TacGias.Remove(t);
         await _db.SaveChangesAsync();
         TempData["success"] = "Đã xóa tác giả";

@@ -1,0 +1,47 @@
+@{ ViewData["Title"] = "Email đã tồn tại"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="auth-page">
+    <div class="auth-card" style="max-width:480px">
+
+        <div class="auth-logo"><i class="fa fa-envelope-circle-check"></i></div>
+        <h3 class="auth-title">Email đã được đăng ký</h3>
+
+        <div class="alert alert-warning small text-center">
+            <i class="fa fa-triangle-exclamation me-1"></i>
+            Email <strong>@ViewBag.ExistsEmail</strong> đã có tài khoản trong hệ thống.<br>
+            Vui lòng nhập một địa chỉ email khác để đăng ký.
+        </div>
+
+        <p class="auth-sub mb-3">
+            Tài khoản sẽ được liên kết với Google của bạn
+            (<strong>@ViewBag.GoogleEmail</strong>)
+            nhưng dùng email mới bên dưới để đăng nhập.
+        </p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger small">
+                <i class="fa fa-circle-exclamation me-1"></i>@ViewBag.Error
+            </div>
+        }
+
+        <form asp-action="GoogleChangeEmail" method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label req">Email mới</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                    <input type="email" name="NewEmail" class="form-control"
+                           placeholder="email_khac@example.com" required autofocus />
+                </div>
+                <small class="text-muted">Dùng email trường hoặc email cá nhân khác.</small>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fa fa-check me-2"></i>Xác nhận và hoàn tất đăng ký
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small><a asp-action="Login">Hủy và quay về đăng nhập</a></small>
+        </div>
+    </div>
+</div>

@@ -2,11 +2,15 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>@ViewData["Title"] - SmartLib</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -14,277 +18,337 @@
 </head>
 <body>
 
-@if (User.Identity?.IsAuthenticated != true)
-{
-    <nav class="navbar pub-navbar-fixed shadow-sm" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:white;border-bottom:1px solid #e8edf8;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;">
-        <a href="/" style="text-decoration:none;font-weight:800;font-size:18px;color:#1e3c72;display:flex;align-items:center;gap:8px;">
-            <span style="background:#2a5298;color:white;padding:4px 10px;border-radius:8px;font-size:14px;"><i class="fa fa-book-open"></i></span> SmartLib
-        </a>
-        <div style="display:flex;gap:10px;align-items:center;">
-            <a href="/Auth/Login" class="btn btn-outline-primary btn-sm px-3" style="border-radius:10px;font-weight:600;"><i class="fa fa-right-to-bracket me-1"></i>Đăng nhập</a>
-            <a href="/Auth/Register" class="btn btn-primary btn-sm px-3" style="border-radius:10px;font-weight:600;"><i class="fa fa-user-plus me-1"></i>Đăng ký</a>
-        </div>
-    </nav>
-    <div style="padding-top:68px">
-        <div class="container-fluid px-4 py-3">@RenderBody()</div>
-    </div>
-}
-else
-{
-<div class="d-flex">
-    @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+    @if (User.Identity?.IsAuthenticated != true)
     {
-        <div class="sidebar" id="sidebarEl">
-            <div class="sidebar-logo">
-                <div class="logo-icon"><i class="fa fa-book-open"></i></div>
-                <span class="logo-text">SmartLib</span>
+        <nav class="navbar pub-navbar-fixed shadow-sm">
+            <a href="/" class="pub-navbar-brand">
+                <span class="pub-navbar-brand__icon"><i class="fa fa-book-open"></i></span> SmartLib
+            </a>
+            <div class="pub-navbar-actions">
+                <a href="/Auth/Login" class="btn btn-outline-primary btn-sm px-3 pub-navbar-btn"><i class="fa fa-right-to-bracket me-1"></i><span>Đăng nhập</span></a>
+                <a href="/Auth/Register" class="btn btn-primary btn-sm px-3 pub-navbar-btn"><i class="fa fa-user-plus me-1"></i><span>Đăng ký</span></a>
             </div>
-            <div class="sidebar-role-badge">
-                @if (User.IsInRole("ADMIN")) { <span class="role-chip admin"><i class="fa fa-crown me-1"></i>Admin</span> }
-                else { <span class="role-chip lib"><i class="fa fa-user-tie me-1"></i>Thủ thư</span> }
-            </div>
-
-            <div class="sidebar-section-label">TỔNG QUAN</div>
-            <a asp-controller="Staff" asp-action="Index" class="sidebar-link"><i class="fa fa-house"></i><span>Trang chủ</span></a>
-            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-link"><i class="fa fa-chart-line"></i><span>Dashboard</span></a>
-
-            <div class="sidebar-section-label">QUẢN LÝ</div>
-            <a asp-controller="Books" asp-action="Index" class="sidebar-link"><i class="fa fa-book"></i><span>Quản lý sách</span></a>
-            <a asp-controller="TacGia" asp-action="Index" class="sidebar-link"><i class="fa fa-pen-nib"></i><span>Tác giả</span></a>
-            <a asp-controller="NhaXuatBan" asp-action="Index" class="sidebar-link"><i class="fa fa-building"></i><span>Nhà xuất bản</span></a>
-            <a asp-controller="DocGia" asp-action="Index" class="sidebar-link"><i class="fa fa-users"></i><span>Độc giả</span></a>
-            <a asp-controller="Borrow" asp-action="Index" class="sidebar-link"><i class="fa fa-right-left"></i><span>Mượn / Trả</span></a>
-            <a asp-controller="Reservation" asp-action="Index" class="sidebar-link"><i class="fa fa-bookmark"></i><span>Đặt trước</span></a>
-            <a asp-controller="Kho" asp-action="Index" class="sidebar-link"><i class="fa fa-warehouse"></i><span>Quản lý kho</span></a>
-            <a asp-controller="Kho" asp-action="KeSach" class="sidebar-link"><i class="fa fa-map-location-dot"></i><span>Vị trí kệ sách</span></a>
-            <a asp-controller="TheThuVien" asp-action="Index" class="sidebar-link"><i class="fa fa-id-card"></i><span>Thẻ thư viện</span></a>
-            @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
-            {
-                <a asp-controller="NhanVien" asp-action="PendingAccounts" class="sidebar-link"><i class="fa fa-user-clock"></i><span>Duyệt tài khoản</span></a>
-            }
-            @if (User.IsInRole("LIB") && !User.IsInRole("ADMIN"))
-            {
-                <a asp-controller="NhanVien" asp-action="Create" class="sidebar-link"><i class="fa fa-user-plus"></i><span>Thêm tài khoản SV</span></a>
-            }
-            @if (User.IsInRole("ADMIN"))
-            {
-                <div class="sidebar-section-label">HỆ THỐNG</div>
-                <a asp-controller="NhanVien" asp-action="Index" class="sidebar-link"><i class="fa fa-user-tie"></i><span>Nhân viên</span></a>
-                <a asp-controller="Audit" asp-action="Index" class="sidebar-link"><i class="fa fa-clock-rotate-left"></i><span>Nhật ký hoạt động</span></a>
-            }
-            <div class="sidebar-divider"></div>
-            <a asp-controller="Auth" asp-action="Logout" class="sidebar-link sidebar-logout"><i class="fa fa-right-from-bracket"></i><span>Đăng xuất</span></a>
+        </nav>
+        <div class="pub-navbar-spacer">
+            <div class="container-fluid px-4 py-3">@RenderBody()</div>
         </div>
     }
     else
     {
-        <div class="sidebar sidebar-student" id="sidebarEl">
-            <div class="sidebar-logo">
-                <div class="logo-icon student"><i class="fa fa-graduation-cap"></i></div>
-                <span class="logo-text">SmartLib</span>
-            </div>
-            <div class="sidebar-role-badge"><span class="role-chip student"><i class="fa fa-user-graduate me-1"></i>Sinh viên</span></div>
+        <div class="d-flex">
+            <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+            @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+            {
+                <div class="sidebar" id="sidebarEl">
+                    <div class="sidebar-logo">
+                        <div class="logo-icon"><i class="fa fa-book-open"></i></div>
+                        <span class="logo-text">SmartLib</span>
+                    </div>
+                    <div class="sidebar-role-badge">
+                        @if (User.IsInRole("ADMIN"))
+                        {
+                            <span class="role-chip admin"><i class="fa fa-crown me-1"></i>Admin</span>
+                        }
+                        else
+                        {
 
-            <div class="sidebar-section-label">DÀNH CHO BẠN</div>
-            <a asp-controller="Student" asp-action="Index" class="sidebar-link"><i class="fa fa-house"></i><span>Trang chủ</span></a>
-            <a asp-controller="Student" asp-action="LichSuMuon" class="sidebar-link"><i class="fa fa-right-left"></i><span>Lịch sử mượn</span></a>
-            <a asp-controller="Wishlist" asp-action="Index" class="sidebar-link" id="wishlistNavLink">
-                <i class="fa fa-heart"></i>
-                <span>Yêu thích</span>
-                <span id="notifBadgeNav" class="ms-auto badge bg-danger rounded-pill" style="font-size:10px;display:none"></span>
-            </a>
-            <a asp-controller="Reservation" asp-action="Index" class="sidebar-link"><i class="fa fa-bookmark"></i><span>Đặt trước</span></a>
-            <a asp-controller="Student" asp-action="EditProfile" class="sidebar-link"><i class="fa fa-user-pen"></i><span>Thông tin cá nhân</span></a>
-            <div class="sidebar-divider"></div>
-            <a asp-controller="Auth" asp-action="Logout" class="sidebar-link sidebar-logout"><i class="fa fa-right-from-bracket"></i><span>Đăng xuất</span></a>
+                            <span class="role-chip lib"><i class="fa fa-user-tie me-1"></i>Thủ thư</span>
+                        }
+                    </div>
+
+                    <div class="sidebar-section-label">TỔNG QUAN</div>
+                    <a asp-controller="Staff" asp-action="Index" class="sidebar-link"><i class="fa fa-house"></i><span>Trang chủ</span></a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="sidebar-link"><i class="fa fa-chart-line"></i><span>Dashboard</span></a>
+
+                    <div class="sidebar-section-label">QUẢN LÝ</div>
+                    <a asp-controller="Books" asp-action="Index" class="sidebar-link"><i class="fa fa-book"></i><span>Quản lý sách</span></a>
+                    <a asp-controller="TacGia" asp-action="Index" class="sidebar-link"><i class="fa fa-pen-nib"></i><span>Tác giả</span></a>
+                    <a asp-controller="NhaXuatBan" asp-action="Index" class="sidebar-link"><i class="fa fa-building"></i><span>Nhà xuất bản</span></a>
+                    <a asp-controller="DocGia" asp-action="Index" class="sidebar-link"><i class="fa fa-users"></i><span>Độc giả</span></a>
+                    <a asp-controller="Borrow" asp-action="Index" class="sidebar-link"><i class="fa fa-right-left"></i><span>Mượn / Trả</span></a>
+                    <a asp-controller="Reservation" asp-action="Index" class="sidebar-link"><i class="fa fa-bookmark"></i><span>Đặt trước</span></a>
+                    <a asp-controller="Kho" asp-action="Index" class="sidebar-link"><i class="fa fa-warehouse"></i><span>Quản lý kho</span></a>
+                    <a asp-controller="Kho" asp-action="KeSach" class="sidebar-link"><i class="fa fa-map-location-dot"></i><span>Vị trí kệ sách</span></a>
+                    <a asp-controller="TheThuVien" asp-action="Index" class="sidebar-link"><i class="fa fa-id-card"></i><span>Thẻ thư viện</span></a>
+                    @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+                    {
+                        <a asp-controller="NhanVien" asp-action="PendingAccounts" class="sidebar-link"><i class="fa fa-user-clock"></i><span>Duyệt tài khoản</span></a>
+                    }
+                    @if (User.IsInRole("LIB") && !User.IsInRole("ADMIN"))
+                    {
+                        <a asp-controller="NhanVien" asp-action="Create" class="sidebar-link"><i class="fa fa-user-plus"></i><span>Thêm tài khoản SV</span></a>
+                    }
+                    @if (User.IsInRole("ADMIN"))
+                    {
+                        <div class="sidebar-section-label">HỆ THỐNG</div>
+                        <a asp-controller="NhanVien" asp-action="Index" class="sidebar-link"><i class="fa fa-user-tie"></i><span>Nhân viên</span></a>
+                        <a asp-controller="PhanQuyen" asp-action="Index" class="sidebar-link"><i class="fa fa-key"></i><span>Phân quyền</span></a>
+                        <a asp-controller="Audit" asp-action="Index" class="sidebar-link"><i class="fa fa-clock-rotate-left"></i><span>Nhật ký hoạt động</span></a>
+                    }
+                    <div class="sidebar-divider"></div>
+                    <a asp-controller="Auth" asp-action="Logout" class="sidebar-link sidebar-logout"><i class="fa fa-right-from-bracket"></i><span>Đăng xuất</span></a>
+                </div>
+            }
+            else
+            {
+                <div class="sidebar sidebar-student" id="sidebarEl">
+                    <div class="sidebar-logo">
+                        <div class="logo-icon student"><i class="fa fa-graduation-cap"></i></div>
+                        <span class="logo-text">SmartLib</span>
+                    </div>
+                    <div class="sidebar-role-badge"><span class="role-chip student"><i class="fa fa-user-graduate me-1"></i>Sinh viên</span></div>
+
+                    <div class="sidebar-section-label">DÀNH CHO BẠN</div>
+                    <a asp-controller="Student" asp-action="Index" class="sidebar-link"><i class="fa fa-house"></i><span>Trang chủ</span></a>
+                    <a asp-controller="Student" asp-action="LichSuMuon" class="sidebar-link"><i class="fa fa-right-left"></i><span>Lịch sử mượn</span></a>
+                    <a asp-controller="Wishlist" asp-action="Index" class="sidebar-link" id="wishlistNavLink">
+                        <i class="fa fa-heart"></i>
+                        <span>Yêu thích</span>
+                        <span id="notifBadgeNav" class="ms-auto badge bg-danger rounded-pill" style="font-size:10px;display:none"></span>
+                    </a>
+                    <a asp-controller="Reservation" asp-action="Index" class="sidebar-link"><i class="fa fa-bookmark"></i><span>Đặt trước</span></a>
+                    <a asp-controller="Student" asp-action="EditProfile" class="sidebar-link"><i class="fa fa-user-pen"></i><span>Thông tin cá nhân</span></a>
+                    <div class="sidebar-divider"></div>
+                    <a asp-controller="Auth" asp-action="Logout" class="sidebar-link sidebar-logout"><i class="fa fa-right-from-bracket"></i><span>Đăng xuất</span></a>
+                </div>
+            }
+
+            <div class="main-content w-100">
+                <nav class="top-navbar">
+                    <button class="btn btn-link sidebar-toggle d-lg-none" id="sidebarToggle"><i class="fa fa-bars fa-lg"></i></button>
+                    <span class="navbar-brand-text">
+                        @if (User.IsInRole("ADMIN"))
+                        {
+                            <span>⚡ Quản trị hệ thống</span>
+                        }
+                        else if (User.IsInRole("LIB"))
+                        {
+
+                            <span>📚 Quản lý thư viện</span>
+                        }
+                        else
+                        {
+
+                            <span>🎓 Thư viện sinh viên</span>
+                        }
+                    </span>
+                    <div class="navbar-actions">
+                        <button class="nav-btn" id="darkModeBtn" title="Chế độ tối"><i class="fa fa-moon" id="darkIcon"></i></button>
+                        @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+                        {
+                            <div class="dropdown">
+                                <button class="nav-btn position-relative" data-bs-toggle="dropdown" id="bellBtn">
+                                    <i class="fa fa-bell"></i>
+                                    <span class="notif-dot" id="bellDot" style="display:none"></span>
+                                    <span id="bellBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:9px;display:none"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end notif-dropdown shadow" style="min-width:280px">
+                                    <li class="notif-header"><i class="fa fa-bell me-2"></i>Thông báo</li>
+                                    <li id="notifOverdue" style="display:none">
+                                        <a class="dropdown-item notif-item" asp-controller="Borrow" asp-action="Index" asp-route-status="OVERDUE">
+                                            <i class="fa fa-triangle-exclamation text-warning me-2"></i>
+                                            Có <span id="overdueCount">0</span> sách quá hạn
+                                        </a>
+                                    </li>
+                                    <li id="notifPending" style="display:none">
+                                        <a class="dropdown-item notif-item" asp-controller="NhanVien" asp-action="PendingAccounts">
+                                            <i class="fa fa-user-clock text-info me-2"></i>
+                                            Có <span id="pendingCount">0</span> tài khoản chờ duyệt
+                                        </a>
+                                    </li>
+                                    <li id="notifEmpty" class="px-3 py-2 text-muted small text-center">
+                                        <i class="fa fa-check-circle text-success me-1"></i>Không có thông báo mới
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        <div class="dropdown">
+                            <button class="user-chip dropdown-toggle" data-bs-toggle="dropdown">
+                                <div class="user-avatar">@(User.Identity?.Name?.Substring(0, 1).ToUpper() ?? "U")</div>
+                                <span class="user-name d-none d-md-inline">@User.Identity?.Name</span>
+                                <i class="fa fa-chevron-down fa-xs ms-1 opacity-50"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                <li class="dropdown-header px-3 py-2">
+                                    <div class="fw-semibold">@User.Identity?.Name</div>
+                                    <div class="text-muted small">@(User.IsInRole("ADMIN") ? "Administrator" : User.IsInRole("LIB") ? "Thủ thư" : "Sinh viên")</div>
+                                </li>
+                                <li><hr class="dropdown-divider my-1" /></li>
+                                @if (User.IsInRole("STU"))
+                                {
+                                    <li><a asp-controller="Student" asp-action="EditProfile" class="dropdown-item"><i class="fa fa-user-pen me-2"></i>Thông tin cá nhân</a></li>
+                                }
+                                <li><a asp-controller="Auth" asp-action="Logout" class="dropdown-item text-danger"><i class="fa fa-right-from-bracket me-2"></i>Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class="page-content">@RenderBody()</div>
+            </div>
         </div>
     }
 
-    <div class="main-content w-100">
-        <nav class="top-navbar">
-            <button class="btn btn-link sidebar-toggle d-lg-none" id="sidebarToggle"><i class="fa fa-bars fa-lg"></i></button>
-            <span class="navbar-brand-text">
-                @if (User.IsInRole("ADMIN")) { <span>⚡ Quản trị hệ thống</span> }
-                else if (User.IsInRole("LIB")) { <span>📚 Quản lý thư viện</span> }
-                else { <span>🎓 Thư viện sinh viên</span> }
-            </span>
-            <div class="navbar-actions">
-                <button class="nav-btn" id="darkModeBtn" title="Chế độ tối"><i class="fa fa-moon" id="darkIcon"></i></button>
-                @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
-                {
-                    <div class="dropdown">
-                        <button class="nav-btn position-relative" data-bs-toggle="dropdown" id="bellBtn">
-                            <i class="fa fa-bell"></i>
-                            <span class="notif-dot" id="bellDot" style="display:none"></span>
-                            <span id="bellBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:9px;display:none"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end notif-dropdown shadow" style="min-width:280px">
-                            <li class="notif-header"><i class="fa fa-bell me-2"></i>Thông báo</li>
-                            <li id="notifOverdue" style="display:none">
-                                <a class="dropdown-item notif-item" asp-controller="Borrow" asp-action="Index" asp-route-status="OVERDUE">
-                                    <i class="fa fa-triangle-exclamation text-warning me-2"></i>
-                                    Có <span id="overdueCount">0</span> sách quá hạn
-                                </a>
-                            </li>
-                            <li id="notifPending" style="display:none">
-                                <a class="dropdown-item notif-item" asp-controller="NhanVien" asp-action="PendingAccounts">
-                                    <i class="fa fa-user-clock text-info me-2"></i>
-                                    Có <span id="pendingCount">0</span> tài khoản chờ duyệt
-                                </a>
-                            </li>
-                            <li id="notifEmpty" class="px-3 py-2 text-muted small text-center">
-                                <i class="fa fa-check-circle text-success me-1"></i>Không có thông báo mới
-                            </li>
-                        </ul>
-                    </div>
-                }
-                <div class="dropdown">
-                    <button class="user-chip dropdown-toggle" data-bs-toggle="dropdown">
-                        <div class="user-avatar">@(User.Identity?.Name?.Substring(0,1).ToUpper() ?? "U")</div>
-                        <span class="user-name d-none d-md-inline">@User.Identity?.Name</span>
-                        <i class="fa fa-chevron-down fa-xs ms-1 opacity-50"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow">
-                        <li class="dropdown-header px-3 py-2">
-                            <div class="fw-semibold">@User.Identity?.Name</div>
-                            <div class="text-muted small">@(User.IsInRole("ADMIN") ? "Administrator" : User.IsInRole("LIB") ? "Thủ thư" : "Sinh viên")</div>
-                        </li>
-                        <li><hr class="dropdown-divider my-1" /></li>
-                        @if (User.IsInRole("STU"))
-                        {
-                            <li><a asp-controller="Student" asp-action="EditProfile" class="dropdown-item"><i class="fa fa-user-pen me-2"></i>Thông tin cá nhân</a></li>
-                        }
-                        <li><a asp-controller="Auth" asp-action="Logout" class="dropdown-item text-danger"><i class="fa fa-right-from-bracket me-2"></i>Đăng xuất</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="page-content">@RenderBody()</div>
-    </div>
-</div>
-}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        // Bật "responsive" mặc định cho MỌI bảng $(...).DataTable({...}) trong toàn bộ
+        // app (Sách, Tác giả, NXB, Độc giả, Nhân viên, Mượn/trả, Kho, ...) — không cần
+        // sửa từng view: cột nào không đủ chỗ trên điện thoại sẽ tự gộp vào 1 nút "+"
+        // bấm ra xem, thay vì phải cuộn ngang khó chịu.
+        if (window.jQuery && $.fn.dataTable) {
+        $.extend(true, $.fn.dataTable.defaults, { responsive: true });
+        }
+    </script>
 
-<script>
-// Cấu hình toastr: tự đóng sau 5 giây, có nút X để đóng tay
-toastr.options = {
-    "closeButton": true,
-    "progressBar": true,
-    "positionClass": "toast-top-right",
-    "timeOut": "5000",
-    "extendedTimeOut": "2000",
-    "preventDuplicates": true,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "500",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-};
-</script>
-@if (TempData["success"] != null) { <script>toastr.success('@Html.Raw(TempData["success"])');</script> }
-@if (TempData["error"]   != null) { <script>toastr.error('@Html.Raw(TempData["error"])');</script> }
-@if (TempData["warning"] != null) { <script>toastr.warning('@Html.Raw(TempData["warning"])');</script> }
-@if (TempData["OtpSent"] != null) { <script>toastr.info('@Html.Raw(TempData["OtpSent"])', '', {timeOut:10000});</script> }
+    <script>
+        // Cấu hình toastr: tự đóng sau 5 giây, có nút X để đóng tay
+        toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "5000",
+        "extendedTimeOut": "2000",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "500",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        };
+    </script>
+    @if (TempData["success"] != null)
+    {
+        <script>toastr.success('@Html.Raw(TempData["success"])');</script>
+    }
+    @if (TempData["error"] != null)
+    {
+        <script>toastr.error('@Html.Raw(TempData["error"])');</script>
+    }
+    @if (TempData["warning"] != null)
+    {
+        <script>toastr.warning('@Html.Raw(TempData["warning"])');</script>
+    }
+    @if (TempData["OtpSent"] != null)
+    {
+        <script>toastr.info('@Html.Raw(TempData["OtpSent"])', '', {timeOut:10000});</script>
+    }
 
-<script>
-const darkBtn=document.getElementById('darkModeBtn'),darkIcon=document.getElementById('darkIcon');
-if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark-mode');if(darkIcon)darkIcon.className='fa fa-sun';}
-darkBtn?.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');const d=document.body.classList.contains('dark-mode');darkIcon.className=d?'fa fa-sun':'fa fa-moon';localStorage.setItem('darkMode',d?'1':'0');});
-const links=document.querySelectorAll('.sidebar-link'),path=window.location.pathname.toLowerCase();
-links.forEach(a=>{if(a.href&&a.href!=='#'){const h=new URL(a.href).pathname.toLowerCase();if(h!=='/'&&path.startsWith(h))a.classList.add('active');}});
-document.getElementById('sidebarToggle')?.addEventListener('click',()=>document.getElementById('sidebarEl')?.classList.toggle('open'));
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-<script>
-const conn=new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
-conn.on("ReceiveNotification",msg=>toastr.info(msg,'📚 Sách mới',{timeOut:6000,positionClass:'toast-top-right'}));
-conn.start().catch(e=>console.error(e));
-</script>
-@if (User.IsInRole("ADMIN") || User.IsInRole("LIB")) {
-<script>
-// Tải thông báo động cho chuông bell (ADMIN + LIB)
-async function loadAdminNotifications() {
-    try {
-        const res = await fetch('/NhanVien/GetNotificationCounts');
-        if (!res.ok) return;
-        const data = await res.json();
+    <script>
+        const darkBtn=document.getElementById('darkModeBtn'),darkIcon=document.getElementById('darkIcon');
+        if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark-mode');if(darkIcon)darkIcon.className='fa fa-sun';}
+        darkBtn?.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');const d=document.body.classList.contains('dark-mode');darkIcon.className=d?'fa fa-sun':'fa fa-moon';localStorage.setItem('darkMode',d?'1':'0');});
+        const links=document.querySelectorAll('.sidebar-link'),path=window.location.pathname.toLowerCase();
+        links.forEach(a=>{if(a.href&&a.href!=='#'){const h=new URL(a.href).pathname.toLowerCase();if(h!=='/'&&path.startsWith(h))a.classList.add('active');}});
 
-        let totalCount = 0;
+        // Mở/đóng sidebar dạng drawer trên điện thoại (≤768px): nút hamburger,
+        // bấm ra ngoài (backdrop), hoặc nhấn Esc đều đóng lại được.
+        const sidebarEl = document.getElementById('sidebarEl');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        function setSidebarOpen(open) {
+        sidebarEl?.classList.toggle('open', open);
+        sidebarBackdrop?.classList.toggle('show', open);
+        document.body.classList.toggle('sidebar-locked', open);
+        }
+        document.getElementById('sidebarToggle')?.addEventListener('click', () => setSidebarOpen(!sidebarEl?.classList.contains('open')));
+        sidebarBackdrop?.addEventListener('click', () => setSidebarOpen(false));
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') setSidebarOpen(false); });
+        // Bấm vào 1 link trong drawer thì tự đóng lại luôn cho gọn
+        sidebarEl?.querySelectorAll('.sidebar-link').forEach(a => a.addEventListener('click', () => setSidebarOpen(false)));
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        const conn=new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+        conn.on("ReceiveNotification",msg=>toastr.info(msg,'📚 Sách mới',{timeOut:6000,positionClass:'toast-top-right'}));
+        conn.start().catch(e=>console.error(e));
+    </script>
+    @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+    {
+        <script>
+            // Tải thông báo động cho chuông bell (ADMIN + LIB)
+            async function loadAdminNotifications() {
+            try {
+            const res = await fetch('/NhanVien/GetNotificationCounts');
+            if (!res.ok) return;
+            const data = await res.json();
 
-        // Cập nhật sách quá hạn
-        const overdueEl = document.getElementById('notifOverdue');
-        const overdueCountEl = document.getElementById('overdueCount');
-        if (overdueEl && overdueCountEl) {
+            let totalCount = 0;
+
+            // Cập nhật sách quá hạn
+            const overdueEl = document.getElementById('notifOverdue');
+            const overdueCountEl = document.getElementById('overdueCount');
+            if (overdueEl && overdueCountEl) {
             if (data.overdueCount > 0) {
-                overdueEl.style.display = '';
-                overdueCountEl.textContent = data.overdueCount;
-                totalCount += data.overdueCount;
+            overdueEl.style.display = '';
+            overdueCountEl.textContent = data.overdueCount;
+            totalCount += data.overdueCount;
             } else {
-                overdueEl.style.display = 'none';
+            overdueEl.style.display = 'none';
             }
-        }
+            }
 
-        // Cập nhật tài khoản chờ duyệt
-        const pendingEl = document.getElementById('notifPending');
-        const pendingCountEl = document.getElementById('pendingCount');
-        if (pendingEl && pendingCountEl) {
+            // Cập nhật tài khoản chờ duyệt
+            const pendingEl = document.getElementById('notifPending');
+            const pendingCountEl = document.getElementById('pendingCount');
+            if (pendingEl && pendingCountEl) {
             if (data.pendingCount > 0) {
-                pendingEl.style.display = '';
-                pendingCountEl.textContent = data.pendingCount;
-                totalCount += data.pendingCount;
+            pendingEl.style.display = '';
+            pendingCountEl.textContent = data.pendingCount;
+            totalCount += data.pendingCount;
             } else {
-                pendingEl.style.display = 'none';
+            pendingEl.style.display = 'none';
             }
-        }
+            }
 
-        // Hiện/ẩn "không có thông báo"
-        const emptyEl = document.getElementById('notifEmpty');
-        if (emptyEl) emptyEl.style.display = totalCount === 0 ? '' : 'none';
+            // Hiện/ẩn "không có thông báo"
+            const emptyEl = document.getElementById('notifEmpty');
+            if (emptyEl) emptyEl.style.display = totalCount === 0 ? '' : 'none';
 
-        // Cập nhật badge trên chuông
-        const bellDot = document.getElementById('bellDot');
-        const bellBadge = document.getElementById('bellBadge');
-        if (totalCount > 0) {
+            // Cập nhật badge trên chuông
+            const bellDot = document.getElementById('bellDot');
+            const bellBadge = document.getElementById('bellBadge');
+            if (totalCount > 0) {
             if (bellDot) bellDot.style.display = '';
             if (bellBadge) { bellBadge.textContent = totalCount > 99 ? '99+' : totalCount; bellBadge.style.display = ''; }
-        } else {
+            } else {
             if (bellDot) bellDot.style.display = 'none';
             if (bellBadge) bellBadge.style.display = 'none';
-        }
-    } catch(e) { console.error('Lỗi tải thông báo:', e); }
-}
-loadAdminNotifications();
-setInterval(loadAdminNotifications, 60000); // Refresh mỗi 1 phút
-</script>
-}
-@if (User.IsInRole("STU")) {
-<script>
-(async function loadNotifBadge() {
-    try {
-        const r = await fetch('/Wishlist/SoThongBaoChuaDoc');
-        const n = await r.json();
-        const badge = document.getElementById('notifBadgeNav');
-        if (badge) { if(n>0){badge.textContent=n;badge.style.display='';}else{badge.style.display='none';} }
-    } catch(e){}
-})();
-setInterval(async function(){
-    try{
-        const r=await fetch('/Wishlist/SoThongBaoChuaDoc');
-        const n=await r.json();
-        const badge=document.getElementById('notifBadgeNav');
-        if(badge){if(n>0){badge.textContent=n;badge.style.display='';}else{badge.style.display='none';}}
-    }catch(e){}
-}, 120000);
-</script>
-}
-@await RenderSectionAsync("Scripts", required: false)
+            }
+            } catch(e) { console.error('Lỗi tải thông báo:', e); }
+            }
+            loadAdminNotifications();
+            setInterval(loadAdminNotifications, 60000); // Refresh mỗi 1 phút
+        </script>
+    }
+    @if (User.IsInRole("STU"))
+    {
+        <script>
+            (async function loadNotifBadge() {
+            try {
+            const r = await fetch('/Wishlist/SoThongBaoChuaDoc');
+            const n = await r.json();
+            const badge = document.getElementById('notifBadgeNav');
+            if (badge) { if(n>0){badge.textContent=n;badge.style.display='';}else{badge.style.display='none';} }
+            } catch(e){}
+            })();
+            setInterval(async function(){
+            try{
+            const r=await fetch('/Wishlist/SoThongBaoChuaDoc');
+            const n=await r.json();
+            const badge=document.getElementById('notifBadgeNav');
+            if(badge){if(n>0){badge.textContent=n;badge.style.display='';}else{badge.style.display='none';}}
+            }catch(e){}
+            }, 120000);
+        </script>
+    }
+    @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

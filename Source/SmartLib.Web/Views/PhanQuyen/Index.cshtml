@@ -1,0 +1,574 @@
+@model SmartLib.Web.ViewModels.PhanQuyenIndexViewModel
+@{
+    ViewData["Title"] = "Phân quyền nhân viên";
+    var jsonOpts = new System.Text.Json.JsonSerializerOptions { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase };
+    var initialJson = System.Text.Json.JsonSerializer.Serialize(new { laAdmin = Model.LaAdmin, groups = Model.NhomChucNangs }, jsonOpts);
+    var nvChon = Model.DanhSachNhanVien.FirstOrDefault(n => n.MaNV == Model.MaNVDangChon);
+}
+
+<style>
+    /* ============================================================
+       PHÂN QUYỀN NHÂN VIÊN — style riêng cho trang này
+    ============================================================ */
+    .pq-sticky { position: sticky; top: 20px; }
+
+    .pq-staff-preview {
+        display: flex; align-items: center; gap: 12px;
+        padding: 12px 14px; background: var(--c-bg2);
+        border-radius: var(--r); margin-bottom: 14px;
+    }
+        .pq-staff-preview .fw-bold { line-height: 1.2; }
+
+    .pq-admin-switch {
+        background: var(--c-gold-pale) !important;
+        border: 1.5px solid var(--c-gold);
+        border-radius: var(--r);
+        padding: 14px !important;
+    }
+        .pq-admin-switch .form-check-input { width: 2.6em; height: 1.4em; cursor: pointer; }
+        .pq-admin-switch .form-check-input:checked {
+            background-color: var(--c-gold); border-color: var(--c-gold);
+        }
+        .pq-admin-switch .form-text { color: var(--c-gold-dk); }
+
+    .pq-copy-box { background: var(--c-blue-pale); border-radius: var(--r); padding: 12px; }
+
+    /* ── Khu vực bảng ma trận ─────────────────────────────────── */
+    .pq-matrix-wrap { position: relative; }
+
+    .pq-table-scroll {
+        max-height: 620px; overflow-y: auto;
+        border: 1px solid var(--c-border); border-radius: var(--r);
+    }
+        .pq-table-scroll table { margin-bottom: 0; }
+        .pq-table-scroll thead th {
+            position: sticky; top: 0; z-index: 3;
+            background: var(--c-blue-pale); border-bottom: 2px solid var(--c-border);
+            font-size: 13px; white-space: nowrap;
+        }
+
+    .pq-col-head { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .pq-col-head input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+    .pq-col-xem  .pq-col-head span { color: var(--c-blue);   font-weight: 700; }
+    .pq-col-them .pq-col-head span { color: var(--c-green);  font-weight: 700; }
+    .pq-col-sua  .pq-col-head span { color: var(--c-gold-dk);font-weight: 700; }
+    .pq-col-xoa  .pq-col-head span { color: var(--c-red);    font-weight: 700; }
+
+    .pq-group-row td {
+        background: var(--c-purple-pale) !important;
+        border-top: 2px solid var(--c-border);
+        padding: 9px 14px !important;
+    }
+    .pq-group-header { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+    .pq-group-chevron { color: var(--c-purple); width: 14px; transition: transform .15s ease; }
+    .pq-group-icon { color: var(--c-purple); width: 16px; }
+    .pq-group-title { font-weight: 700; color: var(--c-purple); }
+    .pq-group-badge {
+        margin-left: auto; background: #fff; color: var(--c-purple);
+        border: 1px solid var(--c-purple); font-weight: 600; font-size: 11.5px;
+    }
+
+    .pq-func-row td { padding-top: 9px; padding-bottom: 9px; font-size: 14px; }
+    .pq-hidden-collapsed, .pq-hidden-search { display: none !important; }
+
+    /* ── Ô check dạng "toggle chip" màu theo cột ─────────────────── */
+    .pq-toggle { position: relative; display: inline-flex; cursor: pointer; }
+        .pq-toggle input {
+            position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; width: 100%; height: 100%;
+        }
+        .pq-toggle-box {
+            width: 30px; height: 30px; border-radius: 9px;
+            background: #eef2f7; border: 1.5px solid #dbe3ee;
+            display: flex; align-items: center; justify-content: center;
+            color: transparent; font-size: 13px; transition: all .12s ease;
+        }
+        .pq-toggle:hover .pq-toggle-box { transform: scale(1.08); }
+        .pq-toggle input:focus-visible + .pq-toggle-box { outline: 2px solid var(--c-blue); outline-offset: 2px; }
+        .pq-toggle input:checked + .pq-toggle-box { color: #fff; }
+        .pq-toggle-xem  input:checked + .pq-toggle-box { background: var(--c-blue);  border-color: var(--c-blue); }
+        .pq-toggle-them input:checked + .pq-toggle-box { background: var(--c-green); border-color: var(--c-green); }
+        .pq-toggle-sua  input:checked + .pq-toggle-box { background: var(--c-gold);  border-color: var(--c-gold); }
+        .pq-toggle-xoa  input:checked + .pq-toggle-box { background: var(--c-red);   border-color: var(--c-red); }
+
+    /* ── Overlay khi bật "Là Admin" ───────────────────────────── */
+    .pq-dimmed .pq-table-scroll { opacity: .32; filter: grayscale(.4); pointer-events: none; transition: opacity .2s; }
+    .pq-admin-overlay {
+        position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; text-align: center;
+        color: var(--c-gold-dk); background: rgba(255,255,255,.6); border-radius: var(--r);
+        backdrop-filter: blur(1px);
+    }
+
+    /* ── Nút Lưu nhấp nháy nhẹ khi có thay đổi chưa lưu ──────────── */
+    .pq-btn-pulse { animation: pqPulse 1.5s infinite; }
+    @@keyframes pqPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,.55); }
+        50%      { box-shadow: 0 0 0 9px rgba(245,158,11,0); }
+    }
+
+    @@media (max-width: 991px) {
+        .pq-sticky { position: static; }
+        .pq-table-scroll { max-height: 460px; }
+    }
+
+    /* ── Dark mode ────────────────────────────────────────────── */
+    body.dark-mode .pq-staff-preview,
+    body.dark-mode .pq-copy-box { background: #0f1a38; }
+    body.dark-mode .pq-toggle-box { background: #16233f; border-color: #26365e; }
+    body.dark-mode .pq-table-scroll { border-color: #1e2d55; }
+    body.dark-mode .pq-table-scroll thead th { background: #0f1a38; border-color: #1e2d55; color: #e2e8f0; }
+    body.dark-mode .pq-group-row td { background: #142048 !important; border-color: #1e2d55; }
+    body.dark-mode .pq-admin-overlay { background: rgba(8,16,42,.65); }
+    body.dark-mode .pq-func-row td { color: #e2e8f0; }
+</style>
+
+<div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h3 class="mb-1"><i class="fa fa-shield-halved text-primary me-2"></i>Phân quyền nhân viên</h3>
+        <p class="text-muted mb-0">
+            Cấp độc lập từng quyền <strong>Xem · Thêm · Sửa · Xóa</strong> cho mỗi nhân viên theo từng chức năng —
+            hai nhân viên cùng chức vụ vẫn có thể sở hữu bộ quyền khác nhau.
+        </p>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <span id="dirtyBadge" class="badge text-bg-warning d-none px-3 py-2">
+            <i class="fa fa-circle-exclamation me-1"></i>Có thay đổi chưa lưu
+        </span>
+        <button type="button" id="btnSave" class="btn btn-primary px-4" onclick="savePermissions()">
+            <i class="fa fa-floppy-disk me-2"></i>Lưu phân quyền
+        </button>
+    </div>
+</div>
+
+@if (!Model.DanhSachNhanVien.Any())
+{
+    <div class="card p-5 text-center text-muted">
+        <i class="fa fa-users-slash fa-2x mb-3"></i>
+        <p class="mb-0">Chưa có nhân viên nào (ngoài tài khoản độc giả) để phân quyền.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <!-- ═════════ CỘT TRÁI: chọn nhân viên ═════════ -->
+        <div class="col-lg-3">
+            <div class="card p-3 pq-sticky">
+                <label class="form-label fw-semibold"><i class="fa fa-user me-1 text-primary"></i>Chọn nhân viên</label>
+                <select id="selNhanVien" class="form-select mb-3" onchange="onChangeNhanVien(this.value)">
+                    @foreach (var nv in Model.DanhSachNhanVien)
+                    {
+                        <option value="@nv.MaNV" selected="@(nv.MaNV == Model.MaNVDangChon)">
+                            @nv.HoTen — @(nv.ChucVu?.TenChucVu ?? nv.MaChucVu)@(!nv.TrangThai ? " (đã khóa)" : "")
+                        </option>
+                    }
+                </select>
+
+                @if (nvChon != null)
+                {
+                    <div class="pq-staff-preview">
+                        <div class="avatar-initials" style="width:44px;height:44px;font-size:17px;">@nvChon.HoTen.Substring(0, 1).ToUpper()</div>
+                        <div>
+                            <div class="fw-bold">@nvChon.HoTen</div>
+                            <div class="small text-muted">@(nvChon.ChucVu?.TenChucVu ?? nvChon.MaChucVu) · @nvChon.MaNV</div>
+                        </div>
+                    </div>
+                }
+
+                <div class="form-check form-switch pq-admin-switch mb-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="chkLaAdmin" onchange="onToggleAdmin(this.checked)">
+                    <label class="form-check-label fw-semibold" for="chkLaAdmin">Là Admin (Toàn quyền)</label>
+                    <div class="form-text mt-1">
+                        <i class="fa fa-circle-info me-1"></i>Nếu bật, nhân viên sẽ thấy và thao tác được <strong>tất cả</strong> chức năng, bất kể bảng bên dưới đang chọn gì.
+                    </div>
+                </div>
+
+                <div class="pq-copy-box">
+                    <label class="form-label fw-semibold small mb-2"><i class="fa fa-copy me-1"></i>Sao chép quyền từ nhân viên khác</label>
+                    <div class="d-flex gap-2">
+                        <select id="selCopyFrom" class="form-select form-select-sm">
+                            <option value="">-- chọn nhân viên --</option>
+                            @foreach (var nv in Model.DanhSachNhanVien)
+                            {
+                                if (nv.MaNV != Model.MaNVDangChon)
+                                {
+                                    <option value="@nv.MaNV">@nv.HoTen</option>
+                                }
+                            }
+                        </select>
+                        <button type="button" class="btn btn-sm btn-outline-secondary text-nowrap" onclick="copyFromStaff()" title="Sao chép">
+                            <i class="fa fa-arrow-right-to-bracket"></i>
+                        </button>
+                    </div>
+                    <div class="form-text mt-1">Chỉ sao chép ma trận Xem/Thêm/Sửa/Xóa, không sao chép cờ "Là Admin".</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═════════ CỘT PHẢI: ma trận quyền ═════════ -->
+        <div class="col-lg-9">
+            <div class="card p-3">
+                <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+                    <div class="input-group" style="max-width:320px">
+                        <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
+                        <input type="text" id="txtSearch" class="form-control" placeholder="Tìm chức năng..." oninput="filterFunctions(this.value)">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllGroups(true)"><i class="fa fa-angles-down me-1"></i>Mở tất cả</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllGroups(false)"><i class="fa fa-angles-up me-1"></i>Thu gọn</button>
+                    </div>
+                </div>
+
+                <div class="pq-matrix-wrap">
+                    <div id="adminOverlay" class="pq-admin-overlay d-none">
+                        <i class="fa fa-shield-halved fa-2x mb-2"></i>
+                        <div class="fw-bold">Nhân viên đang có TOÀN QUYỀN</div>
+                        <div class="small">Tắt công tắc "Là Admin" bên trái nếu muốn cấu hình chi tiết bên dưới.</div>
+                    </div>
+                    <div class="table-responsive pq-table-scroll">
+                        <table class="table table-hover align-middle mb-0" id="pqTable">
+                            <thead>
+                                <tr>
+                                    <th style="width:46px" class="text-center">STT</th>
+                                    <th>Chức năng</th>
+                                    <th class="text-center pq-col-xem" style="width:76px">
+                                        <div class="pq-col-head"><span>Xem</span><input type="checkbox" onchange="toggleColumn('xem', this.checked)" aria-label="Chọn tất cả quyền Xem" title="Chọn/bỏ chọn tất cả cột Xem"></div>
+                                    </th>
+                                    <th class="text-center pq-col-them" style="width:76px">
+                                        <div class="pq-col-head"><span>Thêm</span><input type="checkbox" onchange="toggleColumn('them', this.checked)" aria-label="Chọn tất cả quyền Thêm" title="Chọn/bỏ chọn tất cả cột Thêm"></div>
+                                    </th>
+                                    <th class="text-center pq-col-sua" style="width:76px">
+                                        <div class="pq-col-head"><span>Sửa</span><input type="checkbox" onchange="toggleColumn('sua', this.checked)" aria-label="Chọn tất cả quyền Sửa" title="Chọn/bỏ chọn tất cả cột Sửa"></div>
+                                    </th>
+                                    <th class="text-center pq-col-xoa" style="width:76px">
+                                        <div class="pq-col-head"><span>Xóa</span><input type="checkbox" onchange="toggleColumn('xoa', this.checked)" aria-label="Chọn tất cả quyền Xóa" title="Chọn/bỏ chọn tất cả cột Xóa"></div>
+                                    </th>
+                                    <th class="text-center" style="width:80px">Nhanh</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pqTableBody"><!-- Được JS render --></tbody>
+                        </table>
+                    </div>
+                    <div id="emptyState" class="text-center text-muted py-5 d-none">
+                        <i class="fa fa-box-open fa-2x mb-2"></i><br />Chưa có dữ liệu chức năng. Vui lòng chạy script SQL cài đặt trước.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<form id="antiForgeryForm" class="d-none">@Html.AntiForgeryToken()</form>
+
+@section Scripts {
+<script>
+    const initialData = @Html.Raw(initialJson);
+    let selectedMaNV = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MaNVDangChon ?? ""));
+    let currentData = null;
+    let collapsedGroups = new Set();
+    let dirty = false;
+
+    // ── Tiện ích ──────────────────────────────────────────────
+    function escapeHtml(s) {
+        return (s ?? '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function getToken() {
+        return document.querySelector('#antiForgeryForm [name=__RequestVerificationToken]')?.value;
+    }
+    function findFunc(maChucNang) {
+        for (const g of currentData.groups) {
+            const f = g.chucNangs.find(c => c.maChucNang === maChucNang);
+            if (f) return f;
+        }
+        return null;
+    }
+    function applyDependencyRules(f) {
+        // Xem là điều kiện cần: có Thêm/Sửa/Xóa thì bắt buộc có Xem; tắt Xem thì tắt luôn 3 quyền còn lại
+        if ((f.them || f.sua || f.xoa) && !f.xem) f.xem = true;
+        if (!f.xem) { f.them = false; f.sua = false; f.xoa = false; }
+    }
+    function markDirty() {
+        dirty = true;
+        document.getElementById('dirtyBadge').classList.remove('d-none');
+        document.getElementById('btnSave').classList.add('pq-btn-pulse');
+    }
+    function markClean() {
+        dirty = false;
+        document.getElementById('dirtyBadge').classList.add('d-none');
+        document.getElementById('btnSave').classList.remove('pq-btn-pulse');
+    }
+
+    // ── Render bảng từ dữ liệu (dùng chung cho tải trang & sao chép quyền) ──
+    function renderMatrix(data) {
+        currentData = data;
+        const tbody = document.getElementById('pqTableBody');
+        const scrollWrap = document.querySelector('.pq-table-scroll');
+        const emptyState = document.getElementById('emptyState');
+        tbody.innerHTML = '';
+
+        const hasAny = data.groups && data.groups.some(g => g.chucNangs.length > 0);
+        scrollWrap.classList.toggle('d-none', !hasAny);
+        emptyState.classList.toggle('d-none', hasAny);
+        if (!hasAny) return;
+
+        let stt = 0;
+        data.groups.forEach(group => {
+            const collapsed = collapsedGroups.has(group.maNhom);
+
+            const groupTr = document.createElement('tr');
+            groupTr.className = 'pq-group-row';
+            groupTr.dataset.group = group.maNhom;
+            groupTr.innerHTML = `<td colspan="7">
+                <div class="pq-group-header" onclick="toggleGroup(${group.maNhom})">
+                    <i class="fa fa-chevron-${collapsed ? 'right' : 'down'} pq-group-chevron" id="chev-${group.maNhom}"></i>
+                    <i class="fa ${group.icon || 'fa-folder'} pq-group-icon"></i>
+                    <span class="pq-group-title">${escapeHtml(group.tenNhom)}</span>
+                    <span class="badge pq-group-badge" id="badge-${group.maNhom}"></span>
+                </div>
+            </td>`;
+            tbody.appendChild(groupTr);
+
+            group.chucNangs.forEach(cn => {
+                stt++;
+                const tr = document.createElement('tr');
+                tr.className = 'pq-func-row' + (collapsed ? ' pq-hidden-collapsed' : '');
+                tr.dataset.group = group.maNhom;
+                tr.dataset.name = (cn.tenChucNang || '').toLowerCase();
+                tr.innerHTML = `
+                    <td class="text-center text-muted small">${stt}</td>
+                    <td><i class="fa ${cn.icon || 'fa-circle'} text-primary me-2"></i>${escapeHtml(cn.tenChucNang)}</td>
+                    ${chkCell(cn.maChucNang, 'xem', cn.xem, cn.tenChucNang)}
+                    ${chkCell(cn.maChucNang, 'them', cn.them, cn.tenChucNang)}
+                    ${chkCell(cn.maChucNang, 'sua', cn.sua, cn.tenChucNang)}
+                    ${chkCell(cn.maChucNang, 'xoa', cn.xoa, cn.tenChucNang)}
+                    <td class="text-center text-nowrap">
+                        <button type="button" class="btn btn-xs btn-outline-success me-1" title="Cấp toàn quyền dòng này" onclick="setRow(${cn.maChucNang}, true)"><i class="fa fa-check-double"></i></button>
+                        <button type="button" class="btn btn-xs btn-outline-secondary" title="Bỏ hết quyền dòng này" onclick="setRow(${cn.maChucNang}, false)"><i class="fa fa-ban"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        });
+
+        document.getElementById('chkLaAdmin').checked = !!data.laAdmin;
+        applyAdminOverlay(!!data.laAdmin);
+        recalcColumnHeaders();
+        updateGroupBadges();
+    }
+
+    function chkCell(maChucNang, type, checked, tenChucNang) {
+        const nhan = { xem: 'Xem', them: 'Thêm', sua: 'Sửa', xoa: 'Xóa' }[type];
+        return `<td class="text-center pq-chk-cell">
+            <label class="pq-toggle pq-toggle-${type}">
+                <input type="checkbox" data-ma="${maChucNang}" data-type="${type}" ${checked ? 'checked' : ''}
+                       aria-label="${nhan} — ${escapeHtml(tenChucNang)}" onchange="onCellChange(this)">
+                <span class="pq-toggle-box"><i class="fa fa-check"></i></span>
+            </label>
+        </td>`;
+    }
+
+    // ── Đồng bộ DOM checkbox <= dữ liệu (nguồn dữ liệu duy nhất là currentData) ──
+    function syncCheckboxesFromData() {
+        currentData.groups.forEach(g => g.chucNangs.forEach(f => {
+            ['xem', 'them', 'sua', 'xoa'].forEach(type => {
+                const el = document.querySelector(`input[data-ma="${f.maChucNang}"][data-type="${type}"]`);
+                if (el) el.checked = f[type];
+            });
+        }));
+        recalcColumnHeaders();
+        updateGroupBadges();
+    }
+
+    function recalcColumnHeaders() {
+        ['xem', 'them', 'sua', 'xoa'].forEach(type => {
+            const all = [];
+            currentData.groups.forEach(g => g.chucNangs.forEach(f => all.push(!!f[type])));
+            const header = document.querySelector(`.pq-col-${type} input[type=checkbox]`);
+            if (!header || all.length === 0) return;
+            const checkedCount = all.filter(Boolean).length;
+            header.checked = checkedCount === all.length;
+            header.indeterminate = checkedCount > 0 && checkedCount < all.length;
+        });
+    }
+
+    function updateGroupBadges() {
+        currentData.groups.forEach(g => {
+            const total = g.chucNangs.length;
+            const done = g.chucNangs.filter(c => c.xem || c.them || c.sua || c.xoa).length;
+            const badge = document.getElementById(`badge-${g.maNhom}`);
+            if (badge) badge.textContent = `${done}/${total} chức năng có quyền`;
+        });
+    }
+
+    // ── Sự kiện trên từng ô check ─────────────────────────────
+    function onCellChange(input) {
+        const ma = parseInt(input.dataset.ma, 10);
+        const type = input.dataset.type;
+        const f = findFunc(ma);
+        if (!f) return;
+        f[type] = input.checked;
+        applyDependencyRules(f);
+        syncCheckboxesFromData();
+        markDirty();
+    }
+
+    function setRow(maChucNang, allOn) {
+        const f = findFunc(maChucNang);
+        if (!f) return;
+        f.xem = allOn; f.them = allOn; f.sua = allOn; f.xoa = allOn;
+        syncCheckboxesFromData();
+        markDirty();
+    }
+
+    function toggleColumn(type, checked) {
+        currentData.groups.forEach(g => g.chucNangs.forEach(f => {
+            f[type] = checked;
+            applyDependencyRules(f);
+        }));
+        syncCheckboxesFromData();
+        markDirty();
+    }
+
+    // ── Thu gọn / mở rộng nhóm ────────────────────────────────
+    function toggleGroup(maNhom) {
+        if (collapsedGroups.has(maNhom)) collapsedGroups.delete(maNhom);
+        else collapsedGroups.add(maNhom);
+        const isCollapsed = collapsedGroups.has(maNhom);
+        document.querySelectorAll(`.pq-func-row[data-group="${maNhom}"]`).forEach(row => {
+            row.classList.toggle('pq-hidden-collapsed', isCollapsed);
+        });
+        const chev = document.getElementById(`chev-${maNhom}`);
+        if (chev) {
+            chev.classList.toggle('fa-chevron-down', !isCollapsed);
+            chev.classList.toggle('fa-chevron-right', isCollapsed);
+        }
+    }
+
+    function toggleAllGroups(expand) {
+        collapsedGroups.clear();
+        if (!expand) currentData.groups.forEach(g => collapsedGroups.add(g.maNhom));
+        renderMatrix(currentData);
+    }
+
+    // ── Tìm kiếm chức năng ────────────────────────────────────
+    function filterFunctions(keyword) {
+        const kw = keyword.trim().toLowerCase();
+        const groupHasMatch = {};
+        document.querySelectorAll('.pq-func-row').forEach(row => {
+            const match = !kw || row.dataset.name.includes(kw);
+            row.classList.toggle('pq-hidden-search', !match);
+            if (match) groupHasMatch[row.dataset.group] = true;
+        });
+        document.querySelectorAll('.pq-group-row').forEach(gr => {
+            const gid = gr.dataset.group;
+            const hasMatch = !kw || groupHasMatch[gid];
+            gr.classList.toggle('d-none', !hasMatch);
+            if (kw && hasMatch) {
+                collapsedGroups.delete(parseInt(gid, 10));
+                document.querySelectorAll(`.pq-func-row[data-group="${gid}"]`).forEach(r => r.classList.remove('pq-hidden-collapsed'));
+                const chev = document.getElementById('chev-' + gid);
+                if (chev) { chev.classList.add('fa-chevron-down'); chev.classList.remove('fa-chevron-right'); }
+            }
+        });
+    }
+
+    // ── "Là Admin" ────────────────────────────────────────────
+    function onToggleAdmin(checked) {
+        currentData.laAdmin = checked;
+        applyAdminOverlay(checked);
+        markDirty();
+    }
+    function applyAdminOverlay(isAdmin) {
+        document.getElementById('adminOverlay').classList.toggle('d-none', !isAdmin);
+        document.querySelector('.pq-matrix-wrap').classList.toggle('pq-dimmed', isAdmin);
+    }
+
+    // ── Đổi nhân viên đang chọn (chuyển trang, có cảnh báo nếu chưa lưu) ──
+    function onChangeNhanVien(maNV) {
+        if (dirty) {
+            Swal.fire({
+                title: 'Có thay đổi chưa lưu',
+                text: 'Chuyển sang nhân viên khác sẽ làm mất các thay đổi chưa lưu. Tiếp tục?',
+                icon: 'warning', showCancelButton: true,
+                confirmButtonColor: '#d33', cancelButtonText: 'Ở lại', confirmButtonText: 'Tiếp tục'
+            }).then(r => {
+                if (r.isConfirmed) {
+                    window.location.href = '@Url.Action("Index", "PhanQuyen")?maNV=' + encodeURIComponent(maNV);
+                } else {
+                    document.getElementById('selNhanVien').value = selectedMaNV;
+                }
+            });
+        } else {
+            window.location.href = '@Url.Action("Index", "PhanQuyen")?maNV=' + encodeURIComponent(maNV);
+        }
+    }
+
+    // ── Sao chép quyền từ nhân viên khác (không sao chép cờ Admin) ──
+    async function copyFromStaff() {
+        const fromMaNV = document.getElementById('selCopyFrom').value;
+        if (!fromMaNV) { toastr.warning('Vui lòng chọn nhân viên nguồn để sao chép.', 'Thiếu thông tin'); return; }
+
+        try {
+            const res = await fetch('@Url.Action("GetMatrix", "PhanQuyen")?maNV=' + encodeURIComponent(fromMaNV));
+            const data = await res.json();
+            if (!data.success) { toastr.error(data.message || 'Không tải được dữ liệu.', '❌ Lỗi'); return; }
+
+            const permByFunc = {};
+            data.groups.forEach(g => g.chucNangs.forEach(f => permByFunc[f.maChucNang] = f));
+            currentData.groups.forEach(g => g.chucNangs.forEach(f => {
+                const src = permByFunc[f.maChucNang];
+                if (src) { f.xem = src.xem; f.them = src.them; f.sua = src.sua; f.xoa = src.xoa; }
+            }));
+
+            syncCheckboxesFromData();
+            markDirty();
+            toastr.info(`Đã sao chép ma trận quyền từ "${data.hoTen}". Nhấn "Lưu phân quyền" để áp dụng.`, 'ℹ️ Đã sao chép');
+        } catch (err) {
+            toastr.error('Không thể kết nối máy chủ.', '❌ Lỗi');
+        }
+    }
+
+    // ── Lưu phân quyền ────────────────────────────────────────
+    async function savePermissions() {
+        if (!currentData) return;
+        const maNV = document.getElementById('selNhanVien').value;
+        const payload = { maNV: maNV, laAdmin: document.getElementById('chkLaAdmin').checked, quyens: [] };
+        currentData.groups.forEach(g => g.chucNangs.forEach(f => {
+            payload.quyens.push({ maChucNang: f.maChucNang, xem: f.xem, them: f.them, sua: f.sua, xoa: f.xoa });
+        }));
+
+        const btn = document.getElementById('btnSave');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Đang lưu...';
+
+        try {
+            const res = await fetch('@Url.Action("Save", "PhanQuyen")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getToken() },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+                toastr.success(data.message || 'Đã lưu phân quyền.', '✅ Thành công');
+                selectedMaNV = maNV;
+                markClean();
+            } else {
+                toastr.error(data.message || 'Có lỗi xảy ra, vui lòng thử lại.', '❌ Lỗi');
+            }
+        } catch (err) {
+            toastr.error('Không thể kết nối máy chủ.', '❌ Lỗi');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    }
+
+    // ── Cảnh báo khi rời trang nếu còn thay đổi chưa lưu ──────
+    window.addEventListener('beforeunload', function (e) {
+        if (dirty) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        renderMatrix(initialData);
+    });
+</script>
+}

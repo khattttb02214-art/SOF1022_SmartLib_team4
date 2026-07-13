@@ -417,6 +417,44 @@ body {
     }
 
 /* ================================================================
+   PAGE HEADER CARD (dùng chung nhiều trang quản lý)
+================================================================ */
+.page-header-card {
+    background: white;
+    border: 1px solid var(--c-border);
+    border-radius: var(--r2);
+    box-shadow: var(--sh);
+    padding: 20px 24px;
+}
+
+    .page-header-card h3 {
+        font-weight: 800;
+    }
+
+/* Avatar hình tròn hiển thị chữ cái đầu tên (dùng ở các bảng danh sách) */
+.avatar-initials {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Nút cỡ siêu nhỏ (nhỏ hơn cả btn-sm) dùng cho các icon-action trong bảng */
+.btn-xs {
+    padding: .2rem .5rem;
+    font-size: .75rem;
+    border-radius: 8px;
+    line-height: 1.4;
+}
+
+/* ================================================================
    TABLE
 ================================================================ */
 .table {
@@ -1398,7 +1436,8 @@ body.dark-mode {
         }
 
     body.dark-mode .card,
-    body.dark-mode .dashboard-card {
+    body.dark-mode .dashboard-card,
+    body.dark-mode .page-header-card {
         background: #0f1a38 !important;
         color: #e2e8f0 !important;
         border-color: #1e2d55 !important;
@@ -1611,5 +1650,186 @@ body.dark-mode {
 
     .sl-hero__stats {
         flex-direction: column;
+    }
+}
+
+/* ================================================================
+   NAVBAR CÔNG KHAI (chưa đăng nhập) — trước đây dùng inline style,
+   nay chuyển sang class để có thể responsive theo media query
+================================================================ */
+.pub-navbar-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: white;
+    border-bottom: 1px solid #e8edf8;
+    padding: 10px 24px;
+    padding-top: calc(10px + env(safe-area-inset-top));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pub-navbar-brand {
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 18px;
+    color: #1e3c72;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pub-navbar-brand__icon {
+    background: #2a5298;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.pub-navbar-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.pub-navbar-btn {
+    border-radius: 10px !important;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pub-navbar-spacer {
+    padding-top: 68px;
+}
+
+/* ================================================================
+   SIDEBAR BACKDROP — nền mờ phía sau drawer khi mở sidebar trên
+   điện thoại (≤768px). Ẩn hoàn toàn ở màn hình lớn.
+================================================================ */
+.sidebar-backdrop {
+    display: none;
+}
+
+body.sidebar-locked {
+    overflow: hidden;
+}
+
+/* ================================================================
+   DATATABLES — polish phần điều khiển (ô tìm kiếm / số dòng / phân
+   trang) để không bị vỡ layout trên màn hình hẹp
+================================================================ */
+.dataTables_wrapper {
+    width: 100%;
+}
+
+    .dataTables_wrapper .dataTables_filter input {
+        margin-right: 0 !important;
+    }
+
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Nút "+" mở rộng hàng của DataTables Responsive — thu nhỏ, đồng bộ tông xanh */
+table.dtr-inline.collapsed > tbody > tr > td.dtr-control,
+table.dtr-inline.collapsed > tbody > tr > th.dtr-control {
+    position: relative;
+    padding-left: 30px;
+}
+
+    table.dtr-inline.collapsed > tbody > tr > td.dtr-control::before,
+    table.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
+        top: 50%;
+        left: 5px;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        line-height: 20px;
+        background-color: var(--c-blue, #2563eb);
+        box-shadow: none;
+    }
+
+@media (max-width: 768px) {
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_length {
+        width: 100%;
+        text-align: right !important;
+        margin-bottom: 8px;
+    }
+
+        .dataTables_wrapper .dataTables_filter input {
+            width: 100%;
+            max-width: none;
+        }
+
+    .dataTables_wrapper .dataTables_paginate {
+        width: 100%;
+        text-align: center !important;
+        margin-top: 12px;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Trên điện thoại: mở drawer sẽ hiện nền mờ, bấm vào là đóng lại */
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, .45);
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .25s;
+    }
+
+        .sidebar-backdrop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+}
+
+@media (max-width: 576px) {
+    .pub-navbar-fixed {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .pub-navbar-btn span {
+        display: none; /* chỉ còn icon, đỡ chật trên màn hình rất nhỏ */
+    }
+
+    .pub-navbar-btn {
+        padding-left: .6rem !important;
+        padding-right: .6rem !important;
+    }
+
+        .pub-navbar-btn i {
+            margin: 0 !important;
+        }
+
+    .navbar-brand-text {
+        font-size: 13px;
+    }
+
+    .top-navbar {
+        padding: 10px 12px;
+        padding-top: calc(10px + env(safe-area-inset-top));
+    }
+
+    .page-content {
+        padding: 12px;
+    }
+
+    .dashboard-card {
+        padding: 16px;
     }
 }

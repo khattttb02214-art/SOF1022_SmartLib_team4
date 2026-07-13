@@ -1,0 +1,67 @@
+2026-07-13 08:13:07.976 +07:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-07-13 08:13:10.080 +07:00 [INF] Now listening on: https://localhost:7186
+2026-07-13 08:13:10.098 +07:00 [INF] Now listening on: http://localhost:5149
+2026-07-13 08:13:10.381 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-07-13 08:13:10.387 +07:00 [INF] Hosting environment: Development
+2026-07-13 08:13:10.392 +07:00 [INF] Content root path: D:\file thư viện soff 1022\SmartLib.Web
+2026-07-13 08:13:16.841 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/ - null null
+2026-07-13 08:13:17.839 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-07-13 08:13:20.951 +07:00 [INF] Route matched with {action = "Index", controller = "Home", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller SmartLib.Web.Controllers.HomeController (SmartLib.Web).
+2026-07-13 08:13:24.455 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-07-13 08:13:24.462 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-07-13 08:13:30.322 +07:00 [INF] Executed DbCommand (489ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+2026-07-13 08:13:30.523 +07:00 [INF] Executed DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [TheLoai] AS [t]
+2026-07-13 08:13:30.652 +07:00 [INF] Executed DbCommand (58ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[SoLuongKhaDung] > 0 AND [s].[TrangThai] = CAST(1 AS bit)
+2026-07-13 08:13:31.706 +07:00 [INF] Executed DbCommand (496ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[TenSach], CASE
+    WHEN [t].[MaTheLoai] IS NOT NULL THEN [t].[TenTheLoai]
+    ELSE N'Chưa phân loại'
+END AS [TenTheLoai], [s0].[AnhBia], [s0].[SoLuongKhaDung]
+FROM (
+    SELECT TOP(@__p_0) [s].[MaSach], [s].[AnhBia], [s].[MaTheLoai], [s].[NgayTao], [s].[SoLuongKhaDung], [s].[TenSach]
+    FROM [Sach] AS [s]
+    WHERE [s].[TrangThai] = CAST(1 AS bit)
+    ORDER BY [s].[NgayTao] DESC
+) AS [s0]
+LEFT JOIN [TheLoai] AS [t] ON [s0].[MaTheLoai] = [t].[MaTheLoai]
+ORDER BY [s0].[NgayTao] DESC
+2026-07-13 08:13:31.869 +07:00 [INF] Executed DbCommand (75ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[TenTheLoai], (
+    SELECT COUNT(*)
+    FROM [Sach] AS [s]
+    WHERE [s].[MaTheLoai] = [t].[MaTheLoai]) AS [SoLuongSach]
+FROM [TheLoai] AS [t]
+2026-07-13 08:13:31.951 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-13 08:13:33.082 +07:00 [INF] Executed ViewResult - view Index executed in 1142.9383ms.
+2026-07-13 08:13:33.098 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/css/site.css?v=FvziZm6cBG6hFQcjz98nntly5VgAqcRDNPoolX-deFU - null null
+2026-07-13 08:13:33.108 +07:00 [INF] Executed action SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web) in 12144.931ms
+2026-07-13 08:13:33.125 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-07-13 08:13:33.130 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - null null
+2026-07-13 08:13:33.135 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-13 08:13:33.134 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-13 08:13:33.130 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/assets/js/home.js - null null
+2026-07-13 08:13:33.237 +07:00 [INF] Sending file. Request path: '/js/site.js'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\js\site.js'
+2026-07-13 08:13:33.238 +07:00 [INF] Sending file. Request path: '/css/site.css'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\css\site.css'
+2026-07-13 08:13:33.239 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 101.0001ms
+2026-07-13 08:13:33.267 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - 200 8847 text/javascript 135.3116ms
+2026-07-13 08:13:33.300 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/ - 200 null text/html; charset=utf-8 16496.058ms
+2026-07-13 08:13:33.301 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/css/site.css?v=FvziZm6cBG6hFQcjz98nntly5VgAqcRDNPoolX-deFU - 200 40520 text/css 203.7403ms
+2026-07-13 08:13:33.306 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/assets/js/home.js - 404 0 null 176.2844ms
+2026-07-13 08:13:33.392 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7186/assets/js/home.js, Response status code: 404
+2026-07-13 08:13:33.498 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 363.3318ms
+2026-07-13 08:13:33.856 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-13 08:13:33.895 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-13 08:13:33.929 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-13 08:13:33.934 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 77.7664ms
+2026-07-13 08:13:33.947 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=8RAfIpoip--CY66PrqPWcA - null null
+2026-07-13 08:13:33.960 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-13 08:13:36.783 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-13 08:13:36.791 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=8RAfIpoip--CY66PrqPWcA - 200 null null 2843.7829ms

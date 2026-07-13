@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SmartLib.Web.Attributes;
 using SmartLib.Web.Data;
 using SmartLib.Web.Interfaces;
 using SmartLib.Web.Models;
@@ -223,6 +224,7 @@ public class BooksController : Controller
     // ── API: Tạo thể loại mới nhanh ──────────────────────
     [Authorize(Roles = "ADMIN,LIB")]
     [HttpPost]
+    [ThuocChucNang(4)] // Thể loại sách — tách riêng khỏi "Quản lý sách" (cùng Controller=Books)
     public async Task<IActionResult> CreateTheLoaiAjax([FromBody] CreateTheLoaiRequest req)
     {
         if (string.IsNullOrWhiteSpace(req.TenTheLoai))
@@ -313,6 +315,25 @@ public class BooksController : Controller
     {
         var s = await _db.Saches.FindAsync(id);
         if (s == null) return NotFound();
+
+        // Sách còn vướng dữ liệu liên quan (đã từng mượn, có cuốn trong kho, có
+        // đánh giá, có đặt trước hoặc nằm trong wishlist của độc giả) thì KHÔNG
+        // thể xóa cứng — các ràng buộc khóa ngoại này đều là Restrict để bảo toàn
+        // lịch sử. Kiểm tra trước và báo lý do cụ thể thay vì để lỗi CSDL văng ra.
+        var lyDo = new List<string>();
+        if (await _db.CuonSaches.AnyAsync(c => c.MaSach == id)) lyDo.Add("còn cuốn sách trong kho");
+        if (await _db.ChiTietMuonTras.AnyAsync(c => c.MaSach == id)) lyDo.Add("đã từng có lượt mượn");
+        if (await _db.DanhGiaSaches.AnyAsync(d => d.MaSach == id)) lyDo.Add("đã có đánh giá của độc giả");
+        if (await _db.Reservations.AnyAsync(r => r.MaSach == id)) lyDo.Add("đang có đặt trước");
+        if (await _db.Wishlists.AnyAsync(w => w.MaSach == id)) lyDo.Add("đang nằm trong wishlist của độc giả");
+
+        if (lyDo.Count > 0)
+        {
+            TempData["error"] = $"Không thể xóa sách \"{s.TenSach}\" vì {string.Join(", ", lyDo)}. " +
+                "Bạn có thể ẩn sách (ngừng hoạt động) thay vì xóa hẳn.";
+            return RedirectToAction(nameof(Index));
+        }
+
         if (!string.IsNullOrEmpty(s.AnhBia))
         {
             var p = Path.Combine(_env.WebRootPath, "uploads/books", s.AnhBia);

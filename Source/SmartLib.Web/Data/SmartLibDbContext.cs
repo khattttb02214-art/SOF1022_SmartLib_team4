@@ -27,7 +27,11 @@ public class SmartLibDbContext : DbContext
     public DbSet<WishlistPreference> WishlistPreferences { get; set; }
     public DbSet<NhatKyHoatDong> NhatKyHoatDongs { get; set; }
     public DbSet<ThongBao> ThongBaos { get; set; }
+    public DbSet<GoogleOtpTemp> GoogleOtpTemps { get; set; }
     public DbSet<TheThuVien> TheThiViens { get; set; }
+    public DbSet<NhomChucNang> NhomChucNangs { get; set; }
+    public DbSet<ChucNang> ChucNangs { get; set; }
+    public DbSet<PhanQuyenNhanVien> PhanQuyenNhanViens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -98,7 +102,39 @@ public class SmartLibDbContext : DbContext
             .WithMany()
             .HasForeignKey(x => x.MaSach)
             .OnDelete(DeleteBehavior.SetNull);
-            
-    }
 
+        // ── ThongBao → DocGia: khi xóa độc giả → giữ thông báo, gỡ liên kết (SetNull) ──
+        modelBuilder.Entity<ThongBao>()
+            .HasOne(x => x.DocGia)
+            .WithMany()
+            .HasForeignKey(x => x.MaDocGia)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // ── PHÂN QUYỀN CHI TIẾT ──────────────────────────────────────────────
+        // ChucNang → NhomChucNang (restrict: không cho xóa nhóm khi còn chức năng con)
+        modelBuilder.Entity<ChucNang>()
+            .HasOne(x => x.NhomChucNang)
+            .WithMany(x => x.ChucNangs)
+            .HasForeignKey(x => x.MaNhom)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // PhanQuyenNhanVien → NhanVien (cascade: xóa NV thì xóa luôn quyền của NV đó)
+        modelBuilder.Entity<PhanQuyenNhanVien>()
+            .HasOne(x => x.NhanVien)
+            .WithMany(x => x.PhanQuyens)
+            .HasForeignKey(x => x.MaNV)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // PhanQuyenNhanVien → ChucNang (cascade: xóa chức năng thì xóa luôn dòng quyền liên quan)
+        modelBuilder.Entity<PhanQuyenNhanVien>()
+            .HasOne(x => x.ChucNang)
+            .WithMany(x => x.PhanQuyens)
+            .HasForeignKey(x => x.MaChucNang)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Mỗi nhân viên chỉ có 1 dòng quyền cho mỗi chức năng
+        modelBuilder.Entity<PhanQuyenNhanVien>()
+            .HasIndex(x => new { x.MaNV, x.MaChucNang })
+            .IsUnique();
+    }
 }

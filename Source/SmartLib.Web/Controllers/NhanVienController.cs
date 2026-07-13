@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SmartLib.Web.Attributes;
 using SmartLib.Web.Data;
 using SmartLib.Web.Models;
 using SmartLib.Web.ViewModels;
@@ -38,7 +39,8 @@ public class NhanVienController : Controller
         return View(new NhanVienViewModel());
     }
 
-    [HttpPost][ValidateAntiForgeryToken]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(NhanVienViewModel model)
     {
         // Kiểm tra: Thủ thư chỉ được tạo tài khoản STU
@@ -53,8 +55,8 @@ public class NhanVienController : Controller
         }
 
         if (!ModelState.IsValid) { await LoadCV(); return View(model); }
-        if (string.IsNullOrWhiteSpace(model.MatKhau)) { ModelState.AddModelError("MatKhau","Mật khẩu không được trống"); await LoadCV(); return View(model); }
-        if (await _context.NhanViens.AnyAsync(n => n.Email == model.Email)) { ModelState.AddModelError("Email","Email đã tồn tại"); await LoadCV(); return View(model); }
+        if (string.IsNullOrWhiteSpace(model.MatKhau)) { ModelState.AddModelError("MatKhau", "Mật khẩu không được trống"); await LoadCV(); return View(model); }
+        if (await _context.NhanViens.AnyAsync(n => n.Email == model.Email)) { ModelState.AddModelError("Email", "Email đã tồn tại"); await LoadCV(); return View(model); }
 
         var last = await _context.NhanViens.OrderByDescending(n => n.MaNV).Select(n => n.MaNV).FirstOrDefaultAsync();
         string maNV = "NV001";
@@ -71,12 +73,18 @@ public class NhanVienController : Controller
             await model.AnhDaiDienFile.CopyToAsync(fs);
         }
 
-        _context.NhanViens.Add(new NhanVien {
-            MaNV = maNV, HoTen = model.HoTen, Email = model.Email,
-            SoDienThoai = model.SoDienThoai, DiaChi = model.DiaChi,
+        _context.NhanViens.Add(new NhanVien
+        {
+            MaNV = maNV,
+            HoTen = model.HoTen,
+            Email = model.Email,
+            SoDienThoai = model.SoDienThoai,
+            DiaChi = model.DiaChi,
             MatKhau = BCrypt.Net.BCrypt.HashPassword(model.MatKhau!),
-            MaChucVu = model.MaChucVu, TrangThai = model.TrangThai,
-            AnhDaiDien = avatar, NgayTao = DateTime.Now
+            MaChucVu = model.MaChucVu,
+            TrangThai = model.TrangThai,
+            AnhDaiDien = avatar,
+            NgayTao = DateTime.Now
         });
         await _context.SaveChangesAsync();
         TempData["success"] = "Thêm tài khoản thành công";
@@ -89,15 +97,21 @@ public class NhanVienController : Controller
         var nv = await _context.NhanViens.FindAsync(id);
         if (nv == null) return NotFound();
         await LoadCV();
-        return View(new NhanVienViewModel {
-            MaNV = nv.MaNV, HoTen = nv.HoTen, Email = nv.Email!,
-            SoDienThoai = nv.SoDienThoai, DiaChi = nv.DiaChi,
-            MaChucVu = nv.MaChucVu, TrangThai = nv.TrangThai
+        return View(new NhanVienViewModel
+        {
+            MaNV = nv.MaNV,
+            HoTen = nv.HoTen,
+            Email = nv.Email!,
+            SoDienThoai = nv.SoDienThoai,
+            DiaChi = nv.DiaChi,
+            MaChucVu = nv.MaChucVu,
+            TrangThai = nv.TrangThai
         });
     }
 
     [Authorize(Roles = "ADMIN")]
-    [HttpPost][ValidateAntiForgeryToken]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(string id, NhanVienViewModel model)
     {
         var nv = await _context.NhanViens.FindAsync(id);
@@ -131,6 +145,15 @@ public class NhanVienController : Controller
         var nv = await _context.NhanViens.FindAsync(id);
         if (nv == null) return NotFound();
         if (nv.MaNV == "NV001") { TempData["error"] = "Không thể xóa tài khoản Admin gốc"; return RedirectToAction(nameof(Index)); }
+
+        // Nhân viên đã từng lập/xử lý phiếu mượn thì KHÔNG thể xóa (ràng buộc khóa
+        // ngoại MuonTra → NhanVien là Restrict, xóa sẽ vỡ dữ liệu lịch sử mượn trả).
+        if (await _context.MuonTras.AnyAsync(m => m.MaNV == id))
+        {
+            TempData["error"] = $"Không thể xóa: nhân viên {nv.HoTen} đã từng lập/xử lý phiếu mượn trong hệ thống.";
+            return RedirectToAction(nameof(Index));
+        }
+
         _context.NhanViens.Remove(nv);
         await _context.SaveChangesAsync();
         TempData["success"] = "Đã xóa nhân viên";
@@ -139,6 +162,7 @@ public class NhanVienController : Controller
 
     // ── Duyệt tài khoản sinh viên (ADMIN + LIB) ──────────
     [Authorize(Roles = "ADMIN,LIB")]
+    [ThuocChucNang(12)] // Duyệt tài khoản đăng ký — tách riêng khỏi "Quản lý nhân viên" (cùng Controller=NhanVien)
     public async Task<IActionResult> PendingAccounts()
     {
         var pending = await _context.DocGias
@@ -149,6 +173,7 @@ public class NhanVienController : Controller
     }
 
     [Authorize(Roles = "ADMIN,LIB")]
+    [ThuocChucNang(12)] // Duyệt tài khoản đăng ký
     public async Task<IActionResult> ApproveAccount(string id)
     {
         var dg = await _context.DocGias.FindAsync(id);
@@ -166,6 +191,7 @@ public class NhanVienController : Controller
     }
 
     [Authorize(Roles = "ADMIN,LIB")]
+    [ThuocChucNang(12)] // Duyệt tài khoản đăng ký
     public async Task<IActionResult> RejectAccount(string id)
     {
         var dg = await _context.DocGias
@@ -207,8 +233,12 @@ public class NhanVienController : Controller
 
     private async Task GhiNhatKy(string maNV, string hanhDong, string moTa)
     {
-        _context.NhatKyHoatDongs.Add(new NhatKyHoatDong {
-            MaNV = maNV, HanhDong = hanhDong, MoTa = moTa, ThoiGian = DateTime.Now
+        _context.NhatKyHoatDongs.Add(new NhatKyHoatDong
+        {
+            MaNV = maNV,
+            HanhDong = hanhDong,
+            MoTa = moTa,
+            ThoiGian = DateTime.Now
         });
         await _context.SaveChangesAsync();
     }
@@ -216,20 +246,22 @@ public class NhanVienController : Controller
     private async Task LoadCV()
     {
         IQueryable<ChucVu> query = _context.ChucVus.Where(c => c.MaChucVu != "STU");
-        
+
         // Thủ thư chỉ được tạo tài khoản sinh viên
         if (User.IsInRole("LIB") && !User.IsInRole("ADMIN"))
         {
             // Chỉ cho phép role STU
             query = _context.ChucVus.Where(c => c.MaChucVu == "STU");
         }
-        
+
         ViewBag.ChucVu = new SelectList(await query.ToListAsync(), "MaChucVu", "TenChucVu");
     }
 
     // ── API: lấy số lượng thông báo cho chuông Bell (ADMIN + LIB) ──
     [Authorize(Roles = "ADMIN,LIB")]
     [HttpGet]
+    [BoQuaPhanQuyen] // Gộp số liệu từ nhiều chức năng khác nhau (tài khoản chờ duyệt +
+                     // phiếu quá hạn), không thuộc riêng 1 chức năng nên không chặn theo quyền.
     public async Task<IActionResult> GetNotificationCounts()
     {
         // Đếm tài khoản sinh viên chờ duyệt
