@@ -1,5 +1,7 @@
 @model SmartLib.Web.ViewModels.BorrowViewModel
-@{ ViewData["Title"] = "Tạo phiếu mượn"; }
+@{
+    ViewData["Title"] = "Tạo phiếu mượn";
+}
 
 <div class="page-header-card">
     <h4><i class="fa fa-plus me-2"></i>Tạo phiếu mượn</h4>
@@ -99,145 +101,179 @@
 </form>
 
 @section Scripts {
-<script>
-/* ── Trạng thái ── */
-let selected   = {};   // maCuonSach → { maCuon, tenSach, maSach }
-let searchTimer = null;
+    <script>
+        /* ── Trạng thái ── */
+        let selected   = {};   // maCuonSach → { maCuon, tenSach, maSach }
+        let searchTimer = null;
 
-/* ── Util ── */
-function escHtml(s) {
-    if (!s) return '';
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-/* ── Tìm kiếm theo tên / mã / ISBN sách ── */
-async function doSearch() {
-    const kw  = document.getElementById('bookSearch').value.trim();
-    const div = document.getElementById('searchResults');
-    if (!kw) { div.innerHTML = ''; return; }
-
-    div.innerHTML = '<p class="text-muted small"><i class="fa fa-spinner fa-spin me-1"></i>Đang tìm...</p>';
-    try {
-        const res  = await fetch('/Borrow/SearchSachForBorrow?q=' + encodeURIComponent(kw));
-        if (!res.ok) { div.innerHTML = '<p class="text-danger small">Lỗi kết nối máy chủ</p>'; return; }
-        const list = await res.json();
-
-        if (!list.length) {
-            div.innerHTML = '<p class="text-muted small"><i class="fa fa-circle-info me-1"></i>Không tìm thấy sách nào phù hợp.</p>';
-            return;
+        /* ── Util ── */
+        function escHtml(s) {
+            if (!s) return '';
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         }
 
-        window._sachResults = list;
-        div.innerHTML = list.map((s, i) => `
-            <div class="search-result-item" style="cursor:pointer" onclick="showCuons(${i})">
-                <i class="fa fa-book text-primary me-2"></i>
-                <div class="flex-fill">
-                    <span class="fw-semibold">${escHtml(s.tenSach)}</span>
-                    <small class="text-muted ms-2">${escHtml(s.maSach)}</small>
-                    ${s.isbn ? `<small class="text-muted ms-1">· ${escHtml(s.isbn)}</small>` : ''}
-                </div>
-                ${s.soLuongCoSan > 0
-                    ? `<span class="badge bg-success ms-2">${s.soLuongCoSan} cuốn sẵn</span>`
-                    : `<span class="badge bg-warning text-dark ms-2">Hết sẵn</span>`}
-            </div>`).join('');
-    } catch (e) {
-        div.innerHTML = '<p class="text-danger small">Lỗi: ' + e.message + '</p>';
-    }
-}
+        /* ── Tìm kiếm theo tên / mã / ISBN sách ── */
+        async function doSearch() {
+            const kw  = document.getElementById('bookSearch').value.trim();
+            const div = document.getElementById('searchResults');
+            if (!kw) { div.innerHTML = ''; return; }
 
-/* ── Hiện danh sách cuốn của sách vừa chọn ── */
-function showCuons(idx) {
-    const s = (window._sachResults || [])[idx];
-    if (!s) return;
+            div.innerHTML = '<p class="text-muted small"><i class="fa fa-spinner fa-spin me-1"></i>Đang tìm...</p>';
+            try {
+                const res  = await fetch('/Borrow/SearchSachForBorrow?q=' + encodeURIComponent(kw));
+                if (!res.ok) { div.innerHTML = '<p class="text-danger small">Lỗi kết nối máy chủ</p>'; return; }
+                const list = await res.json();
 
-    document.getElementById('cuonSachTitle').textContent = s.tenSach;
-    const listEl = document.getElementById('cuonList');
+                if (!list.length) {
+                    div.innerHTML = '<p class="text-muted small"><i class="fa fa-circle-info me-1"></i>Không tìm thấy sách nào phù hợp.</p>';
+                    return;
+                }
 
-    if (!s.cuons || !s.cuons.length) {
-        listEl.innerHTML = '<span class="text-muted small">Không có cuốn nào sẵn có.</span>';
-    } else {
-        listEl.innerHTML = s.cuons.map(c => {
-            const alreadyPicked = !!selected[c.maCuonSach];
-            return `
-            <button type="button"
-                    class="btn btn-sm ${alreadyPicked ? 'btn-success' : 'btn-outline-primary'}"
-                    onclick="toggleCuon('${escHtml(c.maCuonSach)}','${escHtml(s.tenSach)}','${escHtml(s.maSach)}')"
-                    id="cuonBtn_${escHtml(c.maCuonSach)}">
-                <i class="fa fa-${alreadyPicked ? 'check' : 'plus'} me-1"></i>
-                ${escHtml(c.maCuonSach)}
-                ${c.barcode ? `<small class="opacity-75">· ${escHtml(c.barcode)}</small>` : ''}
-            </button>`;
-        }).join('');
-    }
+                window._sachResults = list;
+                div.innerHTML = list.map((s, i) => `
+                    <div class="search-result-item" style="cursor:pointer" onclick="showCuons(${i})">
+                        <i class="fa fa-book text-primary me-2"></i>
+                        <div class="flex-fill">
+                            <span class="fw-semibold">${escHtml(s.tenSach)}</span>
+                            <small class="text-muted ms-2">${escHtml(s.maSach)}</small>
+                            ${s.isbn ? `<small class="text-muted ms-1">· ${escHtml(s.isbn)}</small>` : ''}
+                        </div>
+                        ${s.soLuongCoSan > 0
+                            ? `<span class="badge bg-success ms-2">${s.soLuongCoSan} cuốn sẵn</span>`
+                            : `<span class="badge bg-warning text-dark ms-2">Hết sẵn</span>`}
+                    </div>`).join('');
+            } catch (e) {
+                div.innerHTML = '<p class="text-danger small">Lỗi: ' + e.message + '</p>';
+            }
+        }
 
-    document.getElementById('cuonPanel').style.display = '';
-    document.getElementById('searchResults').innerHTML = '';
-    document.getElementById('bookSearch').value = '';
-}
+        /* ── Hiện danh sách cuốn của sách vừa chọn ── */
+        function showCuons(idx) {
+            const s = (window._sachResults || [])[idx];
+            if (!s) return;
 
-function closeCuonPanel() {
-    document.getElementById('cuonPanel').style.display = 'none';
-}
+            document.getElementById('cuonSachTitle').textContent = s.tenSach;
+            const listEl = document.getElementById('cuonList');
 
-/* ── Chọn / bỏ chọn cuốn ── */
-function toggleCuon(maCuon, tenSach, maSach) {
-    if (selected[maCuon]) {
-        delete selected[maCuon];
-    } else {
-        selected[maCuon] = { maCuon, tenSach, maSach };
-    }
-    // Refresh nút trong cuonPanel
-    const btn = document.getElementById('cuonBtn_' + maCuon);
-    if (btn) {
-        const picked = !!selected[maCuon];
-        btn.className = 'btn btn-sm ' + (picked ? 'btn-success' : 'btn-outline-primary');
-        btn.innerHTML = `<i class="fa fa-${picked ? 'check' : 'plus'} me-1"></i>${maCuon}`;
-    }
-    renderSelected();
-}
+            if (!s.cuons || !s.cuons.length) {
+                listEl.innerHTML = '<span class="text-muted small">Không có cuốn nào sẵn có.</span>';
+            } else {
+                listEl.innerHTML = s.cuons.map(c => {
+                    const alreadyPicked = !!selected[c.maCuonSach];
+                    return `
+                    <button type="button"
+                            class="btn btn-sm ${alreadyPicked ? 'btn-success' : 'btn-outline-primary'}"
+                            onclick="toggleCuon('${escHtml(c.maCuonSach)}','${escHtml(s.tenSach)}','${escHtml(s.maSach)}')"
+                            id="cuonBtn_${escHtml(c.maCuonSach)}">
+                        <i class="fa fa-${alreadyPicked ? 'check' : 'plus'} me-1"></i>
+                        ${escHtml(c.maCuonSach)}
+                        ${c.barcode ? `<small class="opacity-75">· ${escHtml(c.barcode)}</small>` : ''}
+                    </button>`;
+                }).join('');
+            }
 
-/* ── Xóa cuốn khỏi danh sách đã chọn ── */
-function removeCuon(maCuon) {
-    delete selected[maCuon];
-    // Sync nút trong panel nếu đang mở
-    const btn = document.getElementById('cuonBtn_' + maCuon);
-    if (btn) {
-        btn.className = 'btn btn-sm btn-outline-primary';
-        btn.innerHTML = `<i class="fa fa-plus me-1"></i>${maCuon}`;
-    }
-    renderSelected();
-}
+            document.getElementById('cuonPanel').style.display = '';
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('bookSearch').value = '';
+        }
 
-/* ── Render danh sách đã chọn ── */
-function renderSelected() {
-    const items = Object.values(selected);
-    const count = items.length;
-    document.getElementById('bookCount').textContent = count;
-    document.getElementById('submitBtn').disabled    = count === 0;
-    document.getElementById('borrowSummary').textContent =
-        count > 0 ? `Đã chọn ${count} cuốn sách` : 'Chưa chọn sách nào';
+        function closeCuonPanel() {
+            document.getElementById('cuonPanel').style.display = 'none';
+        }
 
-    document.getElementById('selectedList').innerHTML = items.map(b => `
-        <div class="selected-book-item">
-            <input type="hidden" name="SelectedBooks" value="${escHtml(b.maCuon)}" />
-            <i class="fa fa-book text-primary me-2"></i>
-            <span class="flex-fill">${escHtml(b.tenSach)}</span>
-            <small class="text-muted me-2">${escHtml(b.maCuon)}</small>
-            <button type="button" class="btn btn-xs btn-outline-danger"
-                    onclick="removeCuon('${escHtml(b.maCuon)}')">
-                <i class="fa fa-xmark"></i>
-            </button>
-        </div>`).join('');
-}
+        /* ── Chọn / bỏ chọn cuốn ── */
+        function toggleCuon(maCuon, tenSach, maSach) {
+            if (selected[maCuon]) {
+                delete selected[maCuon];
+            } else {
+                selected[maCuon] = { maCuon, tenSach, maSach };
+            }
+            // Refresh nút trong cuonPanel
+            const btn = document.getElementById('cuonBtn_' + maCuon);
+            if (btn) {
+                const picked = !!selected[maCuon];
+                btn.className = 'btn btn-sm ' + (picked ? 'btn-success' : 'btn-outline-primary');
+                btn.innerHTML = `<i class="fa fa-${picked ? 'check' : 'plus'} me-1"></i>${maCuon}`;
+            }
+            renderSelected();
+        }
 
-/* ── Sự kiện input ── */
-document.getElementById('bookSearch').addEventListener('input', () => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(doSearch, 400);
-});
-document.getElementById('bookSearch').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); clearTimeout(searchTimer); doSearch(); }
-});
-</script>
+        /* ── Xóa cuốn khỏi danh sách đã chọn ── */
+        function removeCuon(maCuon) {
+            delete selected[maCuon];
+            // Sync nút trong panel nếu đang mở
+            const btn = document.getElementById('cuonBtn_' + maCuon);
+            if (btn) {
+                btn.className = 'btn btn-sm btn-outline-primary';
+                btn.innerHTML = `<i class="fa fa-plus me-1"></i>${maCuon}`;
+            }
+            renderSelected();
+        }
+
+        /* ── Render danh sách đã chọn ── */
+        function renderSelected() {
+            const items = Object.values(selected);
+            const count = items.length;
+            document.getElementById('bookCount').textContent = count;
+            document.getElementById('submitBtn').disabled    = count === 0;
+            document.getElementById('borrowSummary').textContent =
+                count > 0 ? `Đã chọn ${count} cuốn sách` : 'Chưa chọn sách nào';
+
+            document.getElementById('selectedList').innerHTML = items.map(b => `
+                <div class="selected-book-item">
+                    <input type="hidden" name="SelectedBooks" value="${escHtml(b.maCuon)}" />
+                    <i class="fa fa-book text-primary me-2"></i>
+                    <span class="flex-fill">${escHtml(b.tenSach)}</span>
+                    <small class="text-muted me-2">${escHtml(b.maCuon)}</small>
+                    <button type="button" class="btn btn-xs btn-outline-danger"
+                            onclick="removeCuon('${escHtml(b.maCuon)}')">
+                        <i class="fa fa-xmark"></i>
+                    </button>
+                </div>`).join('');
+        }
+
+        /* ── Sự kiện input ── */
+        document.getElementById('bookSearch').addEventListener('input', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(doSearch, 400);
+        });
+        document.getElementById('bookSearch').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); clearTimeout(searchTimer); doSearch(); }
+        });
+
+        /* ── Xác nhận trước khi thực sự cho mượn (không submit thẳng nữa) ── */
+        const borrowForm = document.getElementById('borrowForm');
+        borrowForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const docGiaSelect = document.querySelector('[name="MaDocGia"]');
+            const tenDocGia = docGiaSelect?.selectedOptions?.[0]?.text?.trim() || '(chưa chọn độc giả)';
+            const items = Object.values(selected);
+
+            const danhSachHtml = items.map(b =>
+                `<li class="text-start">${escHtml(b.tenSach)} <span class="text-muted">(${escHtml(b.maCuon)})</span></li>`
+            ).join('');
+
+            Swal.fire({
+                title: 'Xác nhận cho mượn?',
+                icon: 'question',
+                html: `
+                    <div class="text-start small">
+                        <div class="mb-2"><strong>Độc giả:</strong> ${escHtml(tenDocGia)}</div>
+                        <div class="mb-1"><strong>Sách cho mượn (${items.length}):</strong></div>
+                        <ul class="mb-0 ps-3">${danhSachHtml}</ul>
+                    </div>`,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa fa-check me-1"></i>Xác nhận cho mượn',
+                cancelButtonText: 'Kiểm tra lại',
+                confirmButtonColor: '#2563eb',
+                reverseButtons: true
+            }).then(result => {
+                if (result.isConfirmed) {
+                    borrowForm.submit();
+                }
+            });
+        });
+    </script>
 }

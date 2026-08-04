@@ -1,168 +1,226 @@
-@{
-    ViewData["Title"] = "Tạo đặt trước";
-}
-<div class="page-header-card"><h4><i class="fa fa-bookmark me-2"></i>Tạo đặt trước</h4></div>
+@model SmartLib.Web.ViewModels.ReservationViewModel
+@{ ViewData["Title"] = "Tạo đặt trước"; }
 
-<form asp-action="Create" method="post" id="resForm">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="MaSach" id="hidMaSach" />
+<div class="page-header-card d-flex justify-content-between align-items-center mb-3">
+	<h4 class="mb-0"><i class="fa fa-plus-circle me-2"></i>Tạo phiếu đặt trước</h4>
+	<a asp-action="Index" class="btn btn-secondary btn-sm">
+		<i class="fa fa-arrow-left me-1"></i>Quay lại
+	</a>
+</div>
 
-    <div class="row g-4">
-        <div class="col-lg-8">
+<form asp-action="Create" method="post" class="card shadow-sm">
+	@Html.AntiForgeryToken()
 
-            <!-- Thông tin -->
-            <div class="form-card">
-                <h6 class="form-card-title">Thông tin đặt trước</h6>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <label class="form-label req">Độc giả</label>
-                        <select name="MaDocGia" asp-items="ViewBag.DocGia"
-                                class="form-select" required>
-                            <option value="">-- Chọn độc giả --</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+	<div class="card-body">
+		<!-- Chọn độc giả -->
+		<div class="mb-3">
+			<label class="form-label fw-semibold">
+				<i class="fa fa-user me-2"></i>Độc giả <span class="text-danger">*</span>
+			</label>
+			<select name="MaDocGia" id="MaDocGia" class="form-select form-select-lg" required>
+				<option value="">-- Chọn độc giả --</option>
+				@foreach (var dg in (SelectList)ViewBag.DocGia)
+				{
+					<option value="@dg.Value">@dg.Text</option>
+				}
+			</select>
+			<div class="form-text">Chỉ có thể chọn độc giả có thẻ hợp lệ</div>
+		</div>
 
-            <!-- Tìm & chọn sách -->
-            <div class="form-card mt-3">
-                <h6 class="form-card-title">
-                    Tìm &amp; chọn sách
-                    <span class="text-muted small fw-normal">– Đặt trước 1 đầu sách mỗi lần</span>
-                </h6>
+		<hr />
 
-                <div class="d-flex gap-2 mb-3">
-                    <input type="text" id="sachSearch" class="form-control"
-                           placeholder="Nhập tên sách, mã sách, ISBN..." autocomplete="off" />
-                    <button type="button" class="btn btn-outline-primary" onclick="doSearch()">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
+		<!-- Chọn sách -->
+		<div class="mb-3">
+			<label class="form-label fw-semibold">
+				<i class="fa fa-book me-2"></i>Danh sách sách <span class="text-danger">*</span>
+			</label>
+			<div class="input-group mb-2">
+				<input type="text" id="bookSearch" class="form-control form-control-lg" 
+					   placeholder="Tìm kiếm sách (tên, mã, ISBN)..." />
+				<button type="button" class="btn btn-outline-secondary" id="btnSearchBook">
+					<i class="fa fa-search"></i>
+				</button>
+			</div>
+			<div id="bookResults" class="list-group mb-3" style="display:none; max-height: 300px; overflow-y: auto;"></div>
+		</div>
 
-                <div id="searchResults" class="mb-3"></div>
+		<!-- Bảng sách đã chọn -->
+		<div class="mb-3">
+			<label class="form-label fw-semibold">
+				<i class="fa fa-list me-2"></i>Sách đã chọn
+			</label>
+			<div class="table-responsive">
+				<table class="table table-sm table-hover" id="selectedBooksTable">
+					<thead class="table-light">
+						<tr>
+							<th>Sách</th>
+							<th style="width: 100px;">SL</th>
+							<th style="width: 80px;" class="text-center">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody id="selectedBooksList">
+						<tr id="emptyRow">
+							<td colspan="3" class="text-center text-muted py-4">
+								<i class="fa fa-inbox fa-2x d-block mb-2 opacity-50"></i>
+								Chưa chọn sách nào
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-                <!-- Sách đã chọn -->
-                <div id="selectedSach" class="d-none">
-                    <div class="alert alert-success d-flex align-items-center gap-3 py-2 mb-0">
-                        <i class="fa fa-book-open fa-lg text-success"></i>
-                        <div class="flex-fill">
-                            <div class="fw-semibold" id="selTenSach">—</div>
-                            <small class="text-muted" id="selMaSach">—</small>
-                            <small id="selCoSanInfo" class="ms-2"></small>
-                        </div>
-                        <button type="button" class="btn btn-xs btn-outline-danger" onclick="clearSach()">
-                            <i class="fa fa-xmark"></i>
-                        </button>
-                    </div>
-                </div>
-                <div id="noSachMsg" class="text-muted small mt-1" style="display:none">
-                    Vui lòng chọn sách để tiếp tục.
-                </div>
-            </div>
-        </div>
+		<hr />
 
-        <div class="col-lg-4">
-            <div class="form-card sticky-top" style="top:80px">
-                <div id="resSummary" class="mb-3 text-muted small">Chưa chọn sách nào</div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg"
-                            id="submitBtn" disabled>
-                        <i class="fa fa-bookmark me-2"></i>Tạo đặt trước
-                    </button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
-                </div>
-            </div>
-        </div>
-    </div>
+		<!-- Ghi chú -->
+		<div class="mb-3">
+			<label for="GhiChu" class="form-label">
+				<i class="fa fa-note-sticky me-2"></i>Ghi chú
+			</label>
+			<textarea id="GhiChu" name="GhiChu" class="form-control" rows="3" 
+					  placeholder="Ghi chú thêm về phiếu đặt trước (tùy chọn)"></textarea>
+		</div>
+	</div>
+
+	<div class="card-footer bg-light d-flex justify-content-end gap-2">
+		<a asp-action="Index" class="btn btn-secondary">
+			<i class="fa fa-times me-1"></i>Hủy
+		</a>
+		<button type="submit" class="btn btn-primary" id="btnSubmit" disabled>
+			<i class="fa fa-check me-1"></i>Tạo đặt trước
+		</button>
+	</div>
 </form>
 
+<!-- Hidden input để lưu danh sách sách -->
+<input type="hidden" name="SelectedBooks" id="SelectedBooks" />
+
 @section Scripts {
-    <script>
-        let searchTimer = null;
+	<script>
+		const selectedBooks = {}; // { maSach: { tenSach, soLuong } }
 
-        function escHtml(s) {
-            if (!s) return '';
-            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-                    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-        }
+		// Tìm kiếm sách
+		document.getElementById('btnSearchBook').addEventListener('click', async () => {
+			const q = document.getElementById('bookSearch').value.trim();
+			if (!q) return alert('Vui lòng nhập từ khóa tìm kiếm');
 
-        async function doSearch() {
-            const kw = document.getElementById('sachSearch').value.trim();
-            const div = document.getElementById('searchResults');
-            if (!kw) { div.innerHTML = ''; return; }
+			try {
+				const response = await fetch('@Url.Action("SearchSach", "Reservation")' + '?q=' + encodeURIComponent(q));
+				const data = await response.json();
+				const resultsDiv = document.getElementById('bookResults');
 
-            div.innerHTML = '<p class="text-muted small"><i class="fa fa-spinner fa-spin me-1"></i>Đang tìm...</p>';
-            try {
-                const res  = await fetch('/Reservation/SearchSach?q=' + encodeURIComponent(kw));
-                const list = await res.json();
+				if (!data || data.length === 0) {
+					resultsDiv.innerHTML = '<div class="p-2 text-muted">Không tìm thấy sách</div>';
+				} else {
+					resultsDiv.innerHTML = data.map(s => `
+						<button type="button" class="list-group-item list-group-item-action" 
+								onclick="addBook('${s.maSach}', '${s.tenSach.replace(/'/g, "\\'")}', ${s.soLuongCoSan})">
+							<div class="d-flex justify-content-between align-items-start">
+								<div>
+									<strong>${s.tenSach}</strong><br />
+									<small class="text-muted">${s.maSach}</small>
+								</div>
+								<span class="badge ${s.coSan ? 'bg-success' : 'bg-danger'}">
+									${s.soLuongCoSan} cuốn
+								</span>
+							</div>
+						</button>
+					`).join('');
+				}
+				resultsDiv.style.display = 'block';
+			} catch (err) {
+				alert('Lỗi tìm kiếm: ' + err.message);
+			}
+		});
 
-                if (!list.length) {
-                    div.innerHTML = '<p class="text-muted small"><i class="fa fa-circle-info me-1"></i>Không tìm thấy sách nào.</p>';
-                    return;
-                }
+		// Thêm sách vào danh sách
+		function addBook(maSach, tenSach, soLuongCoSan) {
+			if (selectedBooks[maSach]) {
+				alert('Sách này đã được chọn');
+				return;
+			}
 
-                window._sachResults = list;
-                div.innerHTML = list.map((s, i) => {
-                    const coSanBadge = s.soLuongCoSan > 0
-                        ? `<span class="badge bg-success ms-auto">${s.soLuongCoSan} cuốn sẵn</span>`
-                        : `<span class="badge bg-warning text-dark ms-auto">Hết sẵn</span>`;
-                    return `
-                    <div class="search-result-item" style="cursor:pointer" onclick="pickSach(${i})">
-                        <i class="fa fa-book text-primary me-2"></i>
-                        <span class="fw-semibold flex-fill">${escHtml(s.tenSach)}</span>
-                        <small class="text-muted me-2">${escHtml(s.maSach)}</small>
-                        ${coSanBadge}
-                    </div>`;
-                }).join('');
-            } catch (e) {
-                div.innerHTML = '<p class="text-danger small">Lỗi kết nối: ' + e.message + '</p>';
-            }
-        }
+			selectedBooks[maSach] = { tenSach, soLuong: 1, soLuongCoSan };
+			updateTable();
+			document.getElementById('bookSearch').value = '';
+			document.getElementById('bookResults').style.display = 'none';
+		}
 
-        function pickSach(idx) {
-            const s = (window._sachResults || [])[idx];
-            if (!s) return;
+		// Cập nhật bảng
+		function updateTable() {
+			const tbody = document.getElementById('selectedBooksList');
+			const emptyRow = document.getElementById('emptyRow');
 
-            document.getElementById('hidMaSach').value = s.maSach;
-            document.getElementById('selTenSach').textContent = s.tenSach;
-            document.getElementById('selMaSach').textContent  = 'Mã: ' + s.maSach;
+			if (Object.keys(selectedBooks).length === 0) {
+				emptyRow.style.display = '';
+				return;
+			}
 
-            const coSanEl = document.getElementById('selCoSanInfo');
-            if (s.soLuongCoSan > 0) {
-                coSanEl.innerHTML = `<span class="badge bg-success-soft">${s.soLuongCoSan} cuốn sẵn</span>`;
-            } else {
-                coSanEl.innerHTML = `<span class="badge bg-warning-soft text-warning">⚠️ Hiện hết sẵn – vẫn có thể đặt trước</span>`;
-            }
+			emptyRow.style.display = 'none';
+			tbody.innerHTML = Object.entries(selectedBooks).map(([maSach, item]) => `
+				<tr>
+					<td>
+						<strong>${item.tenSach}</strong><br />
+						<small class="text-muted">${maSach}</small>
+					</td>
+					<td>
+						<input type="number" class="form-control" value="${item.soLuong}" min="1" 
+							   onchange="updateQuantity('${maSach}', this.value)">
+					</td>
+					<td class="text-center">
+						<button type="button" class="btn btn-sm btn-outline-danger" 
+								onclick="removeBook('${maSach}')">
+							<i class="fa fa-trash"></i>
+						</button>
+					</td>
+				</tr>
+			`).join('');
 
-            document.getElementById('selectedSach').classList.remove('d-none');
-            document.getElementById('searchResults').innerHTML = '';
-            document.getElementById('sachSearch').value = '';
-            document.getElementById('resSummary').textContent = 'Sách: ' + s.tenSach;
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('noSachMsg').style.display = 'none';
-        }
+			updateSubmitButton();
+		}
 
-        function clearSach() {
-            document.getElementById('hidMaSach').value = '';
-            document.getElementById('selectedSach').classList.add('d-none');
-            document.getElementById('resSummary').textContent = 'Chưa chọn sách nào';
-            document.getElementById('submitBtn').disabled = true;
-        }
+		// Cập nhật số lượng
+		function updateQuantity(maSach, value) {
+			selectedBooks[maSach].soLuong = parseInt(value) || 1;
+		}
 
-        document.getElementById('sachSearch').addEventListener('input', () => {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(doSearch, 400);
-        });
-        document.getElementById('sachSearch').addEventListener('keydown', e => {
-            if (e.key === 'Enter') { e.preventDefault(); clearTimeout(searchTimer); doSearch(); }
-        });
+		// Xóa sách
+		function removeBook(maSach) {
+			delete selectedBooks[maSach];
+			updateTable();
+		}
 
-        document.getElementById('resForm').addEventListener('submit', e => {
-            if (!document.getElementById('hidMaSach').value) {
-                e.preventDefault();
-                document.getElementById('noSachMsg').style.display = '';
-                document.getElementById('sachSearch').focus();
-            }
-        });
-    </script>
+		// Cập nhật nút Tạo
+		function updateSubmitButton() {
+			const btnSubmit = document.getElementById('btnSubmit');
+			const hasBooks = Object.keys(selectedBooks).length > 0;
+			btnSubmit.disabled = !hasBooks;
+
+			// Cập nhật hidden input
+			document.getElementById('SelectedBooks').value = Object.keys(selectedBooks).join(',');
+		}
+
+		// Form submit
+		document.querySelector('form').addEventListener('submit', (e) => {
+			// Tạo hidden inputs cho selected books
+			const container = document.querySelectorAll('input[name="SelectedBooks[]"]');
+			container.forEach(el => el.remove());
+
+			Object.keys(selectedBooks).forEach(maSach => {
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'SelectedBooks';
+				input.value = maSach;
+				document.querySelector('form').appendChild(input);
+			});
+		});
+
+		// Enter key search
+		document.getElementById('bookSearch').addEventListener('keypress', (e) => {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				document.getElementById('btnSearchBook').click();
+			}
+		});
+	</script>
 }

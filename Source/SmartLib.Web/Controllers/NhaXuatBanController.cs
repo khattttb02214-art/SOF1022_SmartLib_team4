@@ -83,10 +83,26 @@ public class NhaXuatBanController : Controller
         var n = await _db.NhaXuatBans.FindAsync(id);
         if (n == null) return NotFound();
         if (await _db.Saches.AnyAsync(s => s.MaNXB == id))
-        { TempData["error"] = "Không thể xóa: NXB này vẫn có sách liên kết"; return RedirectToAction(nameof(Index)); }
+        {
+            TempData["error"] = $"Không thể xóa: NXB {n.TenNXB} vẫn có sách liên kết. " +
+                "Bạn có thể dùng nút \"Ngừng hoạt động\" thay vì xóa hẳn.";
+            return RedirectToAction(nameof(Index));
+        }
         _db.NhaXuatBans.Remove(n);
         await _db.SaveChangesAsync();
         TempData["success"] = "Đã xóa nhà xuất bản";
+        return RedirectToAction(nameof(Index));
+    }
+
+    // Đổi trạng thái (Hoạt động ⇄ Ngừng hợp tác) THAY VÌ xóa hẳn — sách đã liên kết
+    // với NXB này vẫn được giữ nguyên dữ liệu.
+    public async Task<IActionResult> ToggleStatus(string id)
+    {
+        var n = await _db.NhaXuatBans.FindAsync(id);
+        if (n == null) return NotFound();
+        n.TrangThai = !n.TrangThai;
+        await _db.SaveChangesAsync();
+        TempData["success"] = n.TrangThai ? "Đã kích hoạt lại nhà xuất bản" : "Đã ngừng hoạt động NXB (giữ nguyên dữ liệu sách liên kết)";
         return RedirectToAction(nameof(Index));
     }
 

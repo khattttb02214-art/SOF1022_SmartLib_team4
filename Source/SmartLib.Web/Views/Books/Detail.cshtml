@@ -1,5 +1,7 @@
 @model SmartLib.Web.Models.Sach
-@{ ViewData["Title"] = Model.TenSach; }
+@{
+    ViewData["Title"] = Model.TenSach;
+}
 <div class="container py-4">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
@@ -30,7 +32,7 @@
                     if (Model.SoLuongKhaDung > 0)
                     {
                         <a asp-controller="Reservation" asp-action="StuCreate"
-                           asp-route-id="@Model.MaSach" class="btn btn-primary">
+                           asp-route-id="@Model.MaSach" id="btnDatMuonSach" class="btn btn-primary">
                             <i class="fa fa-bookmark me-2"></i>Đặt mượn sách
                         </a>
                     }
@@ -268,71 +270,99 @@
 </div>
 
 @section Styles {
-<style>
-/* ── Shelf location card ──────────────────────────────── */
-.shelf-location-card {
-    border: 1.5px solid var(--bs-primary, #6366f1);
-    border-radius: 12px;
-    overflow: hidden;
-    background: #fff;
-}
-.shelf-location-header {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: #fff;
-    padding: 10px 16px;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-.shelf-location-body {
-    padding: 16px;
-}
-.shelf-info-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-}
-.shelf-info-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #f3f4f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 0.85rem;
-}
-.shelf-info-label {
-    font-size: 0.72rem;
-    color: #9ca3af;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    margin-bottom: 2px;
-}
-.shelf-info-val {
-    font-size: 0.9rem;
-    color: #111827;
-}
-.shelf-note {
-    padding: 8px 12px;
-    background: #f9fafb;
-    border-radius: 8px;
-}
-.shelf-guide {
-    padding: 8px 12px;
-    background: #eff6ff;
-    border-radius: 8px;
-    border-left: 3px solid #6366f1;
+    <style>
+        /* ── Shelf location card ──────────────────────────────── */
+        .shelf-location-card {
+            border: 1.5px solid var(--bs-primary, #6366f1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .shelf-location-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .shelf-location-body {
+            padding: 16px;
+        }
+        .shelf-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .shelf-info-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+        .shelf-info-label {
+            font-size: 0.72rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 2px;
+        }
+        .shelf-info-val {
+            font-size: 0.9rem;
+            color: #111827;
+        }
+        .shelf-note {
+            padding: 8px 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        .shelf-guide {
+            padding: 8px 12px;
+            background: #eff6ff;
+            border-radius: 8px;
+            border-left: 3px solid #6366f1;
+        }
+
+        @@media (prefers-color-scheme: dark) {
+            .shelf-location-card { background: #1e1e2e; border-color: #7c3aed; }
+            .shelf-info-icon { background: #2d2d3f; }
+            .shelf-info-val { color: #f1f5f9; }
+            .shelf-note { background: #2d2d3f; }
+            .shelf-guide { background: #1e2a45; border-left-color: #818cf8; }
+        }
+    </style>
 }
 
-@@media (prefers-color-scheme: dark) {
-    .shelf-location-card { background: #1e1e2e; border-color: #7c3aed; }
-    .shelf-info-icon { background: #2d2d3f; }
-    .shelf-info-val { color: #f1f5f9; }
-    .shelf-note { background: #2d2d3f; }
-    .shelf-guide { background: #1e2a45; border-left-color: #818cf8; }
-}
-</style>
+@section Scripts {
+    <script>
+        // Bấm "Đặt mượn sách" sẽ hỏi xác nhận trước — đồng ý mới thực sự lưu đặt
+        // trước, không thì ở nguyên trang hiện tại, không có gì xảy ra cả.
+        document.getElementById('btnDatMuonSach')?.addEventListener('click', function (e) {
+            e.preventDefault();
+            const href = this.href;
+            const tenSach = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TenSach ?? ""));
+
+            Swal.fire({
+                title: 'Xác nhận đặt mượn?',
+                html: `Bạn muốn đặt trước sách <strong>${tenSach}</strong>?<br><small class="text-muted">Sách sẽ được giữ cho bạn, vui lòng đến thư viện làm thủ tục mượn.</small>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa fa-bookmark me-1"></i>Xác nhận đặt mượn',
+                cancelButtonText: 'Để sau',
+                confirmButtonColor: '#2563eb',
+                reverseButtons: true
+            }).then(result => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                }
+                // Bấm "Để sau" (hoặc đóng dialog) → không làm gì cả, ở nguyên trang hiện tại.
+            });
+        });
+    </script>
 }

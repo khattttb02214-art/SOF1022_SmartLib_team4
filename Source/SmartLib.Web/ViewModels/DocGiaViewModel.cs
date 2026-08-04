@@ -21,6 +21,7 @@ public class DocGiaViewModel
     public DateTime? NgayHetHan { get; set; }
 
     // Mã thẻ thư viện
+    [Required(ErrorMessage = "Mã thẻ thư viện không được trống")]
     public string? MaTheTV { get; set; }
 
     public bool TaoTaiKhoan { get; set; }

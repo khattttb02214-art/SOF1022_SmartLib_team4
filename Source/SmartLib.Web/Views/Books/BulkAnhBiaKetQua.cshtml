@@ -1,0 +1,76 @@
+@model SmartLib.Web.ViewModels.BulkAnhBiaKetQuaViewModel
+@{ ViewData["Title"] = "Kết quả nhập ảnh bìa hàng loạt"; }
+
+<div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h4 class="mb-0"><i class="fa fa-images me-2 text-info"></i>Kết quả nhập ảnh bìa hàng loạt</h4>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i>Về danh sách sách</a>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-sm-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="fs-3 fw-bold text-success">@Model.DaKhop.Count</div>
+                <div class="small text-muted">Ảnh đã khớp &amp; cập nhật</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="fs-3 fw-bold text-danger">@Model.KhongKhop.Count</div>
+                <div class="small text-muted">File không khớp sách nào</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.DaKhop.Any())
+{
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-header bg-white fw-semibold"><i class="fa fa-check-circle text-success me-1"></i>Đã cập nhật thành công</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th class="ps-3">Tên file</th><th>Mã sách</th><th>Tên sách</th><th>Khớp theo</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.DaKhop)
+                        {
+                            <tr>
+                                <td class="ps-3 font-monospace small">@item.TenFile</td>
+                                <td class="font-monospace">@item.MaSach</td>
+                                <td>@item.TenSach</td>
+                                <td><span class="badge bg-primary-subtle text-primary">@item.KhopTheo</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.KhongKhop.Any())
+{
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-semibold"><i class="fa fa-triangle-exclamation text-danger me-1"></i>Không khớp được sách nào</div>
+        <div class="card-body">
+            <p class="text-muted small">Đổi tên các file dưới đây theo đúng <strong>Mã sách</strong> (VD: <code>S0001.jpg</code>) hoặc <strong>ISBN</strong> (VD: <code>9786041234567.png</code>) của sách tương ứng rồi nhập lại.</p>
+            <ul class="mb-0">
+                @foreach (var f in Model.KhongKhop)
+                {
+                    <li class="font-monospace small">@f</li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@if (!Model.DaKhop.Any() && !Model.KhongKhop.Any())
+{
+    <div class="empty-state text-center text-muted py-5">
+        <i class="fa fa-inbox fa-3x mb-3 opacity-25 d-block"></i>Không có file nào được xử lý
+    </div>
+}

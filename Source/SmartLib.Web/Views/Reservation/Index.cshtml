@@ -2,150 +2,165 @@
 @{ ViewData["Title"] = "Đặt trước sách"; }
 
 <div class="page-header-card d-flex justify-content-between align-items-center">
-    <h4 class="mb-0"><i class="fa fa-bookmark me-2"></i>Đặt trước sách</h4>
-    @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
-    {
-        <a asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus me-1"></i>Tạo đặt trước</a>
-    }
+	<h4 class="mb-0"><i class="fa fa-bookmark me-2"></i>Đặt trước sách</h4>
+	@if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+	{
+		<a asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus me-1"></i>Tạo đặt trước</a>
+	}
 </div>
 
-<div class="card shadow-sm mb-3"><div class="card-body py-2">
-    <form method="get" class="d-flex gap-2 flex-wrap">
-        <input type="text" name="search" value="@ViewBag.Search" class="form-control"
-               style="max-width:260px" placeholder="Tên sách, độc giả..." />
-        <select name="status" class="form-select" style="max-width:160px">
-            <option value="">-- Tất cả --</option>
-            <option value="Đang Chờ"  selected="@(ViewBag.Status=="Đang Chờ")">Đang chờ</option>
-            <option value="Đã Duyệt"  selected="@(ViewBag.Status=="Đã Duyệt")">Đã duyệt</option>
-            <option value="Đã Hủy"    selected="@(ViewBag.Status=="Đã Hủy")">Đã hủy</option>
-        </select>
-        <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
-    </form>
-</div></div>
+<div class="card shadow-sm mb-3">
+	<div class="card-body py-2">
+		<form method="get" class="d-flex gap-2 flex-wrap">
+			<input type="text" name="search" value="@ViewBag.Search" class="form-control"
+				   style="max-width:260px" placeholder="Tên sách, độc giả..." />
+			<select name="status" class="form-select" style="max-width:160px">
+				<option value="">-- Tất cả --</option>
+				<option value="Đang Chờ" selected="@(ViewBag.Status=="Đang Chờ")">Đang chờ</option>
+				<option value="Đã Duyệt" selected="@(ViewBag.Status=="Đã Duyệt")">Đã duyệt</option>
+				<option value="Đã Hủy" selected="@(ViewBag.Status=="Đã Hủy")">Đã hủy</option>
+			</select>
+			<button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+		</form>
+	</div>
+</div>
 
-<div class="card shadow-sm"><div class="card-body p-0">
-    <table class="table table-hover mb-0" id="resTable">
-        <thead class="table-light">
-            <tr>
-                <th>#</th>
-                <th>Sách</th>
-                <th>Độc giả</th>
-                <th>Ngày đặt</th>
-                <th>Trạng thái</th>
-                @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
-                {
-                    <th>Phiếu mượn</th>
-                }
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var r in Model)
-        {
-            <tr>
-                <td>@r.MaReservation</td>
-                <td class="fw-semibold">@r.Sach?.TenSach</td>
-                <td>@r.DocGia?.HoTen</td>
-                <td>@($"{r.NgayDat:dd/MM/yyyy HH:mm}")</td>
-                <td>
-                    <span class="badge @(r.TrangThai=="Đã Duyệt" ? "bg-success"
-                                       : r.TrangThai=="Đã Hủy"  ? "bg-danger"
-                                       : "bg-warning text-dark")">
-                        @r.TrangThai
-                    </span>
-                </td>
+<div class="card shadow-sm">
+	<div class="card-body p-0">
+		<table class="table table-hover mb-0" id="resTable">
+			<thead class="table-light">
+				<tr>
+					<th>#</th>
+					<th>Độc giả</th>
+					<th>Số loại sách</th>
+					<th>Ngày đặt</th>
+					<th>Trạng thái</th>
+					@if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+					{
+						<th>Phiếu mượn</th>
+					}
+					<th style="width: 200px;">Thao tác</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var r in Model)
+				{
+					<tr>
+						<td title="Mã đặt trước">@r.MaReservation</td>
+						<td class="fw-semibold">@r.DocGia?.HoTen</td>
+						<td>
+							<span class="badge bg-info">@r.ChiTietDatTruocs.Count loại</span>
+							<span class="text-muted small">(@r.ChiTietDatTruocs.Sum(ct => ct.SoLuong) cuốn)</span>
+						</td>
+						<td>@($"{r.NgayDat:dd/MM/yyyy HH:mm}")</td>
+						<td>
+							<span class="badge @(r.TrangThai=="Đã Duyệt" ? "bg-success"
+												   : r.TrangThai=="Đã Hủy"  ? "bg-danger"
+												   : "bg-warning text-dark")">
+								@r.TrangThai
+							</span>
+						</td>
 
-                @* Cột phiếu mượn – chỉ hiện cho ADMIN/LIB *@
-                @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
-                {
-                    <td>
-                        @if (r.TrangThai == "Đã Duyệt")
-                        {
-                            if (r.DaMuon)
-                            {
-                                <span class="badge bg-info text-dark">
-                                    <i class="fa fa-check me-1"></i>Đã mượn
-                                </span>
-                                @if (!string.IsNullOrEmpty(r.MaPhieuMuon))
-                                {
-                                    <a asp-controller="Borrow" asp-action="Index"
-                                       class="ms-1 text-muted small"
-                                       title="Xem phiếu @r.MaPhieuMuon">
-                                        <i class="fa fa-arrow-up-right-from-square"></i> @r.MaPhieuMuon
-                                    </a>
-                                }
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary me-1">
-                                    <i class="fa fa-clock me-1"></i>Chưa mượn
-                                </span>
-                                <a asp-action="CreateBorrow" asp-route-id="@r.MaReservation"
-                                   class="btn btn-xs btn-primary"
-                                   title="Lập phiếu mượn ngay"
-                                   onclick="return confirm('Lập phiếu mượn cho đặt trước này?')">
-                                    <i class="fa fa-file-circle-plus me-1"></i>Lập phiếu
-                                </a>
-                            }
-                        }
-                        else
-                        {
-                            <span class="text-muted small">—</span>
-                        }
-                    </td>
-                }
+						@* Cột phiếu mượn – chỉ hiện cho ADMIN/LIB *@
+						@if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+						{
+							<td>
+								@if (r.TrangThai == "Đã Duyệt")
+								{
+									if (r.DaMuon)
+									{
+										<span class="badge bg-info text-dark">
+											<i class="fa fa-check me-1"></i>Đã mượn
+										</span>
+										@if (!string.IsNullOrEmpty(r.MaPhieuMuon))
+										{
+											<a asp-controller="Borrow" asp-action="Index"
+											   class="ms-1 text-muted small"
+											   title="Xem phiếu @r.MaPhieuMuon">
+												<i class="fa fa-arrow-up-right-from-square"></i> @r.MaPhieuMuon
+											</a>
+										}
+									}
+									else
+									{
+										<span class="badge bg-secondary me-1">
+											<i class="fa fa-clock me-1"></i>Chưa mượn
+										</span>
+										<a asp-action="CreateBorrow" asp-route-id="@r.MaReservation"
+										   class="btn btn-xs btn-primary"
+										   title="Lập phiếu mượn ngay"
+										   onclick="return confirm('Lập phiếu mượn cho đặt trước này?')">
+											<i class="fa fa-file-circle-plus me-1"></i>Lập phiếu
+										</a>
+									}
+								}
+								else
+								{
+									<span class="text-muted small">—</span>
+								}
+							</td>
+						}
 
-                <td>
-                    <div class="d-flex gap-1 flex-wrap">
-                        @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
-                        {
-                            if (r.TrangThai == "Đang Chờ")
-                            {
-                                <a asp-action="Approve" asp-route-id="@r.MaReservation"
-                                   class="btn btn-xs btn-success" title="Duyệt">
-                                    <i class="fa fa-check"></i>
-                                </a>
-                                <a asp-action="Cancel" asp-route-id="@r.MaReservation"
-                                   class="btn btn-xs btn-outline-warning" title="Hủy">
-                                    <i class="fa fa-ban"></i>
-                                </a>
-                            }
-                            <a asp-action="Edit" asp-route-id="@r.MaReservation"
-                               class="btn btn-xs btn-outline-primary" title="Sửa">
-                                <i class="fa fa-pen"></i>
-                            </a>
-                            <button onclick="confirmDelete('/Reservation/Delete/@r.MaReservation')"
-                                    class="btn btn-xs btn-outline-danger" title="Xóa">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        }
-                        else if (r.TrangThai == "Đang Chờ")
-                        {
-                            <a asp-action="Cancel" asp-route-id="@r.MaReservation"
-                               class="btn btn-xs btn-outline-danger">
-                                <i class="fa fa-xmark me-1"></i>Hủy
-                            </a>
-                        }
-                    </div>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div></div>
+						<td>
+							<div class="d-flex gap-1 flex-wrap">
+								<a asp-action="Details" asp-route-id="@r.MaReservation"
+								   class="btn btn-xs btn-outline-info" title="Xem chi tiết">
+									<i class="fa fa-eye"></i>
+								</a>
+
+								@if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+								{
+									@if (r.TrangThai == "Đang Chờ")
+									{
+										<a asp-action="Approve" asp-route-id="@r.MaReservation"
+										   class="btn btn-xs btn-success" title="Duyệt"
+										   onclick="return confirm('Duyệt đặt trước này?')">
+											<i class="fa fa-check"></i>
+										</a>
+										<a asp-action="Cancel" asp-route-id="@r.MaReservation"
+										   class="btn btn-xs btn-outline-warning" title="Hủy"
+										   onclick="return confirm('Hủy đặt trước này?')">
+											<i class="fa fa-ban"></i>
+										</a>
+									}
+									<a asp-action="Edit" asp-route-id="@r.MaReservation"
+									   class="btn btn-xs btn-outline-primary" title="Sửa">
+										<i class="fa fa-pen"></i>
+									</a>
+									<button onclick="confirmDelete('/Reservation/Delete/@r.MaReservation')"
+											class="btn btn-xs btn-outline-danger" title="Xóa">
+										<i class="fa fa-trash"></i>
+									</button>
+								}
+								else if (r.TrangThai == "Đang Chờ")
+								{
+									<a asp-action="Cancel" asp-route-id="@r.MaReservation"
+									   class="btn btn-xs btn-outline-danger"
+									   onclick="return confirm('Hủy đặt trước này?')">
+										<i class="fa fa-xmark me-1"></i>Hủy
+									</a>
+								}
+							</div>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
 
 @section Scripts {
-<script>
-$('#resTable').DataTable({
-    language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json' },
-    pageLength: 20
-});
-function confirmDelete(url) {
-    Swal.fire({
-        title: 'Xóa đặt trước?', icon: 'warning',
-        showCancelButton: true, confirmButtonColor: '#d33',
-        cancelButtonText: 'Hủy', confirmButtonText: 'Xóa'
-    }).then(r => { if (r.isConfirmed) window.location.href = url; });
-}
-</script>
+	<script>
+		$('#resTable').DataTable({
+			language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json' },
+			pageLength: 20
+		});
+		function confirmDelete(url) {
+			Swal.fire({
+				title: 'Xóa đặt trước?', icon: 'warning',
+				showCancelButton: true, confirmButtonColor: '#d33',
+				cancelButtonText: 'Hủy', confirmButtonText: 'Xóa'
+			}).then(r => { if (r.isConfirmed) window.location.href = url; });
+		}
+	</script>
 }

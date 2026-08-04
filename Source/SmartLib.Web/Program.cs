@@ -7,8 +7,10 @@ using SmartLib.Web.Hubs;
 using SmartLib.Web.Interfaces;
 using SmartLib.Web.Filters;
 using SmartLib.Web.Middleware;
+using SmartLib.Web.Repositories;
 using SmartLib.Web.Services;
 using SmartLib.Web.Services.Pdf;
+using SmartLib.Web.Services.AI;
 using QuestPDF.Infrastructure;
 
 QuestPDF.Settings.License = LicenseType.Community;
@@ -61,6 +63,24 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<BorrowReceiptPdfService>();
 builder.Services.AddScoped<SmartLib.Web.Services.AuditService>();
 builder.Services.AddScoped<SmartLib.Web.Services.EmailService>();
+
+// ── AI Assistant (Chatbot thư viện) ─────────────────────────────────────────
+// AIService KHÔNG được phép tự truy vấn DbContext — mọi dữ liệu thật (sách, mượn/trả, đặt
+// trước) đều phải đi qua ISachService/IMuonTraService/IReservationService bên dưới.
+// Xem thêm: Controllers/AIController.cs, Services/AI/AIService.cs, Services/AI/IntentRecognizer.cs
+builder.Services.AddScoped<ISachRepository, SachRepository>();
+builder.Services.AddScoped<ISachService, SachService>();
+builder.Services.AddScoped<IMuonTraService, MuonTraService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IIntentRecognizer, IntentRecognizer>();
+builder.Services.AddScoped<IAIService, AIService>();
+
+// ── AI Search (tìm sách bằng ngôn ngữ tự nhiên) ─────────────────────────────
+// Controller → AISearchService → ISachService (BookService) → ISachRepository → Database.
+// Xem thêm: Controllers/AISearchController.cs, Services/AI/AISearchService.cs, Services/AI/KeywordExpander.cs
+builder.Services.AddScoped<IKeywordExpander, KeywordExpander>();
+builder.Services.AddScoped<IAISearchService, AISearchService>();
+
 var app = builder.Build();
 
 // Đặt ĐẦU TIÊN trong pipeline để bọc toàn bộ middleware/controller phía sau:

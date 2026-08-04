@@ -1,0 +1,348 @@
+@model SmartLib.Web.Models.MuonTra
+@{
+	ViewData["Title"] = "Chi tiết phiếu mượn/trả";
+	bool overdue = Model.TrangThai == "Đang Mượn" && Model.NgayHenTra < DateTime.Now;
+}
+
+<div class="page-header-card d-flex justify-content-between align-items-center">
+	<div>
+		<h4 class="mb-0"><i class="fa fa-receipt me-2"></i>Chi tiết phiếu mượn/trả</h4>
+		<small class="text-muted">Mã phiếu: <strong>@Model.MaPhieu</strong></small>
+	</div>
+	<div class="d-flex gap-2">
+		<a asp-action="Edit" asp-route-id="@Model.MaPhieu" class="btn btn-outline-primary btn-sm"><i class="fa fa-pen me-1"></i>Sửa</a>
+		<a asp-action="ExportPdf" asp-route-id="@Model.MaPhieu" class="btn btn-outline-secondary btn-sm"><i class="fa fa-file-pdf me-1"></i>PDF</a>
+		<a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i>Quay lại</a>
+	</div>
+</div>
+
+<div class="row g-4">
+	<!-- Left: Ticket Info & Statuses -->
+	<div class="col-lg-4">
+		<div class="card shadow-sm mb-3">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-ticket me-2"></i>Thông tin phiếu
+			</div>
+			<div class="card-body">
+				<div class="mb-3">
+					<label class="form-label text-muted small">Mã phiếu</label>
+					<div class="fw-monospace fw-bold fs-6">@Model.MaPhieu</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label text-muted small">Trạng thái</label>
+					<div>
+						@if (overdue)
+						{
+							<span class="badge bg-danger-subtle text-danger fs-6">
+								<i class="fa fa-triangle-exclamation me-1"></i>Quá hạn
+							</span>
+						}
+						else if (Model.TrangThai == "Đã Trả")
+						{
+							<span class="badge bg-success-subtle text-success fs-6">
+								<i class="fa fa-check me-1"></i>@Model.TrangThai
+							</span>
+						}
+						else
+						{
+							<span class="badge bg-warning-subtle text-warning fs-6">
+								<i class="fa fa-hourglass-half me-1"></i>@Model.TrangThai
+							</span>
+						}
+					</div>
+				</div>
+
+				@if (Model.TienPhat > 0)
+				{
+					<div class="alert alert-danger py-2 px-3 mb-0">
+						<i class="fa fa-money-bill me-2"></i>
+						<strong>Tiền phạt: </strong>
+						<span class="fw-bold">@Model.TienPhat.ToString("N0") ₫</span>
+					</div>
+				}
+			</div>
+		</div>
+
+		<!-- Reader Info -->
+		<div class="card shadow-sm mb-3">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-user me-2"></i>Độc giả
+			</div>
+			<div class="card-body">
+				@if (Model.DocGia != null)
+				{
+					<div class="mb-2">
+						<label class="form-label text-muted small">Họ tên</label>
+						<div class="fw-semibold">@Model.DocGia.HoTen</div>
+					</div>
+
+					<div class="mb-2">
+						<label class="form-label text-muted small">Mã độc giả</label>
+						<div class="font-monospace">@Model.DocGia.MaDocGia</div>
+					</div>
+
+					@if (!string.IsNullOrEmpty(Model.DocGia.Email))
+					{
+						<div class="mb-2">
+							<label class="form-label text-muted small">Email</label>
+							<div>
+								<a href="mailto:@Model.DocGia.Email" class="text-decoration-none">
+									<i class="fa fa-envelope me-1"></i>@Model.DocGia.Email
+								</a>
+							</div>
+						</div>
+					}
+
+					@if (!string.IsNullOrEmpty(Model.DocGia.SoDienThoai))
+					{
+						<div>
+							<label class="form-label text-muted small">Số điện thoại</label>
+							<div>
+								<a href="tel:@Model.DocGia.SoDienThoai" class="text-decoration-none">
+									<i class="fa fa-phone me-1"></i>@Model.DocGia.SoDienThoai
+								</a>
+							</div>
+						</div>
+					}
+				}
+				else
+				{
+					<p class="text-muted small">Không có thông tin độc giả</p>
+				}
+			</div>
+		</div>
+
+		<!-- Staff Info -->
+		<div class="card shadow-sm">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-briefcase me-2"></i>Nhân viên lập phiếu
+			</div>
+			<div class="card-body">
+				@if (Model.NhanVien != null)
+				{
+					<div class="mb-2">
+						<label class="form-label text-muted small">Họ tên</label>
+						<div class="fw-semibold">@Model.NhanVien.HoTen</div>
+					</div>
+
+					<div>
+						<label class="form-label text-muted small">Mã nhân viên</label>
+						<div class="font-monospace">@Model.NhanVien.MaNV</div>
+					</div>
+				}
+				else
+				{
+					<p class="text-muted small">Không có thông tin nhân viên</p>
+				}
+			</div>
+		</div>
+	</div>
+
+	<!-- Right: Dates & Books -->
+	<div class="col-lg-8">
+		<!-- Timeline Card -->
+		<div class="card shadow-sm mb-4">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-calendar me-2"></i>Thời gian
+			</div>
+			<div class="card-body">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label class="form-label text-muted small">Ngày mượn</label>
+						<div class="fw-semibold">
+							@Model.NgayMuon.ToString("dd/MM/yyyy")
+							<br>
+							<small class="text-muted">@Model.NgayMuon.ToString("HH:mm")</small>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<label class="form-label text-muted small">Hạn trả</label>
+						<div class="fw-semibold @(overdue ? "text-danger" : "")">
+							@Model.NgayHenTra.ToString("dd/MM/yyyy")
+							@if (overdue)
+							{
+								<span class="badge bg-danger-subtle text-danger ms-2">Quá hạn</span>
+							}
+						</div>
+					</div>
+				</div>
+
+				@if (Model.NgayTraThucTe.HasValue)
+				{
+					<div class="row g-3 mt-2">
+						<div class="col-md-6">
+							<label class="form-label text-muted small">Ngày trả thực tế</label>
+							<div class="fw-semibold text-success">
+								<i class="fa fa-check-circle me-1"></i>
+								@Model.NgayTraThucTe.Value.ToString("dd/MM/yyyy")
+								<br>
+								<small class="text-muted">@Model.NgayTraThucTe.Value.ToString("HH:mm")</small>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label text-muted small">Tình trạng trả</label>
+							<div>
+								@if (Model.NgayTraThucTe > Model.NgayHenTra)
+								{
+									<span class="badge bg-danger-subtle text-danger">
+										Trả muộn @{var days = (Model.NgayTraThucTe.Value.Date - Model.NgayHenTra.Date).Days;} (@(days) ngày)
+									</span>
+								}
+								else
+								{
+									<span class="badge bg-success-subtle text-success">
+										Trả đúng hạn
+									</span>
+								}
+							</div>
+						</div>
+					</div>
+				}
+
+				@if (Model.DaGiaHan)
+				{
+					<div class="alert alert-info py-2 px-3 mt-3 mb-0">
+						<i class="fa fa-rotate-right me-2"></i>
+						<strong>Phiếu này đã được gia hạn</strong>
+					</div>
+				}
+			</div>
+		</div>
+
+		<!-- Books List -->
+		<div class="card shadow-sm">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-book me-2"></i>Danh sách sách mượn/trả
+				(@Model.ChiTietMuonTras.Count)
+			</div>
+			<div class="card-body p-0">
+				@if (Model.ChiTietMuonTras.Any())
+				{
+					<div class="table-responsive">
+						<table class="table table-hover align-middle mb-0">
+							<thead class="table-light">
+								<tr>
+									<th>Tên sách</th>
+									<th class="text-center" style="width: 100px;">Mã sách</th>
+									<th class="text-center" style="width: 100px;">Mã cuốn</th>
+									<th class="text-center" style="width: 80px;">SL</th>
+									<th class="text-center" style="width: 100px;">Tình trạng</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model.ChiTietMuonTras)
+								{
+									<tr>
+										<td>
+											<div class="fw-semibold">
+												@if (item.Sach != null)
+												{
+													<a asp-controller="Books" asp-action="Detail" asp-route-id="@item.MaSach" 
+													   class="text-decoration-none">
+														@item.Sach.TenSach
+													</a>
+												}
+												else
+												{
+													<span>@(item.MaSach ?? "—")</span>
+												}
+											</div>
+											@if (item.GhiChu != null)
+											{
+												<small class="text-muted d-block">@item.GhiChu</small>
+											}
+										</td>
+										<td class="text-center">
+											<span class="font-monospace small">@item.MaSach</span>
+										</td>
+										<td class="text-center">
+											<span class="font-monospace small">@item.MaCuonSach</span>
+										</td>
+										<td class="text-center">@item.SoLuong</td>
+										<td class="text-center">
+											@if (item.CuonSach != null)
+											{
+												@switch(item.CuonSach.TrangThai)
+												{
+													case "Có Sẵn":
+														<span class="badge bg-success-subtle text-success">Có sẵn</span>
+														break;
+													case "Đang Mượn":
+														<span class="badge bg-warning-subtle text-warning">Đang mượn</span>
+														break;
+													case "Hỏng":
+														<span class="badge bg-danger-subtle text-danger">Hỏng</span>
+														break;
+													default:
+														<span class="badge bg-secondary-subtle text-secondary">@item.CuonSach.TrangThai</span>
+														break;
+												}
+											}
+											else
+											{
+												<span class="text-muted">—</span>
+											}
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				}
+				else
+				{
+					<div class="alert alert-info py-3 mb-0 m-3">
+						<i class="fa fa-circle-info me-2"></i>Không có sách trong phiếu này
+					</div>
+				}
+			</div>
+		</div>
+
+		<!-- Remarks -->
+		@if (!string.IsNullOrEmpty(Model.GhiChu))
+		{
+			<div class="card shadow-sm mt-4">
+				<div class="card-header fw-semibold bg-light">
+					<i class="fa fa-note-sticky me-2"></i>Ghi chú
+				</div>
+				<div class="card-body">
+					<p class="mb-0">@Model.GhiChu</p>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<style>
+	.font-monospace {
+		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
+		font-size: 0.875rem;
+	}
+
+	.table-responsive {
+		border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+		overflow-x: auto;
+	}
+
+	table.table th {
+		border-top: none;
+		font-weight: 600;
+		color: var(--bs-secondary-color);
+	}
+
+	.badge {
+		font-size: 0.775rem;
+		font-weight: 500;
+		padding: 0.35rem 0.65rem;
+	}
+
+	.card-header {
+		border-bottom: 2px solid #f0f0f0;
+	}
+
+	.card-header i {
+		color: var(--bs-primary);
+	}
+</style>

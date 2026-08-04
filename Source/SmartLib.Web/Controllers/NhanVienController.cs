@@ -39,8 +39,7 @@ public class NhanVienController : Controller
         return View(new NhanVienViewModel());
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost][ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(NhanVienViewModel model)
     {
         // Kiểm tra: Thủ thư chỉ được tạo tài khoản STU
@@ -55,8 +54,8 @@ public class NhanVienController : Controller
         }
 
         if (!ModelState.IsValid) { await LoadCV(); return View(model); }
-        if (string.IsNullOrWhiteSpace(model.MatKhau)) { ModelState.AddModelError("MatKhau", "Mật khẩu không được trống"); await LoadCV(); return View(model); }
-        if (await _context.NhanViens.AnyAsync(n => n.Email == model.Email)) { ModelState.AddModelError("Email", "Email đã tồn tại"); await LoadCV(); return View(model); }
+        if (string.IsNullOrWhiteSpace(model.MatKhau)) { ModelState.AddModelError("MatKhau","Mật khẩu không được trống"); await LoadCV(); return View(model); }
+        if (await _context.NhanViens.AnyAsync(n => n.Email == model.Email)) { ModelState.AddModelError("Email","Email đã tồn tại"); await LoadCV(); return View(model); }
 
         var last = await _context.NhanViens.OrderByDescending(n => n.MaNV).Select(n => n.MaNV).FirstOrDefaultAsync();
         string maNV = "NV001";
@@ -73,18 +72,12 @@ public class NhanVienController : Controller
             await model.AnhDaiDienFile.CopyToAsync(fs);
         }
 
-        _context.NhanViens.Add(new NhanVien
-        {
-            MaNV = maNV,
-            HoTen = model.HoTen,
-            Email = model.Email,
-            SoDienThoai = model.SoDienThoai,
-            DiaChi = model.DiaChi,
+        _context.NhanViens.Add(new NhanVien {
+            MaNV = maNV, HoTen = model.HoTen, Email = model.Email,
+            SoDienThoai = model.SoDienThoai, DiaChi = model.DiaChi,
             MatKhau = BCrypt.Net.BCrypt.HashPassword(model.MatKhau!),
-            MaChucVu = model.MaChucVu,
-            TrangThai = model.TrangThai,
-            AnhDaiDien = avatar,
-            NgayTao = DateTime.Now
+            MaChucVu = model.MaChucVu, TrangThai = model.TrangThai,
+            AnhDaiDien = avatar, NgayTao = DateTime.Now
         });
         await _context.SaveChangesAsync();
         TempData["success"] = "Thêm tài khoản thành công";
@@ -97,21 +90,15 @@ public class NhanVienController : Controller
         var nv = await _context.NhanViens.FindAsync(id);
         if (nv == null) return NotFound();
         await LoadCV();
-        return View(new NhanVienViewModel
-        {
-            MaNV = nv.MaNV,
-            HoTen = nv.HoTen,
-            Email = nv.Email!,
-            SoDienThoai = nv.SoDienThoai,
-            DiaChi = nv.DiaChi,
-            MaChucVu = nv.MaChucVu,
-            TrangThai = nv.TrangThai
+        return View(new NhanVienViewModel {
+            MaNV = nv.MaNV, HoTen = nv.HoTen, Email = nv.Email!,
+            SoDienThoai = nv.SoDienThoai, DiaChi = nv.DiaChi,
+            MaChucVu = nv.MaChucVu, TrangThai = nv.TrangThai
         });
     }
 
     [Authorize(Roles = "ADMIN")]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost][ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(string id, NhanVienViewModel model)
     {
         var nv = await _context.NhanViens.FindAsync(id);
@@ -150,13 +137,28 @@ public class NhanVienController : Controller
         // ngoại MuonTra → NhanVien là Restrict, xóa sẽ vỡ dữ liệu lịch sử mượn trả).
         if (await _context.MuonTras.AnyAsync(m => m.MaNV == id))
         {
-            TempData["error"] = $"Không thể xóa: nhân viên {nv.HoTen} đã từng lập/xử lý phiếu mượn trong hệ thống.";
+            TempData["error"] = $"Không thể xóa: nhân viên {nv.HoTen} đã từng lập/xử lý phiếu mượn trong hệ thống. " +
+                "Bạn có thể dùng nút \"Khóa tài khoản\" để ngừng cho đăng nhập mà vẫn giữ nguyên dữ liệu, thay vì xóa hẳn.";
             return RedirectToAction(nameof(Index));
         }
 
         _context.NhanViens.Remove(nv);
         await _context.SaveChangesAsync();
         TempData["success"] = "Đã xóa nhân viên";
+        return RedirectToAction(nameof(Index));
+    }
+
+    // Đổi trạng thái (Hoạt động ⇄ Đã khóa) THAY VÌ xóa hẳn — dữ liệu (phiếu mượn đã
+    // xử lý, nhật ký hoạt động...) vẫn được giữ nguyên, chỉ khóa không cho đăng nhập.
+    public async Task<IActionResult> ToggleStatus(string id)
+    {
+        if (id == "NV001") { TempData["error"] = "Không thể khóa tài khoản Admin gốc"; return RedirectToAction(nameof(Index)); }
+        var nv = await _context.NhanViens.FindAsync(id);
+        if (nv == null) return NotFound();
+        nv.TrangThai = !nv.TrangThai;
+        nv.NgayCapNhat = DateTime.Now;
+        await _context.SaveChangesAsync();
+        TempData["success"] = nv.TrangThai ? "Đã kích hoạt lại tài khoản nhân viên" : "Đã khóa tài khoản (ẩn quyền đăng nhập, giữ nguyên dữ liệu)";
         return RedirectToAction(nameof(Index));
     }
 
@@ -233,12 +235,8 @@ public class NhanVienController : Controller
 
     private async Task GhiNhatKy(string maNV, string hanhDong, string moTa)
     {
-        _context.NhatKyHoatDongs.Add(new NhatKyHoatDong
-        {
-            MaNV = maNV,
-            HanhDong = hanhDong,
-            MoTa = moTa,
-            ThoiGian = DateTime.Now
+        _context.NhatKyHoatDongs.Add(new NhatKyHoatDong {
+            MaNV = maNV, HanhDong = hanhDong, MoTa = moTa, ThoiGian = DateTime.Now
         });
         await _context.SaveChangesAsync();
     }
@@ -246,14 +244,14 @@ public class NhanVienController : Controller
     private async Task LoadCV()
     {
         IQueryable<ChucVu> query = _context.ChucVus.Where(c => c.MaChucVu != "STU");
-
+        
         // Thủ thư chỉ được tạo tài khoản sinh viên
         if (User.IsInRole("LIB") && !User.IsInRole("ADMIN"))
         {
             // Chỉ cho phép role STU
             query = _context.ChucVus.Where(c => c.MaChucVu == "STU");
         }
-
+        
         ViewBag.ChucVu = new SelectList(await query.ToListAsync(), "MaChucVu", "TenChucVu");
     }
 
@@ -261,7 +259,7 @@ public class NhanVienController : Controller
     [Authorize(Roles = "ADMIN,LIB")]
     [HttpGet]
     [BoQuaPhanQuyen] // Gộp số liệu từ nhiều chức năng khác nhau (tài khoản chờ duyệt +
-                     // phiếu quá hạn), không thuộc riêng 1 chức năng nên không chặn theo quyền.
+                      // phiếu quá hạn), không thuộc riêng 1 chức năng nên không chặn theo quyền.
     public async Task<IActionResult> GetNotificationCounts()
     {
         // Đếm tài khoản sinh viên chờ duyệt

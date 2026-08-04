@@ -767,6 +767,15 @@ table.dataTable tbody tr:hover {
         transform: scale(.97);
     }
 
+/* Nút "Tìm bằng AI" - biến thể màu tím để phân biệt trực quan với nút Tìm kiếm truyền thống */
+.sl-search__btn--ai {
+    background: linear-gradient(135deg, var(--c-purple), #6d28d9);
+}
+
+    .sl-search__btn--ai:hover {
+        background: linear-gradient(135deg, #6d28d9, var(--c-purple));
+    }
+
 .sl-search__drop {
     position: absolute;
     top: calc(100% + 6px);
@@ -1832,4 +1841,58 @@ table.dtr-inline.collapsed > tbody > tr > th.dtr-control {
     .dashboard-card {
         padding: 16px;
     }
+}
+
+/* ================================================================
+   Avatar chi tiết (dùng ở trang Detail của Tác giả, Độc giả, Nhân
+   viên...) — trước đây view có gọi class này nhưng chưa từng định
+   nghĩa CSS, giờ bổ sung để hiển thị tròn, có nền, căn giữa.
+================================================================ */
+.detail-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--c-blue, #2563eb), var(--c-blue-mid, #60a5fa));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.detail-avatar-img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+
+/* Badge "nhạt" (pastel) — dùng chung cho các trạng thái/thể loại */
+.bg-primary-soft {
+    background: #e8edfb;
+    color: #2a5298;
+}
+
+.bg-success-soft {
+    background: #e3f7e9;
+    color: #1e7a3d;
+}
+
+.bg-danger-soft {
+    background: #fbe7e9;
+    color: #b3261e;
+}
+
+.bg-warning-soft {
+    background: #fff4e0;
+    color: #9a6400;
+}
+
+.bg-info-soft {
+    background: #e3f3fb;
+    color: #0c6c95;
 }

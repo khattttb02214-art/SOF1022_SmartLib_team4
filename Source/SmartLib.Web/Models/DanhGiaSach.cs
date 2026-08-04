@@ -23,6 +23,12 @@ public class DanhGiaSach
 
     public DateTime NgayDanhGia { get; set; } = DateTime.Now;
 
+    /// <summary>
+    /// Status: "Hiển thị" or "Đã xóa"
+    /// </summary>
+    [StringLength(50)]
+    public string? TrangThai { get; set; } = "Hiển thị";
+
     [ForeignKey("MaDocGia")]
     public virtual DocGia? DocGia { get; set; }
 

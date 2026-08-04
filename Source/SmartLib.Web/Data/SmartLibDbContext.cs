@@ -24,9 +24,11 @@ public class SmartLibDbContext : DbContext
     public DbSet<Wishlist> Wishlists { get; set; }
     public DbSet<WishlistFolder> WishlistFolders { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<ChiTietDatTruoc> ChiTietDatTruocs { get; set; }
     public DbSet<WishlistPreference> WishlistPreferences { get; set; }
     public DbSet<NhatKyHoatDong> NhatKyHoatDongs { get; set; }
     public DbSet<ThongBao> ThongBaos { get; set; }
+    public DbSet<Ebook> Ebooks { get; set; }
     public DbSet<GoogleOtpTemp> GoogleOtpTemps { get; set; }
     public DbSet<TheThuVien> TheThiViens { get; set; }
     public DbSet<NhomChucNang> NhomChucNangs { get; set; }
@@ -109,6 +111,13 @@ public class SmartLibDbContext : DbContext
             .WithMany()
             .HasForeignKey(x => x.MaDocGia)
             .OnDelete(DeleteBehavior.SetNull);
+
+        // ── Ebook → Sach (restrict: không cho xóa sách khi còn ebook đính kèm) ──
+        modelBuilder.Entity<Ebook>()
+            .HasOne(x => x.Sach)
+            .WithMany()
+            .HasForeignKey(x => x.MaSach)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // ── PHÂN QUYỀN CHI TIẾT ──────────────────────────────────────────────
         // ChucNang → NhomChucNang (restrict: không cho xóa nhóm khi còn chức năng con)

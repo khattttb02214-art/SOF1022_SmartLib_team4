@@ -194,11 +194,27 @@ public class KhoController : Controller
         var ke = await _db.KeSaches.Include(k => k.Saches).FirstOrDefaultAsync(k => k.MaKe == id);
         if (ke == null) return NotFound();
         if (ke.Saches.Any(s => s.TrangThai))
-        { TempData["error"] = "Không thể xóa kệ còn chứa sách đang hoạt động"; return RedirectToAction(nameof(KeSach)); }
+        {
+            TempData["error"] = "Không thể xóa kệ còn chứa sách đang hoạt động. " +
+                "Bạn có thể dùng \"Ngừng hoạt động\" để tạm ẩn kệ mà vẫn giữ nguyên dữ liệu sách trên kệ.";
+            return RedirectToAction(nameof(KeSach));
+        }
 
         _db.KeSaches.Remove(ke);
         await _db.SaveChangesAsync();
         TempData["success"] = "Đã xóa kệ sách";
+        return RedirectToAction(nameof(KeSach));
+    }
+
+    // Đổi trạng thái (Đang dùng ⇄ Ngưng dùng) THAY VÌ xóa hẳn — sách đang xếp trên kệ
+    // vẫn được giữ nguyên, chỉ ẩn kệ khỏi danh sách hoạt động.
+    public async Task<IActionResult> ToggleTrangThaiKe(string id)
+    {
+        var ke = await _db.KeSaches.FindAsync(id);
+        if (ke == null) return NotFound();
+        ke.TrangThai = !ke.TrangThai;
+        await _db.SaveChangesAsync();
+        TempData["success"] = ke.TrangThai ? "Đã kích hoạt lại kệ sách" : "Đã ngừng hoạt động kệ (giữ nguyên dữ liệu sách trên kệ)";
         return RedirectToAction(nameof(KeSach));
     }
 
@@ -318,6 +334,15 @@ public class KhoController : Controller
         if (cuon == null) return NotFound();
         if (cuon.TrangThai == "Đang Mượn")
         { TempData["error"] = "Không thể xóa cuốn đang được mượn"; return RedirectToAction(nameof(DanhSachCuon), new { maSach = cuon.MaSach }); }
+
+        // Cuốn đã từng có LỊCH SỬ mượn trả (dù hiện đã trả) thì không xóa cứng được
+        // (ràng buộc khóa ngoại Restrict) — gợi ý đánh dấu Mất/Hỏng thay vì xóa hẳn.
+        if (await _db.ChiTietMuonTras.AnyAsync(c => c.MaCuonSach == maCuon))
+        {
+            TempData["error"] = $"Không thể xóa cuốn {maCuon} vì đã có lịch sử mượn trả trong hệ thống. " +
+                "Hãy đánh dấu trạng thái \"Mất\" hoặc \"Hỏng\" thay vì xóa hẳn để vẫn giữ được dữ liệu lịch sử.";
+            return RedirectToAction(nameof(DanhSachCuon), new { maSach = cuon.MaSach });
+        }
 
         var maSach = cuon.MaSach;
         _db.CuonSaches.Remove(cuon);

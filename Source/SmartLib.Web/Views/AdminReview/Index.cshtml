@@ -1,0 +1,289 @@
+@model SmartLib.Web.ViewModels.AdminReviewViewModel
+@{ ViewData["Title"] = "Quản lý đánh giá sách"; }
+
+@section Styles {
+<style>
+.ar-kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; margin-bottom:22px; }
+.ar-kpi-card { background:white; border-radius:16px; padding:16px 18px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 10px rgba(0,0,0,0.06); }
+.ar-kpi-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.ar-kpi-num { font-size:22px; font-weight:800; color:#1f2937; line-height:1.1; }
+.ar-kpi-label { font-size:12px; color:#6b7280; font-weight:600; margin-top:2px; }
+
+.ar-stars i { font-size:12px; }
+.ar-noidung-cell { max-width:280px; white-space:normal; }
+.ar-noidung-cell .ar-noidung-text {
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.ar-detail-cover { width:64px; height:88px; object-fit:cover; border-radius:8px; background:#e5e7eb; flex-shrink:0; }
+</style>
+}
+
+<div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h4 class="mb-0"><i class="fa fa-star me-2 text-warning"></i>Quản lý đánh giá sách</h4>
+</div>
+
+<!-- KPI -->
+<div class="ar-kpi-row">
+    <div class="ar-kpi-card">
+        <div class="ar-kpi-icon" style="background:#eef2ff;color:#4f46e5"><i class="fa fa-comments"></i></div>
+        <div><div class="ar-kpi-num">@Model.TongSoDanhGia</div><div class="ar-kpi-label">Tổng số đánh giá</div></div>
+    </div>
+    <div class="ar-kpi-card">
+        <div class="ar-kpi-icon" style="background:#dcfce7;color:#16a34a"><i class="fa fa-eye"></i></div>
+        <div><div class="ar-kpi-num">@Model.SoDangHienThi</div><div class="ar-kpi-label">Đang hiển thị</div></div>
+    </div>
+    <div class="ar-kpi-card">
+        <div class="ar-kpi-icon" style="background:#fee2e2;color:#dc2626"><i class="fa fa-eye-slash"></i></div>
+        <div><div class="ar-kpi-num">@Model.SoDaXoa</div><div class="ar-kpi-label">Đã ẩn (vi phạm)</div></div>
+    </div>
+    <div class="ar-kpi-card">
+        <div class="ar-kpi-icon" style="background:#fef9c3;color:#ca8a04"><i class="fa fa-star"></i></div>
+        <div><div class="ar-kpi-num">@Model.DiemTrungBinh.ToString("0.0")</div><div class="ar-kpi-label">Điểm TB (đang hiển thị)</div></div>
+    </div>
+</div>
+
+@* Bộ lọc *@
+<div class="card shadow-sm mb-3 border-0">
+    <div class="card-body py-2">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label small text-muted mb-1">Tìm kiếm</label>
+                <input type="text" name="search" value="@Model.Search" class="form-control form-control-sm"
+                       placeholder="Mã, tên sách, người đánh giá, email, nội dung..." />
+            </div>
+            <div class="col-sm-3 col-md-2">
+                <label class="form-label small text-muted mb-1">Số sao</label>
+                <select name="soSao" class="form-select form-select-sm">
+                    <option value="">Tất cả</option>
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <option value="@i" selected="@(Model.SoSao == i)">@i sao</option>
+                    }
+                </select>
+            </div>
+            <div class="col-sm-3 col-md-2">
+                <label class="form-label small text-muted mb-1">Trạng thái</label>
+                <select name="trangThai" class="form-select form-select-sm">
+                    <option value="">Tất cả</option>
+                    <option value="Hiển thị" selected="@(Model.TrangThai == "Hiển thị")">Hiển thị</option>
+                    <option value="Đã xóa" selected="@(Model.TrangThai == "Đã xóa")">Đã xóa</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-2">
+                <label class="form-label small text-muted mb-1">Từ ngày</label>
+                <input type="date" name="tuNgay" value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" class="form-control form-control-sm" />
+            </div>
+            <div class="col-sm-6 col-md-2">
+                <label class="form-label small text-muted mb-1">Đến ngày</label>
+                <input type="date" name="denNgay" value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" class="form-control form-control-sm" />
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary btn-sm"><i class="fa fa-search me-1"></i>Lọc</button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-1"><i class="fa fa-rotate-left me-1"></i>Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="reviewTable" style="width:100%">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Mã ĐG</th>
+                        <th>Tên sách</th>
+                        <th>Người đánh giá</th>
+                        <th>Số sao</th>
+                        <th>Nội dung</th>
+                        <th>Ngày đánh giá</th>
+                        <th>Trạng thái</th>
+                        <th style="width:130px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dg in Model.DanhSach)
+                    {
+                        <tr>
+                            <td class="ps-3 font-monospace" data-order="@dg.MaDanhGia">#@dg.MaDanhGia</td>
+                            <td>
+                                @if (dg.Sach != null)
+                                {
+                                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@dg.MaSach" class="fw-semibold">@dg.Sach.TenSach</a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">(sách đã bị xóa)</span>
+                                }
+                            </td>
+                            <td>
+                                @if (dg.DocGia != null)
+                                {
+                                    <div class="fw-semibold small">@dg.DocGia.HoTen</div>
+                                    <small class="text-muted">@dg.DocGia.Email</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">(đã xóa)</span>
+                                }
+                            </td>
+                            <td data-order="@dg.SoSao">
+                                <div class="ar-stars text-nowrap">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fa fa-star @(i <= dg.SoSao ? "text-warning" : "text-muted opacity-25")"></i>
+                                    }
+                                </div>
+                            </td>
+                            <td class="ar-noidung-cell">
+                                <div class="ar-noidung-text small">@(string.IsNullOrEmpty(dg.NoiDung) ? "—" : dg.NoiDung)</div>
+                            </td>
+                            <td class="text-nowrap" data-order="@dg.NgayDanhGia.Ticks">@dg.NgayDanhGia.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (dg.TrangThai == "Đã xóa")
+                                {
+                                    <span class="badge bg-danger-subtle text-danger">Đã xóa</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success-subtle text-success">Hiển thị</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="xemChiTiet(@dg.MaDanhGia)" title="Xem chi tiết">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                    @if (dg.TrangThai == "Đã xóa")
+                                    {
+                                        <a asp-action="KhoiPhuc" asp-route-id="@dg.MaDanhGia" class="btn btn-sm btn-outline-success"
+                                           onclick="return confirmKhoiPhuc(event, this.href)" title="Khôi phục">
+                                            <i class="fa fa-rotate-left"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="XoaMem" asp-route-id="@dg.MaDanhGia" class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirmXoaMem(event, this.href)" title="Ẩn đánh giá (vi phạm)">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.DanhSach.Any())
+                    {
+                        <tr><td colspan="8" class="text-center text-muted py-5">
+                            <i class="fa fa-comment-slash fa-3x mb-3 opacity-25 d-block"></i>Không có đánh giá nào phù hợp
+                        </td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════ MODAL: CHI TIẾT ĐÁNH GIÁ ═══════════════════ -->
+<div class="modal fade" id="chiTietModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="fa fa-star text-warning me-2"></i>Chi tiết đánh giá</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="chiTietBody">
+                <div class="text-center text-muted py-4"><i class="fa fa-spinner fa-spin"></i> Đang tải...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function escapeHtml(str) {
+    return (str || '').replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+}
+
+function starsHtml(soSao) {
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+        html += '<i class="fa fa-star ' + (i <= soSao ? 'text-warning' : 'text-muted opacity-25') + '"></i>';
+    }
+    return html;
+}
+
+async function xemChiTiet(id) {
+    const modal = new bootstrap.Modal(document.getElementById('chiTietModal'));
+    document.getElementById('chiTietBody').innerHTML = '<div class="text-center text-muted py-4"><i class="fa fa-spinner fa-spin"></i> Đang tải...</div>';
+    modal.show();
+    try {
+        const res = await fetch('@Url.Action("ChiTiet", "AdminReview")?id=' + id);
+        const data = await res.json();
+        if (!data.success) { document.getElementById('chiTietBody').innerHTML = '<p class="text-danger mb-0">' + escapeHtml(data.message || 'Lỗi') + '</p>'; return; }
+
+        const coverHtml = data.sach.anhBia
+            ? '<img src="/uploads/books/' + data.sach.anhBia + '" class="ar-detail-cover" />'
+            : '<div class="ar-detail-cover d-flex align-items-center justify-content-center"><i class="fa fa-book text-muted"></i></div>';
+
+        document.getElementById('chiTietBody').innerHTML =
+            '<div class="d-flex gap-3 mb-3">' + coverHtml +
+                '<div>' +
+                    '<div class="fw-bold">' + escapeHtml(data.sach.tenSach || '(không rõ)') + '</div>' +
+                    '<div class="text-muted small">' + escapeHtml(data.sach.theLoai || '') + '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="mb-2"><span class="fw-semibold small">Người đánh giá: </span>' +
+                escapeHtml(data.docGia.hoTen || '(đã xóa)') +
+                (data.docGia.email ? ' <span class="text-muted small">(' + escapeHtml(data.docGia.email) + ')</span>' : '') +
+            '</div>' +
+            '<div class="mb-2">' + starsHtml(data.soSao) + ' <span class="text-muted small ms-1">' + data.ngayDanhGia + '</span></div>' +
+            '<div class="p-2 rounded" style="background:#f8fafc">' + (data.noiDung ? escapeHtml(data.noiDung) : '<span class="text-muted">(không có nội dung)</span>') + '</div>';
+    } catch (e) {
+        document.getElementById('chiTietBody').innerHTML = '<p class="text-danger mb-0">Không tải được dữ liệu</p>';
+    }
+}
+
+function confirmXoaMem(e, url) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Ẩn đánh giá này?',
+        html: 'Đánh giá sẽ không còn hiển thị với sinh viên nữa (dữ liệu vẫn được giữ lại, có thể khôi phục sau).',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonText: 'Hủy',
+        confirmButtonText: '<i class="fa fa-trash me-1"></i>Ẩn đánh giá'
+    }).then(function (r) { if (r.isConfirmed) window.location.href = url; });
+    return false;
+}
+
+function confirmKhoiPhuc(e, url) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Khôi phục đánh giá này?',
+        text: 'Đánh giá sẽ hiển thị lại với sinh viên như bình thường.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#16a34a',
+        cancelButtonText: 'Hủy',
+        confirmButtonText: '<i class="fa fa-rotate-left me-1"></i>Khôi phục'
+    }).then(function (r) { if (r.isConfirmed) window.location.href = url; });
+    return false;
+}
+
+$(function () {
+    $('#reviewTable').DataTable({
+        order: [],
+        pageLength: 20,
+        columnDefs: [{ orderable: false, targets: [4, 7] }],
+        language: {
+            search: "Tìm:", lengthMenu: "Hiển thị _MENU_ dòng", info: "Hiển thị _START_–_END_ / _TOTAL_",
+            paginate: { next: "›", previous: "‹" }, zeroRecords: "Không có kết quả"
+        }
+    });
+});
+</script>
+}

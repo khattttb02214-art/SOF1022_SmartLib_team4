@@ -158,6 +158,12 @@ else
                                 <li><a asp-action="SuaKe" asp-route-id="@ke.MaKe" class="dropdown-item"><i class="fa fa-pen me-2"></i>Sửa</a></li>
                                 <li><hr class="dropdown-divider my-1"></li>
                                 <li>
+                                    <a href="#" onclick="confirmToggleKe('/Kho/ToggleTrangThaiKe/@ke.MaKe', @(ke.TrangThai ? "true" : "false"), '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(ke.TenKe))'); return false;" class="dropdown-item">
+                                        <i class="fa @(ke.TrangThai ? "fa-ban" : "fa-rotate-left") me-2"></i>@(ke.TrangThai ? "Ngừng hoạt động" : "Kích hoạt lại")
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
                                     <form asp-action="XoaKe" method="post" onsubmit="return confirm('Xóa kệ @ke.TenKe?')">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="id" value="@ke.MaKe" />
@@ -237,7 +243,7 @@ else
                 <h5 class="modal-title fw-bold"><i class="fa fa-plus-circle me-2 text-primary"></i>Thêm kệ sách mới</h5>
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form asp-action="TaoKe" method="post">
+            <form asp-action="TaoKe" method="post" class="needs-validation" novalidate>
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div class="row g-3">
@@ -249,6 +255,7 @@ else
                         <div class="col-md-8">
                             <label class="form-label fw-semibold">Tên kệ *</label>
                             <input name="TenKe" class="form-control" placeholder="VD: Kệ Văn học A" maxlength="100" required />
+                            <div class="invalid-feedback">Vui lòng nhập tên kệ.</div>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Tầng</label>
@@ -307,4 +314,21 @@ else
             </form>
         </div>
     </div>
+</div>
+
+@section Scripts {
+<script>
+function confirmToggleKe(url, dangHoatDong, ten) {
+    const active = dangHoatDong === true || dangHoatDong === 'true';
+    const hanhDong = active ? 'ngừng hoạt động' : 'kích hoạt lại';
+    Swal.fire({
+        title: active ? 'Ngừng hoạt động kệ này?' : 'Kích hoạt lại kệ này?',
+        html: `Bạn muốn ${hanhDong} <strong>${ten}</strong>?<br><small class="text-muted">Sách đang xếp trên kệ vẫn được giữ nguyên.</small>`,
+        icon: 'question', showCancelButton: true,
+        confirmButtonColor: active ? '#6c757d' : '#198754',
+        cancelButtonText: 'Hủy', confirmButtonText: active ? 'Ngừng hoạt động' : 'Kích hoạt lại'
+    }).then(r => { if (r.isConfirmed) window.location.href = url; });
+}
+</script>
+}
 </div>

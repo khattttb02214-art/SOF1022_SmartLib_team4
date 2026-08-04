@@ -82,6 +82,13 @@ public class DocGiaController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> Details(string id)
+    {
+        var d = await _db.DocGias.FindAsync(id);
+        if (d == null) return NotFound();
+        return View(d);
+    }
+
     public async Task<IActionResult> Edit(string id)
     {
         var d = await _db.DocGias.FindAsync(id);

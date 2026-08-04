@@ -10,7 +10,7 @@
 
 <div class="card border-0 shadow-sm" style="max-width:700px">
     <div class="card-body p-4">
-        <form asp-action="SuaKe" asp-route-id="@Model.MaKe" method="post">
+        <form asp-action="SuaKe" asp-route-id="@Model.MaKe" method="post" class="needs-validation" novalidate>
             @Html.AntiForgeryToken()
             <div class="row g-3">
                 <div class="col-md-4">
@@ -20,6 +20,7 @@
                 <div class="col-md-8">
                     <label class="form-label fw-semibold">Tên kệ *</label>
                     <input name="TenKe" class="form-control" value="@Model.TenKe" maxlength="100" required />
+                    <div class="invalid-feedback">Vui lòng nhập tên kệ.</div>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fw-semibold">Tầng</label>

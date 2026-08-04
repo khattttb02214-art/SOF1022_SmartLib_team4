@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartLib.Web.Data;
+using SmartLib.Web.Services;
 using SmartLib.Web.ViewModels;
 
 namespace SmartLib.Web.Controllers;
@@ -11,9 +12,10 @@ public class StudentController : Controller
 {
     private readonly SmartLibDbContext _db;
     private readonly IWebHostEnvironment _env;
+    private readonly EmailService _emailService;
 
-    public StudentController(SmartLibDbContext db, IWebHostEnvironment env)
-    { _db = db; _env = env; }
+    public StudentController(SmartLibDbContext db, IWebHostEnvironment env, EmailService emailService)
+    { _db = db; _env = env; _emailService = emailService; }
 
     string? MaDocGia => User.FindFirst("MaDocGia")?.Value;
     string? MaNV => User.FindFirst("MaNV")?.Value;
@@ -106,6 +108,7 @@ public class StudentController : Controller
         var dg = await _db.DocGias.FindAsync(MaDocGia);
         if (dg == null) return NotFound();
         ViewBag.DocGia = dg;
+        ViewBag.DaDatMatKhau = (await _db.NhanViens.FindAsync(MaNV))?.MatKhauTuDat ?? false;
         return View(dg);
     }
 
@@ -133,6 +136,73 @@ public class StudentController : Controller
         TempData["OtpSent"] = $"OTP đã được gửi về email {dg.Email}. (Dev mode: {otp})";
         return RedirectToAction(nameof(ConfirmOtp));
     }
+
+    // ── ĐẶT / ĐỔI MẬT KHẨU ĐĂNG NHẬP ──────────────────────────────────────
+    // Áp dụng cho cả tài khoản đăng ký Google (đặt mật khẩu LẦN ĐẦU để có thể
+    // đăng nhập bằng email+mật khẩu) lẫn tài khoản đăng ký thường (đổi mật khẩu).
+    // Luôn bắt buộc xác nhận qua OTP gửi về email trước khi cho sửa.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> GuiOtpDoiMatKhau()
+    {
+        if (string.IsNullOrEmpty(MaNV)) return RedirectToAction(nameof(EditProfile));
+        var nv = await _db.NhanViens.FindAsync(MaNV);
+        if (nv == null || string.IsNullOrEmpty(nv.Email)) return RedirectToAction(nameof(EditProfile));
+
+        string otp = GenerateOtpAnToan();
+        nv.OtpResetMatKhau = otp;
+        nv.OtpResetMatKhauHetHan = DateTime.Now.AddMinutes(10);
+        await _db.SaveChangesAsync();
+        await _emailService.SendOtpAsync(nv.Email, nv.HoTen, otp, "reset_password");
+
+        TempData["success"] = $"Mã xác nhận đã được gửi tới email {nv.Email}.";
+        return RedirectToAction(nameof(DoiMatKhau));
+    }
+
+    public async Task<IActionResult> DoiMatKhau()
+    {
+        if (string.IsNullOrEmpty(MaNV)) return RedirectToAction(nameof(EditProfile));
+        var nv = await _db.NhanViens.FindAsync(MaNV);
+        if (nv == null) return RedirectToAction(nameof(EditProfile));
+        if (string.IsNullOrEmpty(nv.OtpResetMatKhau))
+        {
+            TempData["error"] = "Vui lòng bấm \"Đặt/Đổi mật khẩu\" ở trang hồ sơ để nhận mã xác nhận trước.";
+            return RedirectToAction(nameof(EditProfile));
+        }
+        ViewBag.DaDatMatKhau = nv.MatKhauTuDat;
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DoiMatKhau(string otp, string matKhauMoi, string xacNhanMatKhau)
+    {
+        if (string.IsNullOrEmpty(MaNV)) return RedirectToAction(nameof(EditProfile));
+        var nv = await _db.NhanViens.FindAsync(MaNV);
+        if (nv == null) return RedirectToAction(nameof(EditProfile));
+        ViewBag.DaDatMatKhau = nv.MatKhauTuDat;
+
+        if (string.IsNullOrWhiteSpace(otp) || string.IsNullOrWhiteSpace(matKhauMoi))
+        { ViewBag.Error = "Vui lòng nhập đầy đủ mã xác nhận và mật khẩu mới"; return View(); }
+        if (matKhauMoi.Length < 6)
+        { ViewBag.Error = "Mật khẩu phải ít nhất 6 ký tự"; return View(); }
+        if (matKhauMoi != xacNhanMatKhau)
+        { ViewBag.Error = "Mật khẩu xác nhận không khớp"; return View(); }
+        if (nv.OtpResetMatKhau != otp || nv.OtpResetMatKhauHetHan == null || nv.OtpResetMatKhauHetHan < DateTime.Now)
+        { ViewBag.Error = "Mã xác nhận không đúng hoặc đã hết hạn. Vui lòng gửi lại mã."; return View(); }
+
+        nv.MatKhau = BCrypt.Net.BCrypt.HashPassword(matKhauMoi);
+        nv.MatKhauTuDat = true;
+        nv.OtpResetMatKhau = null;
+        nv.OtpResetMatKhauHetHan = null;
+        await _db.SaveChangesAsync();
+
+        TempData["success"] = "Đặt mật khẩu thành công! Từ giờ bạn có thể đăng nhập bằng email và mật khẩu này.";
+        return RedirectToAction(nameof(EditProfile));
+    }
+
+    private static string GenerateOtpAnToan() =>
+        System.Security.Cryptography.RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
 
     public IActionResult ConfirmOtp() => View();
 

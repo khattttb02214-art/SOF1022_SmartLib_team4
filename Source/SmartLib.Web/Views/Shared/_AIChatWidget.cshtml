@@ -1,0 +1,52 @@
+@*
+    Widget "AI Assistant" (Trợ lý AI thư viện) — hiển thị cố định góc phải màn hình cho MỌI
+    người dùng đã đăng nhập (Sinh viên & Thủ thư/Admin). Partial này CHỈ chứa khung HTML;
+    toàn bộ hành vi (mở/đóng, gửi câu hỏi, tải lịch sử...) nằm trong wwwroot/js/ai-chat.js,
+    style nằm trong wwwroot/css/ai-chat.css.
+*@
+
+<button type="button" id="aiChatToggleBtn" class="ai-chat-toggle-btn" title="Trợ lý AI thư viện" aria-label="Mở trợ lý AI">
+    <i class="fa fa-robot"></i>
+</button>
+
+<div class="ai-chat-panel" id="aiChatPanel" style="display:none" role="dialog" aria-label="Trợ lý AI thư viện SmartLib">
+    <div class="ai-chat-header">
+        <div class="ai-chat-header-info">
+            <div class="ai-chat-avatar"><i class="fa fa-robot"></i></div>
+            <div>
+                <div class="ai-chat-title">Trợ lý AI SmartLib</div>
+                <div class="ai-chat-subtitle"><span class="ai-chat-dot"></span>Đang hoạt động</div>
+            </div>
+        </div>
+        <div class="ai-chat-header-actions">
+            <button type="button" id="aiChatClearBtn" title="Xóa hội thoại"><i class="fa fa-broom"></i></button>
+            <button type="button" id="aiChatCloseBtn" title="Đóng"><i class="fa fa-xmark"></i></button>
+        </div>
+    </div>
+
+    <div class="ai-chat-messages" id="aiChatMessages"></div>
+
+    <div class="ai-chat-suggestions" id="aiChatSuggestions">
+        @if (User.IsInRole("LIB") || User.IsInRole("ADMIN"))
+        {
+            <button type="button" class="ai-chat-suggestion-chip">Hôm nay có bao nhiêu lượt mượn?</button>
+            <button type="button" class="ai-chat-suggestion-chip">Có bao nhiêu sách đang quá hạn?</button>
+            <button type="button" class="ai-chat-suggestion-chip">Sách nào được mượn nhiều nhất?</button>
+            <button type="button" class="ai-chat-suggestion-chip">Có bao nhiêu sách đang đặt trước?</button>
+        }
+        else
+        {
+            <button type="button" class="ai-chat-suggestion-chip">Tôi đang mượn những sách nào?</button>
+            <button type="button" class="ai-chat-suggestion-chip">Tôi đã quá hạn chưa?</button>
+            <button type="button" class="ai-chat-suggestion-chip">Tôi đã đặt trước những sách nào?</button>
+            <button type="button" class="ai-chat-suggestion-chip">Quy định mượn trả như thế nào?</button>
+        }
+    </div>
+
+    <form id="aiChatForm" class="ai-chat-input-area" autocomplete="off">
+        <input type="text" id="aiChatInput" placeholder="Nhập câu hỏi..." maxlength="500" />
+        <button type="submit" id="aiChatSendBtn" title="Gửi"><i class="fa fa-paper-plane"></i></button>
+    </form>
+</div>
+
+<form id="antiForgeryForm" class="d-none">@Html.AntiForgeryToken()</form>

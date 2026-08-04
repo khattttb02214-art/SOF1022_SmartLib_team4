@@ -1,718 +1,604 @@
-@model SmartLib.Web.ViewModels.HomeViewModel
-
 @{
-    ViewData["Title"] = "Trang chủ";
-
-    string[] catIcons = { "fa-book", "fa-flask", "fa-briefcase", "fa-landmark", "fa-child", "fa-laptop-code", "fa-palette", "fa-globe" };
-    string[] catColors = { "#2a5298", "#198754", "#fd7e14", "#6f42c1", "#d63384", "#0dcaf0", "#20c997", "#ffc107" };
+	ViewData["Title"] = "Dashboard Thủ Thư";
 }
 
-<!-- =============== HERO BANNER =============== -->
-<!-- Admin/LIB dashboard -->
-<div class="home-hero mb-4">
-    <div class="home-hero-inner">
-        <div class="hero-left">
-            <div class="hero-badge">
-                <i class="fa fa-star"></i> Hệ thống quản lý thư viện thông minh
-            </div>
-            <h1 class="hero-title">
-                Chào mừng đến với<br />
-                <span class="hero-brand">SmartLib</span>
-            </h1>
-            <p class="hero-sub">
-                Quản lý sách, độc giả, mượn trả dễ dàng &mdash; mọi lúc, mọi nơi.
-            </p>
-            <div class="hero-actions">
-                <a asp-controller="Books" asp-action="Index" class="btn btn-hero-primary">
-                    <i class="fa fa-book me-2"></i>Quản lý sách
-                </a>
-                <a asp-controller="Borrow" asp-action="Index" class="btn btn-hero-outline">
-                    <i class="fa fa-right-left me-2"></i>Mượn trả
-                </a>
-            </div>
-        </div>
-        <div class="hero-right">
-            <div class="hero-stats-float">
-                <div class="hstat-item">
-                    <i class="fa fa-book-open"></i>
-                    <div>
-                        <div class="hstat-num">@Model.TongSach</div>
-                        <div class="hstat-lbl">Đầu sách</div>
-                    </div>
-                </div>
-                <div class="hstat-item">
-                    <i class="fa fa-users"></i>
-                    <div>
-                        <div class="hstat-num">@Model.TongDocGia</div>
-                        <div class="hstat-lbl">Độc giả</div>
-                    </div>
-                </div>
-                <div class="hstat-item">
-                    <i class="fa fa-right-left"></i>
-                    <div>
-                        <div class="hstat-num">@Model.SachDangMuon</div>
-                        <div class="hstat-lbl">Đang mượn</div>
-                    </div>
-                </div>
-                <div class="hstat-item @(Model.SachQuaHan > 0 ? "danger" : "")">
-                    <i class="fa fa-triangle-exclamation"></i>
-                    <div>
-                        <div class="hstat-num">@Model.SachQuaHan</div>
-                        <div class="hstat-lbl">Quá hạn</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@section Styles {
+	<style>
+		/* ────── STAFF DASHBOARD TOKENS ────── */
+		:root {
+			--staff-blue:    #0369a1;
+			--staff-blue2:   #0284c7;
+			--staff-cyan:    #0891b2;
+			--staff-teal:    #0d9488;
+			--staff-orange:  #ea580c;
+			--staff-red:     #dc2626;
+			--staff-light:   #f0f9ff;
+			--staff-white:   #ffffff;
+			--staff-text:    #0c2340;
+			--staff-border:  #bae6fd;
+			--staff-radius:  14px;
+			--staff-radius2: 20px;
+			--staff-shadow:  0 4px 24px rgba(3,105,161,.12);
+			--staff-shadow2: 0 8px 40px rgba(3,105,161,.18);
+		}
 
-<!-- =============== TRUY CẬP NHANH =============== -->
-<div class="section-card mb-4">
-    <div class="section-header">
-        <i class="fa fa-bolt"></i>
-        <span>Truy cập nhanh</span>
-    </div>
-    <div class="quick-grid">
-        <a asp-controller="Books" asp-action="Index" class="quick-item" style="--qc:#2a5298">
-            <div class="quick-icon"><i class="fa fa-book"></i></div>
-            <div class="quick-name">Quản lý sách</div>
-        </a>
-        <a asp-controller="DocGia" asp-action="Index" class="quick-item" style="--qc:#198754">
-            <div class="quick-icon"><i class="fa fa-users"></i></div>
-            <div class="quick-name">Độc giả</div>
-        </a>
-        <a asp-controller="Borrow" asp-action="Index" class="quick-item" style="--qc:#fd7e14">
-            <div class="quick-icon"><i class="fa fa-right-left"></i></div>
-            <div class="quick-name">Mượn / Trả</div>
-        </a>
-        <a asp-controller="Reservation" asp-action="Index" class="quick-item" style="--qc:#6f42c1">
-            <div class="quick-icon"><i class="fa fa-bookmark"></i></div>
-            <div class="quick-name">Đặt trước</div>
-        </a>
-        <a asp-controller="Wishlist" asp-action="Index" class="quick-item" style="--qc:#d63384">
-            <div class="quick-icon"><i class="fa fa-heart"></i></div>
-            <div class="quick-name">Wishlist</div>
-        </a>
-        <a asp-controller="Dashboard" asp-action="Index" class="quick-item" style="--qc:#0dcaf0">
-            <div class="quick-icon"><i class="fa fa-chart-line"></i></div>
-            <div class="quick-name">Dashboard</div>
-        </a>
-        @if (User.IsInRole("ADMIN"))
-        {
-            <a asp-controller="Audit" asp-action="Index" class="quick-item" style="--qc:#20c997">
-                <div class="quick-icon"><i class="fa fa-clock-rotate-left"></i></div>
-                <div class="quick-name">Audit Log</div>
-            </a>
-        }
-        <a asp-controller="DocGia" asp-action="Create" class="quick-item" style="--qc:#e91e63">
-            <div class="quick-icon"><i class="fa fa-user-plus"></i></div>
-            <div class="quick-name">Thêm độc giả</div>
-        </a>
-        <a asp-controller="Books" asp-action="Create" class="quick-item" style="--qc:#009688">
-            <div class="quick-icon"><i class="fa fa-plus-circle"></i></div>
-            <div class="quick-name">Thêm sách</div>
-        </a>
-        <a asp-controller="Borrow" asp-action="Create" class="quick-item" style="--qc:#ff5722">
-            <div class="quick-icon"><i class="fa fa-hand-holding-heart"></i></div>
-            <div class="quick-name">Tạo phiếu mượn</div>
-        </a>
-    </div>
-</div>
+		/* ────── PAGE WRAPPER ────── */
+		.staff-page {
+			background: linear-gradient(135deg, #ecf0f1 0%, #f8fbff 100%);
+			min-height: 100vh;
+			font-family: 'Segoe UI', 'Inter', sans-serif;
+			padding: 0 0 48px;
+		}
 
-<!-- =============== ROW: THỂ LOẠI + MƯỢN TRẢ GẦN ĐÂY =============== -->
-<div class="row g-4 mb-4">
+		/* ────── WELCOME BANNER ────── */
+		.staff-banner {
+			background: linear-gradient(135deg, #003d7a 0%, #0369a1 45%, #0891b2 100%);
+			border-radius: 0 0 32px 32px;
+			padding: 40px 32px 72px;
+			position: relative;
+			overflow: hidden;
+			margin-bottom: -40px;
+		}
+		.staff-banner::before {
+			content: '';
+			position: absolute;
+			width: 400px; height: 400px;
+			background: radial-gradient(circle, rgba(2,196,199,.2) 0%, transparent 70%);
+			top: -100px; right: -80px;
+			border-radius: 50%;
+		}
+		.staff-banner::after {
+			content: '';
+			position: absolute;
+			width: 250px; height: 250px;
+			background: radial-gradient(circle, rgba(234,88,12,.15) 0%, transparent 70%);
+			bottom: 10px; left: 15%;
+			border-radius: 50%;
+		}
+		.staff-banner__inner { position: relative; z-index: 2; }
+		.staff-banner__greeting {
+			font-size: 12px;
+			font-weight: 700;
+			color: rgba(165,243,252,.9);
+			letter-spacing: 1.3px;
+			text-transform: uppercase;
+			margin-bottom: 8px;
+		}
+		.staff-banner__title {
+			font-size: 32px;
+			font-weight: 900;
+			color: #ffffff;
+			margin: 0 0 20px;
+		}
+		.staff-banner__subtitle {
+			font-size: 14px;
+			color: rgba(206,235,245,.8);
+			margin-bottom: 24px;
+		}
 
-    <!-- THỂ LOẠI -->
-    <div class="col-lg-5">
-        <div class="section-card h-100">
-            <div class="section-header">
-                <i class="fa fa-tags"></i>
-                <span>Thể loại sách</span>
-                <a asp-controller="Books" asp-action="Index" class="ms-auto view-all">
-                    Xem tất cả <i class="fa fa-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="cat-list">
-                @{
-                    int ci = 0;
-                }
-                @foreach (var cat in Model.DanhSachTheLoai)
-                {
-                    string ico = catIcons[ci % catIcons.Length];
-                    string col = catColors[ci % catColors.Length];
-                    ci++;
-                    <div class="cat-row">
-                        <div class="cat-dot" style="background:@col">
-                            <i class="fa @ico"></i>
-                        </div>
-                        <span class="cat-name">@cat.TenTheLoai</span>
-                        <span class="cat-count">@cat.SoLuongSach cuốn</span>
-                    </div>
-                }
-                @if (!Model.DanhSachTheLoai.Any())
-                {
-                    <div class="empty-state">
-                        <i class="fa fa-folder-open fa-2x mb-2"></i>
-                        <div>Chưa có thể loại nào</div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
+		/* ────── STAT PILLS ────── */
+		.staff-stats {
+			display: flex;
+			gap: 14px;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+		.staff-stat {
+			background: rgba(255,255,255,.13);
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255,255,255,.2);
+			border-radius: 14px;
+			padding: 14px 22px;
+			display: flex;
+			align-items: center;
+			gap: 13px;
+			min-width: 145px;
+			transition: all .25s;
+		}
+		.staff-stat:hover {
+			transform: translateY(-2px);
+			background: rgba(255,255,255,.18);
+			box-shadow: 0 8px 16px rgba(0,0,0,.2);
+		}
+		.staff-stat__icon {
+			width: 44px; height: 44px;
+			border-radius: 11px;
+			display: flex; align-items: center; justify-content: center;
+			font-size: 20px;
+			flex-shrink: 0;
+		}
+		.staff-stat__icon--cyan   { background: rgba(6,182,212,.3); color: #22d3ee; }
+		.staff-stat__icon--orange { background: rgba(234,88,12,.3); color: #fdba74; }
+		.staff-stat__icon--red    { background: rgba(220,38,38,.3); color: #fca5a5; }
+		.staff-stat__icon--teal   { background: rgba(13,148,136,.3); color: #7ee8c9; }
+		.staff-stat__num  { font-size: 24px; font-weight: 900; color: #ffffff; line-height: 1; }
+		.staff-stat__lbl  { font-size: 11px; color: rgba(206,235,245,.85); margin-top: 3px; font-weight: 600; }
 
-    <!-- MƯỢN TRẢ GẦN ĐÂY -->
-    <div class="col-lg-7">
-        <div class="section-card h-100">
-            <div class="section-header">
-                <i class="fa fa-clock-rotate-left"></i>
-                <span>Phiếu mượn gần đây</span>
-                <a asp-controller="Borrow" asp-action="Index" class="ms-auto view-all">
-                    Xem tất cả <i class="fa fa-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="table home-table mb-0">
-                    <thead>
-                        <tr>
-                            <th>Mã phiếu</th>
-                            <th>Độc giả</th>
-                            <th>Ngày mượn</th>
-                            <th>Hạn trả</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var m in Model.MuonTraGanDay)
-                        {
-                            bool overdue = m.TrangThai == "Đang Mượn" && m.NgayHenTra < DateTime.Now;
-                            <tr>
-                                <td><span class="code-badge">@m.MaPhieu</span></td>
-                                <td><i class="fa fa-user-circle me-1 text-muted"></i>@m.TenDocGia</td>
-                                <td>@($"{m.NgayMuon:dd/MM/yyyy}")</td>
-                                <td class="@(overdue ? "text-danger fw-semibold" : "")">
-                                    @($"{m.NgayHenTra:dd/MM/yyyy}")
-                                    @if (overdue)
-                                    {
-                                        <i class="fa fa-triangle-exclamation ms-1"></i>
-                                    }
-                                </td>
-                                <td>
-                                    @{
-                                        string badgeClass = m.TrangThai switch
-                                        {
-                                            "Đã Trả" => "status-badge returned",
-                                            "Đang Mượn" when overdue => "status-badge overdue",
-                                            "Đang Mượn" => "status-badge borrowing",
-                                            _ => "status-badge"
-                                        };
-                                    }
-                                    <span class="@badgeClass">@m.TrangThai</span>
-                                </td>
-                            </tr>
-                        }
-                        @if (!Model.MuonTraGanDay.Any())
-                        {
-                            <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">
-                                    <i class="fa fa-inbox fa-2x d-block mb-2"></i>Chưa có phiếu mượn nào
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+		/* ────── CONTENT AREA ────── */
+		.staff-content {
+			padding: 0 28px;
+			max-width: 1400px;
+			margin: 0 auto;
+		}
 
-<!-- =============== SÁCH MỚI NHẬP =============== -->
-<div class="section-card mb-4">
-    <div class="section-header">
-        <i class="fa fa-sparkles"></i>
-        <span>Sách mới nhập</span>
-        <a asp-controller="Books" asp-action="Index" class="ms-auto view-all">
-            Xem tất cả <i class="fa fa-arrow-right ms-1"></i>
-        </a>
-    </div>
-    <div class="books-grid">
-        @foreach (var sach in Model.SachMoiNhat)
-        {
-            <div class="book-item animate-book">
-                <div class="book-cover-wrap">
-                    @if (!string.IsNullOrEmpty(sach.AnhBia))
-                    {
-                        <img src="~/uploads/books/@sach.AnhBia" alt="@sach.TenSach" class="book-cover-img" />
-                    }
-                    else
-                    {
-                        <div class="book-cover-placeholder">
-                            <i class="fa fa-book fa-2x"></i>
-                        </div>
-                    }
-                    <div class="book-avail @(sach.SoLuongKhaDung > 0 ? "avail" : "unavail")">
-                        @(sach.SoLuongKhaDung > 0 ? "Còn sách" : "Hết sách")
-                    </div>
-                </div>
-                <div class="book-info">
-                    <div class="book-cat">@(sach.TenTheLoai ?? "Chưa phân loại")</div>
-                    <div class="book-title-text" title="@sach.TenSach">@sach.TenSach</div>
-                    <div class="book-qty">
-                        <i class="fa fa-cubes me-1"></i>Còn @sach.SoLuongKhaDung cuốn
-                    </div>
-                </div>
-            </div>
-        }
-        @if (!Model.SachMoiNhat.Any())
-        {
-            <div class="empty-state w-100 py-4">
-                <i class="fa fa-book-open fa-2x mb-2"></i>
-                <div>Chưa có sách nào trong hệ thống</div>
-            </div>
-        }
-    </div>
-</div>
+		/* ────── QUICK ACTION CARDS ────── */
+		.staff-actions-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 16px;
+			margin-bottom: 32px;
+		}
+		.staff-action-card {
+			background: var(--staff-white);
+			border: 1.5px solid var(--staff-border);
+			border-radius: var(--staff-radius2);
+			padding: 24px 20px;
+			text-align: center;
+			text-decoration: none;
+			color: inherit;
+			transition: all .25s;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+		}
+		.staff-action-card:hover {
+			transform: translateY(-4px);
+			box-shadow: var(--staff-shadow2);
+			border-color: var(--staff-blue2);
+		}
+		.staff-action-card__icon {
+			width: 50px; height: 50px;
+			border-radius: 12px;
+			display: flex; align-items: center; justify-content: center;
+			font-size: 24px;
+			background: linear-gradient(135deg, #e0f2fe, #cffafe);
+			color: var(--staff-blue);
+		}
+		.staff-action-card__title {
+			font-size: 14px;
+			font-weight: 700;
+			color: var(--staff-text);
+		}
+		.staff-action-card__desc {
+			font-size: 11px;
+			color: #64748b;
+		}
 
-@section Scripts {
-    <style>
-       
+		/* ────── SECTION HEADER ────── */
+		.staff-sec-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 20px;
+			margin-top: 32px;
+		}
+		.staff-sec-title {
+			font-size: 18px;
+			font-weight: 800;
+			color: var(--staff-text);
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0;
+		}
+		.staff-sec-title__icon {
+			width: 36px; height: 36px;
+			border-radius: 10px;
+			display: flex; align-items: center; justify-content: center;
+			font-size: 16px;
+			background: linear-gradient(135deg, #e0f2fe, #cffafe);
+			color: var(--staff-blue);
+		}
 
-        /* === ENTRANCE ANIMATIONS === */
-        .home-hero { animation: heroIn 0.5s ease-out; }
-        @@keyframes heroIn { from { opacity:0; transform:translateY(-15px); } to { opacity:1; transform:translateY(0); } }
-        
-        .section-card { animation: cardIn 0.5s ease-out both; }
-        .section-card:nth-child(1) { animation-delay: 0.05s; }
-        .section-card:nth-child(2) { animation-delay: 0.10s; }
-        .section-card:nth-child(3) { animation-delay: 0.15s; }
-        @@keyframes cardIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-        
-        .animate-book { animation: bookIn 0.4s ease-out both; }
-        .books-grid .book-item:nth-child(1) { animation-delay: 0.00s; }
-        .books-grid .book-item:nth-child(2) { animation-delay: 0.07s; }
-        .books-grid .book-item:nth-child(3) { animation-delay: 0.14s; }
-        .books-grid .book-item:nth-child(4) { animation-delay: 0.21s; }
-        .books-grid .book-item:nth-child(5) { animation-delay: 0.28s; }
-        .books-grid .book-item:nth-child(6) { animation-delay: 0.35s; }
-        @@keyframes bookIn { from { opacity:0; transform:scale(0.88) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
-        
-        .hstat-item { animation: statIn 0.4s ease-out both; }
-        .hstat-item:nth-child(1) { animation-delay: 0.1s; }
-        .hstat-item:nth-child(2) { animation-delay: 0.2s; }
-        .hstat-item:nth-child(3) { animation-delay: 0.3s; }
-        .hstat-item:nth-child(4) { animation-delay: 0.4s; }
-        @@keyframes statIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
+		/* ────── DATA CARD ────── */
+		.staff-data-card {
+			background: var(--staff-white);
+			border: 1.5px solid var(--staff-border);
+			border-radius: var(--staff-radius2);
+			overflow: hidden;
+			box-shadow: var(--staff-shadow);
+			margin-bottom: 28px;
+		}
+		.staff-data-card__header {
+			background: linear-gradient(90deg, #e0f2fe 0%, #cffafe 100%);
+			padding: 16px 20px;
+			border-bottom: 1.5px solid #bae6fd;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+		.staff-data-card__header-icon {
+			width: 36px; height: 36px;
+			background: var(--staff-blue);
+			border-radius: 9px;
+			display: flex; align-items: center; justify-content: center;
+			color: #fff; font-size: 16px;
+		}
+		.staff-data-card__header-text {
+			font-size: 14px;
+			font-weight: 700;
+			color: var(--staff-text);
+		}
 
-        /* === BOOK SHIMMER EFFECT === */
-        .book-cover-wrap::after {
-            content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
-            border-radius: 12px;
-            opacity: 0;
-            transition: opacity .3s;
-            pointer-events: none;
-        }
-        .book-item:hover .book-cover-wrap::after { opacity: 1; }
-        
-                .home-hero {
-            background: linear-gradient(135deg,#1e3c72 0%,#2a5298 60%,#3a6bc7 100%);
-            border-radius: 22px;
-            padding: 36px 36px;
-            color: white;
-            overflow: hidden;
-            position: relative;
-        }
-        .home-hero::before {
-            content: '';
-            position: absolute;
-            top: -40px; right: -40px;
-            width: 280px; height: 280px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-        }
-        .home-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -60px; right: 120px;
-            width: 180px; height: 180px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.04);
-        }
-        .home-hero-inner {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero-left { flex: 1; }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 20px;
-            padding: 5px 14px;
-            font-size: 12px;
-            margin-bottom: 14px;
-            letter-spacing: 0.3px;
-        }
-        .hero-title {
-            font-size: 2rem;
-            font-weight: 700;
-            line-height: 1.25;
-            margin-bottom: 10px;
-        }
-        .hero-brand {
-            color: #7dd3fc;
-            font-style: italic;
-        }
-        .hero-sub {
-            font-size: 15px;
-            opacity: 0.85;
-            margin-bottom: 22px;
-        }
-        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-        .btn-hero-primary {
-            background: white;
-            color: #1e3c72;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 22px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            transition: all .2s;
-        }
-        .btn-hero-primary:hover {
-            background: #f0f7ff;
-            transform: translateY(-2px);
-            color: #1e3c72;
-        }
-        .btn-hero-outline {
-            background: transparent;
-            color: white;
-            border: 1.5px solid rgba(255,255,255,0.6);
-            border-radius: 12px;
-            padding: 10px 22px;
-            font-size: 14px;
-            text-decoration: none;
-            transition: all .2s;
-        }
-        .btn-hero-outline:hover {
-            background: rgba(255,255,255,0.12);
-            color: white;
-            border-color: white;
-        }
-        .hero-right { flex-shrink: 0; }
-        .hero-stats-float {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 280px;
-        }
-        .hstat-item {
-            background: rgba(255,255,255,0.12);
-            border-radius: 16px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            backdrop-filter: blur(4px);
-            transition: .2s;
-        }
-        .hstat-item:hover { background: rgba(255,255,255,0.2); }
-        .hstat-item.danger { background: rgba(220,53,69,0.3); }
-        .hstat-item i {
-            font-size: 20px;
-            opacity: 0.9;
-            width: 24px;
-            text-align: center;
-        }
-        .hstat-num { font-size: 22px; font-weight: 700; line-height: 1; }
-        .hstat-lbl { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+		/* ────── TABLE STYLES ────── */
+		.staff-table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		.staff-table thead th {
+			padding: 14px 16px;
+			font-size: 11px;
+			font-weight: 800;
+			color: var(--staff-text);
+			text-transform: uppercase;
+			letter-spacing: .8px;
+			background: #f0f9ff;
+			border-bottom: 2px solid var(--staff-border);
+			text-align: left;
+		}
+		.staff-table tbody td {
+			padding: 13px 16px;
+			font-size: 13px;
+			color: #374151;
+			border-bottom: 1px solid #e5e7eb;
+			vertical-align: middle;
+		}
+		.staff-table tbody tr:last-child td { border-bottom: none; }
+		.staff-table tbody tr:hover td { background: #f8fbff; }
 
-        /* Section card */
-        .section-card {
-            background: white;
-            border-radius: 18px;
-            padding: 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 20px;
-            border-bottom: 1px solid #f0f0f0;
-            font-weight: 600;
-            font-size: 15px;
-            color: #1e3c72;
-        }
-        .section-header i {
-            color: #2a5298;
-            font-size: 16px;
-        }
-        .view-all {
-            font-size: 12px;
-            color: #2a5298;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .view-all:hover { color: #1e3c72; }
+		/* ────── BADGE STYLES ────── */
+		.staff-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			padding: 5px 12px;
+			border-radius: 100px;
+			font-size: 11px;
+			font-weight: 700;
+			white-space: nowrap;
+		}
+		.staff-badge--blue   { background: #dbeafe; color: #0369a1; }
+		.staff-badge--green  { background: #dcfce7; color: #166534; }
+		.staff-badge--red    { background: #fee2e2; color: #991b1b; }
+		.staff-badge--orange { background: #fed7aa; color: #9a3412; }
 
-        /* Quick access */
-        .quick-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            padding: 18px 20px;
-        }
-        .quick-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            width: 90px;
-            transition: transform .2s;
-        }
-        .quick-item:hover { transform: translateY(-4px); }
-        .quick-icon {
-            width: 54px;
-            height: 54px;
-            border-radius: 16px;
-            background: color-mix(in srgb, var(--qc) 12%, white);
-            color: var(--qc);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: background .2s;
-        }
-        .quick-item:hover .quick-icon {
-            background: color-mix(in srgb, var(--qc) 20%, white);
-        }
-        .quick-name {
-            font-size: 12px;
-            color: #444;
-            font-weight: 500;
-            text-align: center;
-            line-height: 1.3;
-        }
+		/* ────── BUTTON STYLES ────── */
+		.staff-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			padding: 8px 14px;
+			border-radius: 8px;
+			border: none;
+			font-size: 12px;
+			font-weight: 600;
+			font-family: inherit;
+			cursor: pointer;
+			transition: all .15s;
+			text-decoration: none;
+		}
+		.staff-btn--primary {
+			background: linear-gradient(135deg, var(--staff-blue) 0%, var(--staff-cyan) 100%);
+			color: #fff;
+			box-shadow: 0 4px 12px rgba(3,105,161,.3);
+		}
+		.staff-btn--primary:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 16px rgba(3,105,161,.4);
+		}
+		.staff-btn--outline {
+			border: 1.5px solid var(--staff-border);
+			background: transparent;
+			color: var(--staff-blue);
+		}
+		.staff-btn--outline:hover {
+			background: #f0f9ff;
+			border-color: var(--staff-blue2);
+		}
 
-        /* Category list */
-        .cat-list { padding: 8px 0; }
-        .cat-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 20px;
-            transition: background .15s;
-        }
-        .cat-row:hover { background: #f8f9ff; }
-        .cat-dot {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        .cat-name { flex: 1; font-size: 14px; font-weight: 500; color: #333; }
-        .cat-count {
-            font-size: 12px;
-            background: #f0f4ff;
-            color: #2a5298;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        /* Home table */
-        .home-table {
-            font-size: 13.5px;
-        }
-        .home-table thead th {
-            background: #f8f9fc;
-            color: #666;
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
-            padding: 10px 14px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .home-table tbody td {
-            padding: 11px 14px;
-            border-bottom: 1px solid #f5f5f5;
-            vertical-align: middle;
-        }
-        .home-table tbody tr:last-child td { border-bottom: none; }
-        .home-table tbody tr:hover td { background: #f8f9ff; }
-        .code-badge {
-            background: #f0f4ff;
-            color: #2a5298;
-            border-radius: 8px;
-            padding: 3px 9px;
-            font-family: monospace;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-badge {
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-badge.returned { background: #d1fae5; color: #065f46; }
-        .status-badge.borrowing { background: #dbeafe; color: #1e40af; }
-        .status-badge.overdue { background: #fee2e2; color: #991b1b; }
-
-        /* Books grid */
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 16px;
-            padding: 18px 20px;
-        }
-        .book-item { cursor: pointer; }
-        .book-item:hover .book-cover-wrap { transform: translateY(-4px); }
-        .book-cover-wrap {
-            position: relative;
-            transition: transform .2s;
-        }
-        .book-cover-img {
-            width: 100%;
-            height: 170px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-        }
-        .book-cover-placeholder {
-            width: 100%;
-            height: 170px;
-            border-radius: 12px;
-            background: linear-gradient(135deg,#e8edf8,#c7d4f0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2a5298;
-            opacity: 0.7;
-        }
-        .book-avail {
-            position: absolute;
-            top: 8px; right: 8px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-        }
-        .book-avail.avail { background: #d1fae5; color: #065f46; }
-        .book-avail.unavail { background: #fee2e2; color: #991b1b; }
-        .book-info { padding-top: 10px; }
-        .book-cat {
-            font-size: 11px;
-            color: #2a5298;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-bottom: 3px;
-        }
-        .book-title-text {
-            font-size: 13px;
-            font-weight: 600;
-            color: #222;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .book-qty {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            color: #aaa;
-            padding: 24px 0;
-        }
-
-        /* Dark mode */
-        body.dark-mode .section-card {
-            background: #1e1e1e !important;
-            color: white !important;
-        }
-        body.dark-mode .section-header { color: #90b4e8 !important; border-color: #333 !important; }
-        body.dark-mode .cat-row:hover { background: #2a2a2a !important; }
-        body.dark-mode .cat-name { color: #eee !important; }
-        body.dark-mode .cat-count { background: #2a3a5a; color: #90b4e8; }
-        body.dark-mode .home-table thead th { background: #2a2a2a !important; color: #aaa !important; }
-        body.dark-mode .home-table tbody tr:hover td { background: #2a2a2a !important; }
-        body.dark-mode .code-badge { background: #1a2a4a; color: #90b4e8; }
-        body.dark-mode .quick-name { color: #ccc !important; }
-        body.dark-mode .book-title-text { color: #eee; }
-        body.dark-mode .book-cat { color: #90b4e8; }
-        body.dark-mode .book-qty { color: #888; }
-
-        /* Responsive */
-        @@media (max-width: 992px) {
-            .home-hero-inner { flex-direction: column; }
-            .hero-stats-float { width: 100%; grid-template-columns: repeat(4,1fr); }
-            .hero-title { font-size: 1.5rem; }
-        }
-        @@media (max-width: 576px) {
-            .hero-stats-float { grid-template-columns: repeat(2,1fr); }
-            /* === ENTRANCE ANIMATIONS === */
-        .home-hero { animation: heroIn 0.5s ease-out; }
-        @@keyframes heroIn { from { opacity:0; transform:translateY(-15px); } to { opacity:1; transform:translateY(0); } }
-        
-        .section-card { animation: cardIn 0.5s ease-out both; }
-        .section-card:nth-child(1) { animation-delay: 0.05s; }
-        .section-card:nth-child(2) { animation-delay: 0.10s; }
-        .section-card:nth-child(3) { animation-delay: 0.15s; }
-        @@keyframes cardIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-        
-        .animate-book { animation: bookIn 0.4s ease-out both; }
-        .books-grid .book-item:nth-child(1) { animation-delay: 0.00s; }
-        .books-grid .book-item:nth-child(2) { animation-delay: 0.07s; }
-        .books-grid .book-item:nth-child(3) { animation-delay: 0.14s; }
-        .books-grid .book-item:nth-child(4) { animation-delay: 0.21s; }
-        .books-grid .book-item:nth-child(5) { animation-delay: 0.28s; }
-        .books-grid .book-item:nth-child(6) { animation-delay: 0.35s; }
-        @@keyframes bookIn { from { opacity:0; transform:scale(0.88) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
-        
-        .hstat-item { animation: statIn 0.4s ease-out both; }
-        .hstat-item:nth-child(1) { animation-delay: 0.1s; }
-        .hstat-item:nth-child(2) { animation-delay: 0.2s; }
-        .hstat-item:nth-child(3) { animation-delay: 0.3s; }
-        .hstat-item:nth-child(4) { animation-delay: 0.4s; }
-        @@keyframes statIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
-
-        /* === BOOK SHIMMER EFFECT === */
-        .book-cover-wrap::after {
-            content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
-            border-radius: 12px;
-            opacity: 0;
-            transition: opacity .3s;
-            pointer-events: none;
-        }
-        .book-item:hover .book-cover-wrap::after { opacity: 1; }
-        
-                .home-hero { padding: 24px 18px; }
-            .quick-item { width: 70px; }
-            .quick-icon { width: 44px; height: 44px; font-size: 16px; }
-        }
-    </style>
+		/* ────── RESPONSIVE ────── */
+		@@media (max-width: 768px) {
+			.staff-content { padding: 0 16px; }
+			.staff-banner { padding: 28px 20px 52px; }
+			.staff-banner__title { font-size: 24px; }
+			.staff-stats { gap: 10px; }
+			.staff-stat { min-width: 120px; padding: 10px 14px; }
+			.staff-actions-grid { grid-template-columns: repeat(2, 1fr); }
+		}
+		@@media (max-width: 480px) {
+			.staff-banner__title { font-size: 20px; }
+			.staff-stats { gap: 8px; flex-direction: column; align-items: stretch; }
+			.staff-stat { min-width: unset; }
+			.staff-actions-grid { grid-template-columns: 1fr; }
+		}
+	</style>
 }
+
+<div class="staff-page">
+	<!-- BANNER -->
+	<div class="staff-banner">
+		<div class="staff-banner__inner">
+			<div class="staff-banner__greeting"><i class="fa fa-user-tie me-2"></i>Chào mừng quay lại</div>
+			<h2 class="staff-banner__title">Dashboard Thủ Thư 📚</h2>
+			<div class="staff-banner__subtitle">Quản lý thư viện một cách hiệu quả</div>
+
+			<div class="staff-stats">
+				<div class="staff-stat">
+					<div class="staff-stat__icon staff-stat__icon--cyan"><i class="fa fa-book"></i></div>
+					<div>
+						<div class="staff-stat__num">1,248</div>
+						<div class="staff-stat__lbl">Tổng sách</div>
+					</div>
+				</div>
+				<div class="staff-stat">
+					<div class="staff-stat__icon staff-stat__icon--orange"><i class="fa fa-users"></i></div>
+					<div>
+						<div class="staff-stat__num">842</div>
+						<div class="staff-stat__lbl">Độc giả đã duyệt</div>
+					</div>
+				</div>
+				<div class="staff-stat">
+					<div class="staff-stat__icon staff-stat__icon--red"><i class="fa fa-hourglass-end"></i></div>
+					<div>
+						<div class="staff-stat__num">23</div>
+						<div class="staff-stat__lbl">Quá hạn</div>
+					</div>
+				</div>
+				<div class="staff-stat">
+					<div class="staff-stat__icon staff-stat__icon--teal"><i class="fa fa-bookmark"></i></div>
+					<div>
+						<div class="staff-stat__num">156</div>
+						<div class="staff-stat__lbl">Đợi duyệt</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="staff-content" style="padding-top: 56px;">
+		<!-- QUICK ACTIONS -->
+		<div class="staff-sec-header">
+			<h3 class="staff-sec-title">
+				<span class="staff-sec-title__icon"><i class="fa fa-flash"></i></span>
+				Thao tác nhanh
+			</h3>
+		</div>
+
+		<div class="staff-actions-grid">
+			<a href="#" class="staff-action-card">
+				<div class="staff-action-card__icon"><i class="fa fa-plus-circle"></i></div>
+				<div class="staff-action-card__title">Thêm sách</div>
+				<div class="staff-action-card__desc">Nhập sách mới vào kho</div>
+			</a>
+			<a href="#" class="staff-action-card">
+				<div class="staff-action-card__icon"><i class="fa fa-hand-holding-hand"></i></div>
+				<div class="staff-action-card__title">Xử lý mượn</div>
+				<div class="staff-action-card__desc">Lập phiếu mượn sách</div>
+			</a>
+			<a href="#" class="staff-action-card">
+				<div class="staff-action-card__icon"><i class="fa fa-rotate-left"></i></div>
+				<div class="staff-action-card__title">Xử lý trả</div>
+				<div class="staff-action-card__desc">Tiếp nhận trả sách</div>
+			</a>
+			<a href="#" class="staff-action-card">
+				<div class="staff-action-card__icon"><i class="fa fa-check-square"></i></div>
+				<div class="staff-action-card__title">Duyệt độc giả</div>
+				<div class="staff-action-card__desc">Duyệt tài khoản mới</div>
+			</a>
+			<a href="#" class="staff-action-card">
+				<div class="staff-action-card__icon"><i class="fa fa-star"></i></div>
+				<div class="staff-action-card__title">Duyệt đánh giá</div>
+				<div class="staff-action-card__desc">Kiểm tra đánh giá sách</div>
+			</a>
+			<a href="#" class="staff-action-card">
+				<div class="staff-action-card__icon"><i class="fa fa-chart-bar"></i></div>
+				<div class="staff-action-card__title">Báo cáo</div>
+				<div class="staff-action-card__desc">Xem thống kê chi tiết</div>
+			</a>
+		</div>
+
+		<!-- PHIẾU MƯỢN QUÁ HẠN -->
+		<div class="staff-sec-header">
+			<h3 class="staff-sec-title">
+				<span class="staff-sec-title__icon"><i class="fa fa-triangle-exclamation"></i></span>
+				Phiếu mượn quá hạn
+			</h3>
+			<a href="#" class="staff-btn staff-btn--outline">
+				<i class="fa fa-arrow-right"></i>Xem tất cả
+			</a>
+		</div>
+
+		<div class="staff-data-card">
+			<div class="staff-data-card__header">
+				<div class="staff-data-card__header-icon"><i class="fa fa-exclamation-circle"></i></div>
+				<div class="staff-data-card__header-text">23 phiếu mượn quá hạn cần xử lý</div>
+			</div>
+			<div style="overflow-x: auto;">
+				<table class="staff-table">
+					<thead>
+						<tr>
+							<th><i class="fa fa-hashtag me-1"></i>Mã phiếu</th>
+							<th><i class="fa fa-user me-1"></i>Độc giả</th>
+							<th><i class="fa fa-book me-1"></i>Sách</th>
+							<th><i class="fa fa-calendar me-1"></i>Hạn trả</th>
+							<th><i class="fa fa-hourglass-end me-1"></i>Quá hạn</th>
+							<th>Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>PM000123</code></td>
+							<td><strong>Nguyễn Văn A</strong></td>
+							<td>Lập Trình C#</td>
+							<td>15/08/2026</td>
+							<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>6 ngày</span></td>
+							<td>
+								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
+									<i class="fa fa-phone"></i>Nhắc
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td><code>PM000124</code></td>
+							<td><strong>Trần Thị B</strong></td>
+							<td>Python 101</td>
+							<td>10/08/2026</td>
+							<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>11 ngày</span></td>
+							<td>
+								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
+									<i class="fa fa-phone"></i>Nhắc
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td><code>PM000125</code></td>
+							<td><strong>Lê Hoàng C</strong></td>
+							<td>JavaScript Mastery</td>
+							<td>05/08/2026</td>
+							<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>16 ngày</span></td>
+							<td>
+								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
+									<i class="fa fa-phone"></i>Nhắc
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- ĐƠƠN ĐẶT TRƯỚC CHƯA DUYỆT -->
+		<div class="staff-sec-header">
+			<h3 class="staff-sec-title">
+				<span class="staff-sec-title__icon"><i class="fa fa-hourglass"></i></span>
+				Đơn đặt trước chờ duyệt
+			</h3>
+			<a href="#" class="staff-btn staff-btn--outline">
+				<i class="fa fa-arrow-right"></i>Xem tất cả
+			</a>
+		</div>
+
+		<div class="staff-data-card">
+			<div class="staff-data-card__header">
+				<div class="staff-data-card__header-icon"><i class="fa fa-bookmark"></i></div>
+				<div class="staff-data-card__header-text">156 đơn đặt trước chờ duyệt</div>
+				<span class="ms-auto badge" style="background: #fed7aa; color: #9a3412; border-radius: 8px; padding: 6px 12px; font-weight: 700; font-size: 12px;">
+					156 đơn
+				</span>
+			</div>
+			<div style="overflow-x: auto;">
+				<table class="staff-table">
+					<thead>
+						<tr>
+							<th><i class="fa fa-hashtag me-1"></i>Mã đặt</th>
+							<th><i class="fa fa-user me-1"></i>Độc giả</th>
+							<th><i class="fa fa-book me-1"></i>Sách yêu cầu</th>
+							<th><i class="fa fa-calendar me-1"></i>Ngày đặt</th>
+							<th><i class="fa fa-check-square me-1"></i>Trạng thái</th>
+							<th>Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>DT003421</code></td>
+							<td><strong>Phạm Văn D</strong></td>
+							<td>Design Thinking</td>
+							<td>20/08/2026</td>
+							<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
+							<td>
+								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
+									<i class="fa fa-check"></i>Duyệt
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td><code>DT003422</code></td>
+							<td><strong>Võ Thị E</strong></td>
+							<td>UX/UI Principles</td>
+							<td>19/08/2026</td>
+							<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
+							<td>
+								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
+									<i class="fa fa-check"></i>Duyệt
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td><code>DT003423</code></td>
+							<td><strong>Đinh Văn F</strong></td>
+							<td>Data Science 101</td>
+							<td>18/08/2026</td>
+							<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
+							<td>
+								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
+									<i class="fa fa-check"></i>Duyệt
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- THỐNG KÊ NHANH -->
+		<div class="staff-sec-header" style="margin-top: 40px;">
+			<h3 class="staff-sec-title">
+				<span class="staff-sec-title__icon"><i class="fa fa-chart-bar"></i></span>
+				Thống kê
+			</h3>
+		</div>
+
+		<div class="row g-3 mb-5">
+			<div class="col-md-3 col-sm-6">
+				<div class="staff-data-card" style="margin-bottom: 0;">
+					<div class="staff-data-card__header">
+						<div class="staff-data-card__header-icon"><i class="fa fa-book"></i></div>
+						<div class="staff-data-card__header-text">Tổng sách</div>
+					</div>
+					<div style="padding: 24px; text-align: center;">
+						<div style="font-size: 36px; font-weight: 900; color: var(--staff-blue); margin-bottom: 8px;">1,248</div>
+						<div style="font-size: 12px; color: #64748b;">Trong hệ thống</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="staff-data-card" style="margin-bottom: 0;">
+					<div class="staff-data-card__header">
+						<div class="staff-data-card__header-icon" style="background: rgba(16,185,129,.3); color: #10b981;"><i class="fa fa-circle-check"></i></div>
+						<div class="staff-data-card__header-text">Sách có sẵn</div>
+					</div>
+					<div style="padding: 24px; text-align: center;">
+						<div style="font-size: 36px; font-weight: 900; color: #10b981; margin-bottom: 8px;">892</div>
+						<div style="font-size: 12px; color: #64748b;">Có thể mượn</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="staff-data-card" style="margin-bottom: 0;">
+					<div class="staff-data-card__header">
+						<div class="staff-data-card__header-icon" style="background: rgba(234,88,12,.3); color: #ea580c;"><i class="fa fa-rotate-left"></i></div>
+						<div class="staff-data-card__header-text">Đang mượn</div>
+					</div>
+					<div style="padding: 24px; text-align: center;">
+						<div style="font-size: 36px; font-weight: 900; color: #ea580c; margin-bottom: 8px;">356</div>
+						<div style="font-size: 12px; color: #64748b;">Phiếu hoạt động</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6">
+				<div class="staff-data-card" style="margin-bottom: 0;">
+					<div class="staff-data-card__header">
+						<div class="staff-data-card__header-icon" style="background: rgba(220,38,38,.3); color: #dc2626;"><i class="fa fa-hourglass-end"></i></div>
+						<div class="staff-data-card__header-text">Quá hạn</div>
+					</div>
+					<div style="padding: 24px; text-align: center;">
+						<div style="font-size: 36px; font-weight: 900; color: #dc2626; margin-bottom: 8px;">23</div>
+						<div style="font-size: 12px; color: #64748b;">Cần followup</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

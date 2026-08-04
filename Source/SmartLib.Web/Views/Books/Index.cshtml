@@ -10,6 +10,9 @@
         <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
             <i class="fa fa-file-import me-1"></i>Import Excel
         </button>
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bulkAnhBiaModal">
+            <i class="fa fa-images me-1"></i>Nhập ảnh bìa hàng loạt
+        </button>
         <a asp-action="ExportExcel" class="btn btn-outline-secondary btn-sm">
             <i class="fa fa-download me-1"></i>Xuất Excel
         </a>
@@ -114,6 +117,37 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                     <button type="submit" class="btn btn-info text-white"><i class="fa fa-upload me-1"></i>Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Modal Nhập ảnh bìa hàng loạt *@
+<div class="modal fade" id="bulkAnhBiaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-images me-2 text-primary"></i>Nhập ảnh bìa hàng loạt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="BulkAnhBiaUpload" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="alert alert-info small">
+                        <i class="fa fa-circle-info me-1"></i>
+                        Đặt tên mỗi file ảnh theo đúng <strong>Mã sách</strong> (VD: <code>S0001.jpg</code>) hoặc
+                        <strong>ISBN</strong> (VD: <code>9786041234567.png</code>) của sách cần gán — hệ thống tự
+                        dò khớp theo tên file và cập nhật đúng ảnh cho đúng sách, không cần sửa từng sách một.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label req">Chọn nhiều ảnh bìa cùng lúc</label>
+                        <input type="file" name="files" class="form-control" accept="image/*" multiple required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-upload me-1"></i>Nhập ảnh</button>
                 </div>
             </form>
         </div>

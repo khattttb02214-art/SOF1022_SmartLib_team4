@@ -1,0 +1,583 @@
+@model SmartLib.Web.Models.NhanVien
+@{
+	ViewData["Title"] = "Thông tin cá nhân";
+}
+
+@section Styles {
+	<style>
+		:root {
+			--prof-blue: #0369a1;
+			--prof-blue2: #0284c7;
+			--prof-cyan: #0891b2;
+			--prof-border: #bae6fd;
+			--prof-bg: #f0f9ff;
+		}
+
+		.prof-page {
+			padding: 0 4px 60px;
+		}
+
+		/* PAGE HEADER */
+		.prof-page-header {
+			background: linear-gradient(135deg, #003d7a 0%, #0369a1 50%, #0891b2 100%);
+			border-radius: 20px;
+			padding: 26px 28px;
+			margin-bottom: 28px;
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.prof-page-header::before {
+			content: '';
+			position: absolute;
+			width: 200px; height: 200px;
+			border-radius: 50%;
+			background: radial-gradient(circle, rgba(8,145,178,.25) 0%, transparent 70%);
+			top: -60px; right: -30px;
+			pointer-events: none;
+		}
+
+		.prof-page-header__icon {
+			width: 52px; height: 52px;
+			border-radius: 14px;
+			background: rgba(255,255,255,.15);
+			border: 1.5px solid rgba(255,255,255,.25);
+			display: flex; align-items: center; justify-content: center;
+			font-size: 22px;
+			color: #a5f3fc;
+			flex-shrink: 0;
+			position: relative; z-index: 1;
+		}
+
+		.prof-page-header__text {
+			position: relative; z-index: 1;
+		}
+
+		.prof-page-header h4 {
+			color: #fff;
+			font-size: 20px; font-weight: 800;
+			margin: 0 0 4px;
+		}
+
+		.prof-page-header p {
+			color: rgba(206,235,245,.75);
+			font-size: 13px;
+			margin: 0;
+		}
+
+		/* LAYOUT */
+		.prof-row {
+			display: flex;
+			gap: 24px;
+		}
+
+		.prof-col-left {
+			width: 300px;
+			flex-shrink: 0;
+		}
+
+		.prof-col-right {
+			flex: 1;
+			min-width: 0;
+		}
+
+		/* PROFILE CARD (left) */
+		.prof-card {
+			background: #fff;
+			border: 1.5px solid var(--prof-border);
+			border-radius: 20px;
+			box-shadow: 0 4px 24px rgba(3,105,161,.09);
+			padding: 28px 20px;
+			text-align: center;
+			position: sticky;
+			top: 80px;
+		}
+
+		.prof-avatar-ring {
+			width: 96px; height: 96px;
+			border-radius: 50%;
+			margin: 0 auto 16px;
+			position: relative;
+			background: linear-gradient(135deg, #0369a1, #0891b2);
+			padding: 3px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.prof-avatar-ring img {
+			width: 90px; height: 90px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 3px solid #fff;
+		}
+
+		.prof-avatar-initials {
+			width: 90px; height: 90px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, #0369a1 0%, #0891b2 100%);
+			display: flex; align-items: center; justify-content: center;
+			font-size: 36px; font-weight: 800;
+			color: #fff;
+			border: 3px solid #fff;
+		}
+
+		.prof-name {
+			font-size: 17px;
+			font-weight: 800;
+			color: #0c2340;
+			margin: 0 0 4px;
+		}
+
+		.prof-email {
+			font-size: 12px;
+			color: #6b7280;
+			margin: 0 0 10px;
+		}
+
+		.prof-meta {
+			font-size: 12px;
+			color: #6b7280;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			margin-bottom: 14px;
+		}
+
+		.prof-status {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 16px;
+			border-radius: 100px;
+			font-size: 12px;
+			font-weight: 700;
+			background: #d1fae5;
+			color: #065f46;
+		}
+
+		/* INFO ITEMS */
+		.prof-info-items {
+			margin-top: 20px;
+			border-top: 1.5px solid #e0f2fe;
+			padding-top: 18px;
+		}
+
+		.prof-info-item {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 8px 0;
+			border-bottom: 1px solid #f0f9ff;
+			text-align: left;
+		}
+
+		.prof-info-item:last-child {
+			border-bottom: none;
+		}
+
+		.prof-info-item__icon {
+			width: 28px; height: 28px;
+			border-radius: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 12px;
+			flex-shrink: 0;
+			background: #dbeafe;
+			color: #0369a1;
+		}
+
+		.prof-info-item__label {
+			font-size: 11px;
+			color: #9ca3af;
+		}
+
+		.prof-info-item__value {
+			font-size: 13px;
+			font-weight: 600;
+			color: #0c2340;
+		}
+
+		/* FORM CARD (right) */
+		.prof-form-card {
+			background: #fff;
+			border: 1.5px solid var(--prof-border);
+			border-radius: 20px;
+			box-shadow: 0 4px 24px rgba(3,105,161,.09);
+			overflow: hidden;
+		}
+
+		.prof-form-card__header {
+			padding: 20px 26px;
+			background: linear-gradient(90deg, #e0f2fe 0%, #cffafe 100%);
+			border-bottom: 1.5px solid #bae6fd;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.prof-form-card__header-icon {
+			width: 36px; height: 36px;
+			border-radius: 10px;
+			background: linear-gradient(135deg, #0369a1, #0891b2);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			font-size: 14px;
+		}
+
+		.prof-form-card__header-text {
+			font-size: 15px;
+			font-weight: 700;
+			color: #0c2340;
+		}
+
+		.prof-form-card__header-sub {
+			font-size: 12px;
+			color: #0369a1;
+			margin-top: 1px;
+		}
+
+		.prof-form-body {
+			padding: 26px;
+		}
+
+		/* OTP NOTICE */
+		.prof-otp-notice {
+			background: linear-gradient(90deg, #dbeafe 0%, #e0f2fe 100%);
+			border: 1.5px solid #bae6fd;
+			border-radius: 12px;
+			padding: 12px 16px;
+			display: flex;
+			align-items: flex-start;
+			gap: 10px;
+			margin-bottom: 24px;
+		}
+
+		.prof-otp-notice__icon {
+			width: 20px; height: 20px;
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 12px;
+			color: #0369a1;
+			margin-top: 2px;
+		}
+
+		.prof-otp-notice__text {
+			font-size: 13px;
+			color: #0c2340;
+			line-height: 1.5;
+		}
+
+		.prof-otp-notice__text strong {
+			color: #0369a1;
+			font-weight: 700;
+		}
+
+		/* FORM ELEMENTS */
+		.prof-form-group {
+			margin-bottom: 22px;
+		}
+
+		.prof-label {
+			display: block;
+			font-size: 13px;
+			font-weight: 700;
+			color: #0c2340;
+			margin-bottom: 8px;
+		}
+
+		.prof-input {
+			width: 100%;
+			border: 1.5px solid var(--prof-border);
+			border-radius: 12px;
+			padding: 11px 14px;
+			font-size: 14px;
+			font-family: inherit;
+			color: #0c2340;
+			background: #fff;
+			outline: none;
+			transition: all .2s;
+		}
+
+		.prof-input:focus {
+			border-color: var(--prof-blue2);
+			box-shadow: 0 0 0 3px rgba(3,105,161,.12);
+			background: #fefbff;
+		}
+
+		.prof-input:disabled {
+			background: #f0f9ff;
+			color: #6b7280;
+			cursor: not-allowed;
+		}
+
+		.prof-form-row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 16px;
+		}
+
+		.prof-file-input {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			border: 2px dashed var(--prof-border);
+			border-radius: 14px;
+			background: var(--prof-bg);
+			cursor: pointer;
+			transition: all .2s;
+			text-decoration: none;
+			color: #0369a1;
+		}
+
+		.prof-file-input:hover {
+			border-color: var(--prof-blue2);
+			background: #e0f2fe;
+		}
+
+		.prof-submit-btn {
+			width: 100%;
+			padding: 12px 20px;
+			background: linear-gradient(135deg, var(--prof-blue) 0%, var(--prof-cyan) 100%);
+			color: #fff;
+			border: none;
+			border-radius: 12px;
+			font-size: 14px;
+			font-weight: 700;
+			font-family: inherit;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			transition: all .15s;
+			box-shadow: 0 4px 12px rgba(3,105,161,.3);
+			margin-top: 8px;
+		}
+
+		.prof-submit-btn:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 16px rgba(3,105,161,.4);
+		}
+
+		/* RESPONSIVE */
+		@@media (max-width: 1024px) {
+			.prof-row {
+				flex-direction: column;
+			}
+
+			.prof-col-left {
+				width: 100%;
+			}
+		}
+
+		@@media (max-width: 480px) {
+			.prof-form-row {
+				grid-template-columns: 1fr;
+			}
+
+			.prof-page-header {
+				padding: 20px;
+			}
+
+			.prof-form-body {
+				padding: 16px;
+			}
+		}
+	</style>
+}
+
+<div class="prof-page">
+	<!-- HEADER -->
+	<div class="prof-page-header">
+		<div class="prof-page-header__icon"><i class="fa fa-user-tie"></i></div>
+		<div class="prof-page-header__text">
+			<h4>Thông tin cá nhân</h4>
+			<p>Quản lý hồ sơ và thông tin tài khoản của bạn</p>
+		</div>
+	</div>
+
+	<div class="prof-row">
+		<!-- LEFT: PROFILE CARD -->
+		<div class="prof-col-left">
+			<div class="prof-card">
+				<div class="prof-avatar-ring">
+					@if (!string.IsNullOrEmpty(Model.AnhDaiDien))
+					{
+						<img src="@Model.AnhDaiDien" alt="@Model.HoTen">
+					}
+					else
+					{
+						<div class="prof-avatar-initials">
+							@(Model.HoTen?.Split(' ').LastOrDefault()?[0].ToString()?.ToUpper() ?? "?")
+						</div>
+					}
+				</div>
+
+				<h5 class="prof-name">@Model.HoTen</h5>
+				<p class="prof-email">@Model.Email</p>
+
+				<div class="prof-meta">
+					<i class="fa fa-briefcase" style="color: #0369a1;"></i>
+					<span>@(Model.ChucVu?.TenChucVu ?? "Chưa gán")</span>
+				</div>
+
+				<span class="prof-status">
+					<i class="fa fa-circle-check"></i>Tích cực
+				</span>
+
+				<div class="prof-info-items">
+					<div class="prof-info-item">
+						<div class="prof-info-item__icon"><i class="fa fa-envelope"></i></div>
+						<div style="flex: 1;">
+							<div class="prof-info-item__label">Email</div>
+							<div class="prof-info-item__value">@Model.Email</div>
+						</div>
+					</div>
+
+					@if (!string.IsNullOrEmpty(Model.SoDienThoai))
+					{
+						<div class="prof-info-item">
+							<div class="prof-info-item__icon"><i class="fa fa-phone"></i></div>
+							<div style="flex: 1;">
+								<div class="prof-info-item__label">Điện thoại</div>
+								<div class="prof-info-item__value">@Model.SoDienThoai</div>
+							</div>
+						</div>
+					}
+
+					@if (!string.IsNullOrEmpty(Model.MaNV))
+					{
+						<div class="prof-info-item">
+							<div class="prof-info-item__icon"><i class="fa fa-id-card"></i></div>
+							<div style="flex: 1;">
+								<div class="prof-info-item__label">Mã nhân viên</div>
+								<div class="prof-info-item__value">@Model.MaNV</div>
+							</div>
+						</div>
+					}
+				</div>
+
+				<hr class="my-3" style="border-color: var(--prof-border);" />
+				<form method="post" asp-action="GuiOtpDoiMatKhau">
+					@Html.AntiForgeryToken()
+					<button type="submit" class="btn btn-outline-primary w-100 btn-sm">
+						<i class="fa fa-key me-1"></i>
+						Đổi mật khẩu
+					</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- RIGHT: FORM CARD -->
+		<div class="prof-col-right">
+			<div class="prof-form-card">
+				<div class="prof-form-card__header">
+					<div class="prof-form-card__header-icon"><i class="fa fa-pen-to-square"></i></div>
+					<div>
+						<div class="prof-form-card__header-text">Chỉnh sửa thông tin</div>
+						<div class="prof-form-card__header-sub">Cập nhật hồ sơ của bạn</div>
+					</div>
+				</div>
+				<div class="prof-form-body">
+					<!-- OTP NOTICE -->
+					<div class="prof-otp-notice">
+						<div class="prof-otp-notice__icon"><i class="fa fa-shield-halved"></i></div>
+						<div class="prof-otp-notice__text">
+							Sau khi nhấn lưu, <strong>mã OTP</strong> sẽ được gửi về hộp thư email của bạn để xác nhận thay đổi.
+						</div>
+					</div>
+
+					@if (ViewBag.Error != null)
+					{
+						<div class="alert alert-danger small py-2 mb-3">
+							<i class="fa fa-circle-exclamation me-1"></i>@ViewBag.Error
+						</div>
+					}
+
+					<form method="post" asp-action="EditProfile" enctype="multipart/form-data">
+						@Html.AntiForgeryToken()
+
+						<div class="prof-form-group">
+							<label class="prof-label">Họ tên <span style="color: #dc2626;">*</span></label>
+							<input type="text" name="HoTen" value="@Model.HoTen" class="prof-input" required placeholder="Nhập họ và tên đầy đủ" />
+						</div>
+
+						<div class="prof-form-group">
+							<label class="prof-label">
+								Email hiện tại
+								<span style="color: #0369a1; font-weight: 400; font-size: 11px; margin-left: 6px;">
+									(để trống nếu không muốn đổi)
+								</span>
+							</label>
+							<div style="position: relative;">
+								<input type="text" class="prof-input" value="@Model.Email" disabled
+									   style="background: #f0f9ff; color: #6b7280; cursor: not-allowed;" />
+							</div>
+						</div>
+
+						<div class="prof-form-group">
+							<label class="prof-label">
+								Địa chỉ email mới
+								<span style="color: #9ca3af; font-weight: 400; font-size: 11px; margin-left: 4px;">
+									(không bắt buộc)
+								</span>
+							</label>
+							<input type="email" name="NewEmail" class="prof-input" placeholder="Nhập email mới để đổi..." />
+						</div>
+
+						<div class="prof-form-row">
+							<div class="prof-form-group">
+								<label class="prof-label">Số điện thoại</label>
+								<input type="text" name="SoDienThoai" value="@Model.SoDienThoai" class="prof-input" placeholder="0xxx xxx xxx" />
+							</div>
+							<div class="prof-form-group">
+								<label class="prof-label">Địa chỉ</label>
+								<input type="text" name="DiaChi" value="@Model.DiaChi" class="prof-input" placeholder="Địa chỉ của bạn" />
+							</div>
+						</div>
+
+						<div class="prof-form-group">
+							<label class="prof-label">Ảnh đại diện mới</label>
+							<label class="prof-file-input" for="avatarFile">
+								<i class="fa fa-cloud-arrow-up fa-lg mb-2 d-block" style="font-size: 24px;"></i>
+								<div style="font-weight: 700;">Chọn ảnh từ máy tính</div>
+								<div style="font-size: 11px; color: #9ca3af; margin-top: 4px;">PNG, JPG, GIF tối đa 5MB</div>
+								<input type="file" id="avatarFile" name="AnhDaiDienFile" accept="image/*" class="d-none" />
+							</label>
+						</div>
+
+						<button type="submit" class="prof-submit-btn">
+							<i class="fa fa-paper-plane"></i>
+							Gửi OTP để xác nhận thay đổi
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		// Show filename when file selected
+		document.getElementById('avatarFile').addEventListener('change', function() {
+			const label = this.closest('label');
+			if (this.files && this.files[0]) {
+				const name = this.files[0].name;
+				label.querySelector('div:nth-child(2)').textContent = '✅ ' + name;
+			}
+		});
+	</script>
+}

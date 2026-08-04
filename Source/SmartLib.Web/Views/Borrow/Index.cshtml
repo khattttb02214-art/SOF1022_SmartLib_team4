@@ -38,6 +38,7 @@
                     <td>@(b.TienPhat > 0 ? $"{b.TienPhat:N0} đ" : "—")</td>
                     <td>
                         <div class="d-flex gap-1 flex-wrap">
+                            <a asp-action="Details" asp-route-id="@b.MaPhieu" class="btn btn-xs btn-outline-info" title="Xem"><i class="fa fa-eye"></i></a>
                             @if (b.TrangThai == "Đang Mượn")
                             {
                                 <a asp-action="ReturnBook" asp-route-id="@b.MaPhieu" class="btn btn-xs btn-success" title="Trả sách"><i class="fa fa-check"></i></a>

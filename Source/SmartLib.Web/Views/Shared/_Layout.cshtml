@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ai-chat.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -86,6 +87,8 @@
                         <a asp-controller="Audit" asp-action="Index" class="sidebar-link"><i class="fa fa-clock-rotate-left"></i><span>Nhật ký hoạt động</span></a>
                     }
                     <div class="sidebar-divider"></div>
+                    <a asp-controller="Staff" asp-action="EditProfile" class="sidebar-link"><i class="fa fa-user-pen"></i><span>Thông tin cá nhân</span></a>
+
                     <a asp-controller="Auth" asp-action="Logout" class="sidebar-link sidebar-logout"><i class="fa fa-right-from-bracket"></i><span>Đăng xuất</span></a>
                 </div>
             }
@@ -174,6 +177,10 @@
                                     <div class="text-muted small">@(User.IsInRole("ADMIN") ? "Administrator" : User.IsInRole("LIB") ? "Thủ thư" : "Sinh viên")</div>
                                 </li>
                                 <li><hr class="dropdown-divider my-1" /></li>
+                                @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
+                                {
+                                    <li><a asp-controller="Staff" asp-action="EditProfile" class="dropdown-item"><i class="fa fa-user-pen me-2"></i>Thông tin cá nhân</a></li>
+                                }
                                 @if (User.IsInRole("STU"))
                                 {
                                     <li><a asp-controller="Student" asp-action="EditProfile" class="dropdown-item"><i class="fa fa-user-pen me-2"></i>Thông tin cá nhân</a></li>
@@ -188,7 +195,60 @@
         </div>
     }
 
+    @* AI Assistant (Chatbot thư viện) — hiện cho MỌI người dùng đã đăng nhập, không phân biệt vai trò. *@
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <partial name="_AIChatWidget" />
+    }
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+            // Áp dụng mặc định cho MỌI form có data-val (bật bởi asp-validation-for):
+            // báo đỏ ô nhập sai + hiện thông báo lỗi ngay khi rời khỏi ô hoặc khi gõ lại,
+            // không cần đợi bấm Submit.
+            $.validator.setDefaults({
+                highlight: function(element) { $(element).addClass('is-invalid'); },
+                unhighlight: function(element) { $(element).removeClass('is-invalid'); },
+                errorElement: 'span',
+                errorClass: 'text-danger small d-block mt-1',
+                errorPlacement: function(error, element) {
+                    var span = $(element).closest('.mb-3, .mb-4, .col-12, .col-md-4, .col-md-6, .col-md-8, .col-lg-7, .col-lg-5').find('[data-valmsg-for="' + element.attr('name') + '"]');
+                    if (span.length) { span.replaceWith(error); } else { error.insertAfter(element); }
+                }
+            });
+
+            // Rule dùng chung cho MỌI form: so sánh 2 field số với nhau, khớp với
+            // attribute [NhoHonHoacBang] phía C# (VD: Số lượng khả dụng <= Số lượng kho
+            // ở form Thêm/Sửa sách). Đăng ký 1 LẦN DUY NHẤT ở đây (không lặp lại trong
+            // từng view) để field số nào gắn [NhoHonHoacBang("TenFieldKia")] cũng tự có
+            // validate ngay khi gõ, không cần đợi submit lên server.
+            $.validator.addMethod('nhohonhoacbang', function(value, element, tenFieldKia) {
+                if (this.optional(element)) return true;
+                var elKia = $(element.form).find('[name="' + tenFieldKia + '"]');
+                if (elKia.length === 0) return true; // không thấy field kia thì bỏ qua, để server tự lo
+                return parseFloat(value) <= parseFloat(elKia.val());
+            });
+            $.validator.unobtrusive.adapters.add('nhohonhoacbang', ['other'], function(options) {
+                options.rules['nhohonhoacbang'] = options.params.other;
+                options.messages['nhohonhoacbang'] = options.message;
+            });
+
+            // Với các form KHÔNG dùng asp-for (input thường, ví dụ 1 số modal Thêm/Sửa
+            // nhanh) — kích hoạt kiểm tra hợp lệ gốc của trình duyệt + báo đỏ kiểu
+            // Bootstrap khi bấm Submit mà còn thiếu trường bắt buộc (required/min/max...).
+            (function() {
+                document.querySelectorAll('form.needs-validation').forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
@@ -197,32 +257,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
-        // Bật "responsive" mặc định cho MỌI bảng $(...).DataTable({...}) trong toàn bộ
-        // app (Sách, Tác giả, NXB, Độc giả, Nhân viên, Mượn/trả, Kho, ...) — không cần
-        // sửa từng view: cột nào không đủ chỗ trên điện thoại sẽ tự gộp vào 1 nút "+"
-        // bấm ra xem, thay vì phải cuộn ngang khó chịu.
-        if (window.jQuery && $.fn.dataTable) {
-        $.extend(true, $.fn.dataTable.defaults, { responsive: true });
-        }
+            // Bật "responsive" mặc định cho MỌI bảng $(...).DataTable({...}) trong toàn bộ
+            // app (Sách, Tác giả, NXB, Độc giả, Nhân viên, Mượn/trả, Kho, ...) — không cần
+            // sửa từng view: cột nào không đủ chỗ trên điện thoại sẽ tự gộp vào 1 nút "+"
+            // bấm ra xem, thay vì phải cuộn ngang khó chịu.
+            if (window.jQuery && $.fn.dataTable) {
+                $.extend(true, $.fn.dataTable.defaults, { responsive: true });
+            }
     </script>
 
     <script>
-        // Cấu hình toastr: tự đóng sau 5 giây, có nút X để đóng tay
-        toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "timeOut": "5000",
-        "extendedTimeOut": "2000",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "500",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-        };
+            // Cấu hình toastr: tự đóng sau 5 giây, có nút X để đóng tay
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000",
+                "extendedTimeOut": "2000",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "500",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
     </script>
     @if (TempData["success"] != null)
     {
@@ -238,117 +298,118 @@
     }
     @if (TempData["OtpSent"] != null)
     {
-        <script>toastr.info('@Html.Raw(TempData["OtpSent"])', '', {timeOut:10000});</script>
+        <script>toastr.info('@Html.Raw(TempData["OtpSent"])', '', { timeOut: 10000 });</script>
     }
 
     <script>
-        const darkBtn=document.getElementById('darkModeBtn'),darkIcon=document.getElementById('darkIcon');
-        if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark-mode');if(darkIcon)darkIcon.className='fa fa-sun';}
-        darkBtn?.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');const d=document.body.classList.contains('dark-mode');darkIcon.className=d?'fa fa-sun':'fa fa-moon';localStorage.setItem('darkMode',d?'1':'0');});
-        const links=document.querySelectorAll('.sidebar-link'),path=window.location.pathname.toLowerCase();
-        links.forEach(a=>{if(a.href&&a.href!=='#'){const h=new URL(a.href).pathname.toLowerCase();if(h!=='/'&&path.startsWith(h))a.classList.add('active');}});
+            const darkBtn = document.getElementById('darkModeBtn'), darkIcon = document.getElementById('darkIcon');
+            if (localStorage.getItem('darkMode') === '1') { document.body.classList.add('dark-mode'); if (darkIcon) darkIcon.className = 'fa fa-sun'; }
+            darkBtn?.addEventListener('click', () => { document.body.classList.toggle('dark-mode'); const d = document.body.classList.contains('dark-mode'); darkIcon.className = d ? 'fa fa-sun' : 'fa fa-moon'; localStorage.setItem('darkMode', d ? '1' : '0'); });
+            const links = document.querySelectorAll('.sidebar-link'), path = window.location.pathname.toLowerCase();
+            links.forEach(a => { if (a.href && a.href !== '#') { const h = new URL(a.href).pathname.toLowerCase(); if (h !== '/' && path.startsWith(h)) a.classList.add('active'); } });
 
-        // Mở/đóng sidebar dạng drawer trên điện thoại (≤768px): nút hamburger,
-        // bấm ra ngoài (backdrop), hoặc nhấn Esc đều đóng lại được.
-        const sidebarEl = document.getElementById('sidebarEl');
-        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-        function setSidebarOpen(open) {
-        sidebarEl?.classList.toggle('open', open);
-        sidebarBackdrop?.classList.toggle('show', open);
-        document.body.classList.toggle('sidebar-locked', open);
-        }
-        document.getElementById('sidebarToggle')?.addEventListener('click', () => setSidebarOpen(!sidebarEl?.classList.contains('open')));
-        sidebarBackdrop?.addEventListener('click', () => setSidebarOpen(false));
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') setSidebarOpen(false); });
-        // Bấm vào 1 link trong drawer thì tự đóng lại luôn cho gọn
-        sidebarEl?.querySelectorAll('.sidebar-link').forEach(a => a.addEventListener('click', () => setSidebarOpen(false)));
+            // Mở/đóng sidebar dạng drawer trên điện thoại (≤768px): nút hamburger,
+            // bấm ra ngoài (backdrop), hoặc nhấn Esc đều đóng lại được.
+            const sidebarEl = document.getElementById('sidebarEl');
+            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+            function setSidebarOpen(open) {
+                sidebarEl?.classList.toggle('open', open);
+                sidebarBackdrop?.classList.toggle('show', open);
+                document.body.classList.toggle('sidebar-locked', open);
+            }
+            document.getElementById('sidebarToggle')?.addEventListener('click', () => setSidebarOpen(!sidebarEl?.classList.contains('open')));
+            sidebarBackdrop?.addEventListener('click', () => setSidebarOpen(false));
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') setSidebarOpen(false); });
+            // Bấm vào 1 link trong drawer thì tự đóng lại luôn cho gọn
+            sidebarEl?.querySelectorAll('.sidebar-link').forEach(a => a.addEventListener('click', () => setSidebarOpen(false)));
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
-        const conn=new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
-        conn.on("ReceiveNotification",msg=>toastr.info(msg,'📚 Sách mới',{timeOut:6000,positionClass:'toast-top-right'}));
-        conn.start().catch(e=>console.error(e));
+            const conn = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+            conn.on("ReceiveNotification", msg => toastr.info(msg, '📚 Sách mới', { timeOut: 6000, positionClass: 'toast-top-right' }));
+            conn.start().catch(e => console.error(e));
     </script>
     @if (User.IsInRole("ADMIN") || User.IsInRole("LIB"))
     {
         <script>
-            // Tải thông báo động cho chuông bell (ADMIN + LIB)
-            async function loadAdminNotifications() {
-            try {
-            const res = await fetch('/NhanVien/GetNotificationCounts');
-            if (!res.ok) return;
-            const data = await res.json();
+                // Tải thông báo động cho chuông bell (ADMIN + LIB)
+                async function loadAdminNotifications() {
+                    try {
+                        const res = await fetch('/NhanVien/GetNotificationCounts');
+                        if (!res.ok) return;
+                        const data = await res.json();
 
-            let totalCount = 0;
+                        let totalCount = 0;
 
-            // Cập nhật sách quá hạn
-            const overdueEl = document.getElementById('notifOverdue');
-            const overdueCountEl = document.getElementById('overdueCount');
-            if (overdueEl && overdueCountEl) {
-            if (data.overdueCount > 0) {
-            overdueEl.style.display = '';
-            overdueCountEl.textContent = data.overdueCount;
-            totalCount += data.overdueCount;
-            } else {
-            overdueEl.style.display = 'none';
-            }
-            }
+                        // Cập nhật sách quá hạn
+                        const overdueEl = document.getElementById('notifOverdue');
+                        const overdueCountEl = document.getElementById('overdueCount');
+                        if (overdueEl && overdueCountEl) {
+                            if (data.overdueCount > 0) {
+                                overdueEl.style.display = '';
+                                overdueCountEl.textContent = data.overdueCount;
+                                totalCount += data.overdueCount;
+                            } else {
+                                overdueEl.style.display = 'none';
+                            }
+                        }
 
-            // Cập nhật tài khoản chờ duyệt
-            const pendingEl = document.getElementById('notifPending');
-            const pendingCountEl = document.getElementById('pendingCount');
-            if (pendingEl && pendingCountEl) {
-            if (data.pendingCount > 0) {
-            pendingEl.style.display = '';
-            pendingCountEl.textContent = data.pendingCount;
-            totalCount += data.pendingCount;
-            } else {
-            pendingEl.style.display = 'none';
-            }
-            }
+                        // Cập nhật tài khoản chờ duyệt
+                        const pendingEl = document.getElementById('notifPending');
+                        const pendingCountEl = document.getElementById('pendingCount');
+                        if (pendingEl && pendingCountEl) {
+                            if (data.pendingCount > 0) {
+                                pendingEl.style.display = '';
+                                pendingCountEl.textContent = data.pendingCount;
+                                totalCount += data.pendingCount;
+                            } else {
+                                pendingEl.style.display = 'none';
+                            }
+                        }
 
-            // Hiện/ẩn "không có thông báo"
-            const emptyEl = document.getElementById('notifEmpty');
-            if (emptyEl) emptyEl.style.display = totalCount === 0 ? '' : 'none';
+                        // Hiện/ẩn "không có thông báo"
+                        const emptyEl = document.getElementById('notifEmpty');
+                        if (emptyEl) emptyEl.style.display = totalCount === 0 ? '' : 'none';
 
-            // Cập nhật badge trên chuông
-            const bellDot = document.getElementById('bellDot');
-            const bellBadge = document.getElementById('bellBadge');
-            if (totalCount > 0) {
-            if (bellDot) bellDot.style.display = '';
-            if (bellBadge) { bellBadge.textContent = totalCount > 99 ? '99+' : totalCount; bellBadge.style.display = ''; }
-            } else {
-            if (bellDot) bellDot.style.display = 'none';
-            if (bellBadge) bellBadge.style.display = 'none';
-            }
-            } catch(e) { console.error('Lỗi tải thông báo:', e); }
-            }
-            loadAdminNotifications();
-            setInterval(loadAdminNotifications, 60000); // Refresh mỗi 1 phút
+                        // Cập nhật badge trên chuông
+                        const bellDot = document.getElementById('bellDot');
+                        const bellBadge = document.getElementById('bellBadge');
+                        if (totalCount > 0) {
+                            if (bellDot) bellDot.style.display = '';
+                            if (bellBadge) { bellBadge.textContent = totalCount > 99 ? '99+' : totalCount; bellBadge.style.display = ''; }
+                        } else {
+                            if (bellDot) bellDot.style.display = 'none';
+                            if (bellBadge) bellBadge.style.display = 'none';
+                        }
+                    } catch (e) { console.error('Lỗi tải thông báo:', e); }
+                }
+                loadAdminNotifications();
+                setInterval(loadAdminNotifications, 60000); // Refresh mỗi 1 phút
         </script>
     }
     @if (User.IsInRole("STU"))
     {
         <script>
-            (async function loadNotifBadge() {
-            try {
-            const r = await fetch('/Wishlist/SoThongBaoChuaDoc');
-            const n = await r.json();
-            const badge = document.getElementById('notifBadgeNav');
-            if (badge) { if(n>0){badge.textContent=n;badge.style.display='';}else{badge.style.display='none';} }
-            } catch(e){}
-            })();
-            setInterval(async function(){
-            try{
-            const r=await fetch('/Wishlist/SoThongBaoChuaDoc');
-            const n=await r.json();
-            const badge=document.getElementById('notifBadgeNav');
-            if(badge){if(n>0){badge.textContent=n;badge.style.display='';}else{badge.style.display='none';}}
-            }catch(e){}
-            }, 120000);
+                (async function loadNotifBadge() {
+                    try {
+                        const r = await fetch('/Wishlist/SoThongBaoChuaDoc');
+                        const n = await r.json();
+                        const badge = document.getElementById('notifBadgeNav');
+                        if (badge) { if (n > 0) { badge.textContent = n; badge.style.display = ''; } else { badge.style.display = 'none'; } }
+                    } catch (e) { }
+                })();
+                setInterval(async function() {
+                    try {
+                        const r = await fetch('/Wishlist/SoThongBaoChuaDoc');
+                        const n = await r.json();
+                        const badge = document.getElementById('notifBadgeNav');
+                        if (badge) { if (n > 0) { badge.textContent = n; badge.style.display = ''; } else { badge.style.display = 'none'; } }
+                    } catch (e) { }
+                }, 120000);
         </script>
     }
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/ai-chat.js" asp-append-version="true"></script>
 </body>
 </html>

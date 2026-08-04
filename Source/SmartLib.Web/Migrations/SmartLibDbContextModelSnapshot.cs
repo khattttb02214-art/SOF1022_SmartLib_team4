@@ -17,10 +17,41 @@ namespace SmartLib.Web.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.9")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SmartLib.Web.Models.ChiTietDatTruoc", b =>
+                {
+                    b.Property<int>("MaChiTiet")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaChiTiet"));
+
+                    b.Property<string>("GhiChu")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("MaReservation")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MaSach")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("SoLuong")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaChiTiet");
+
+                    b.HasIndex("MaReservation");
+
+                    b.HasIndex("MaSach");
+
+                    b.ToTable("ChiTietDatTruoc");
+                });
 
             modelBuilder.Entity("SmartLib.Web.Models.ChiTietMuonTra", b =>
                 {
@@ -61,6 +92,40 @@ namespace SmartLib.Web.Migrations
                     b.HasIndex("MaSach");
 
                     b.ToTable("ChiTietMuonTra");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.ChucNang", b =>
+                {
+                    b.Property<int>("MaChucNang")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaChucNang"));
+
+                    b.Property<string>("Controller")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("MaNhom")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TenChucNang")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("ThuTu")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaChucNang");
+
+                    b.HasIndex("MaNhom");
+
+                    b.ToTable("ChucNang");
                 });
 
             modelBuilder.Entity("SmartLib.Web.Models.ChucVu", b =>
@@ -131,6 +196,10 @@ namespace SmartLib.Web.Migrations
                     b.Property<int>("SoSao")
                         .HasColumnType("int");
 
+                    b.Property<string>("TrangThai")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("MaDanhGia");
 
                     b.HasIndex("MaDocGia");
@@ -195,6 +264,82 @@ namespace SmartLib.Web.Migrations
                     b.HasKey("MaDocGia");
 
                     b.ToTable("DocGia");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.Ebook", b =>
+                {
+                    b.Property<int>("MaEbook")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaEbook"));
+
+                    b.Property<string>("DinhDangFile")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("DuongDanFile")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long?>("KichThuoc")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("MaSach")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime?>("NgayTaiLen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TenFile")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("MaEbook");
+
+                    b.HasIndex("MaSach");
+
+                    b.ToTable("Ebook");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.GoogleOtpTemp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("GoogleId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("HoTen")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("OtpCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<DateTime>("OtpExpiry")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GoogleOtpTemp");
                 });
 
             modelBuilder.Entity("SmartLib.Web.Models.KeSach", b =>
@@ -316,6 +461,9 @@ namespace SmartLib.Web.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
+
                     b.HasKey("MaNXB");
 
                     b.ToTable("NhaXuatBan");
@@ -342,10 +490,17 @@ namespace SmartLib.Web.Migrations
                     b.Property<bool>("EmailVerified")
                         .HasColumnType("bit");
 
+                    b.Property<string>("GoogleId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("HoTen")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("LaAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("MaChucVu")
                         .HasMaxLength(10)
@@ -360,6 +515,9 @@ namespace SmartLib.Web.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool>("MatKhauTuDat")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("NgayCapNhat")
                         .HasColumnType("datetime2");
 
@@ -370,6 +528,13 @@ namespace SmartLib.Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("OtpExpiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OtpResetMatKhau")
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<DateTime?>("OtpResetMatKhauHetHan")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PendingEmail")
@@ -418,6 +583,69 @@ namespace SmartLib.Web.Migrations
                     b.ToTable("NhatKyHoatDong");
                 });
 
+            modelBuilder.Entity("SmartLib.Web.Models.NhomChucNang", b =>
+                {
+                    b.Property<int>("MaNhom")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaNhom"));
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TenNhom")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("ThuTu")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaNhom");
+
+                    b.ToTable("NhomChucNang");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.PhanQuyenNhanVien", b =>
+                {
+                    b.Property<int>("MaPQ")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaPQ"));
+
+                    b.Property<bool>("DuocSua")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DuocThem")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DuocXem")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DuocXoa")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaChucNang")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MaNV")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("MaPQ");
+
+                    b.HasIndex("MaChucNang");
+
+                    b.HasIndex("MaNV", "MaChucNang")
+                        .IsUnique();
+
+                    b.ToTable("PhanQuyenNhanVien");
+                });
+
             modelBuilder.Entity("SmartLib.Web.Models.Reservation", b =>
                 {
                     b.Property<int>("MaReservation")
@@ -429,17 +657,21 @@ namespace SmartLib.Web.Migrations
                     b.Property<bool>("DaMuon")
                         .HasColumnType("bit");
 
+                    b.Property<string>("GhiChu")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("MaDocGia")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("MaNV")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("MaPhieuMuon")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("MaSach")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("NgayDat")
                         .HasColumnType("datetime2");
@@ -452,7 +684,7 @@ namespace SmartLib.Web.Migrations
 
                     b.HasIndex("MaDocGia");
 
-                    b.HasIndex("MaSach");
+                    b.HasIndex("MaNV");
 
                     b.ToTable("Reservation");
                 });
@@ -553,6 +785,20 @@ namespace SmartLib.Web.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("AnhDaiDien")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ButDanh")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("NamMat")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NamSinh")
+                        .HasColumnType("int");
+
                     b.Property<string>("QuocTich")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -564,6 +810,9 @@ namespace SmartLib.Web.Migrations
 
                     b.Property<string>("TieuSu")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
 
                     b.HasKey("MaTacGia");
 
@@ -645,6 +894,10 @@ namespace SmartLib.Web.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("MaNV")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("MaSach")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
@@ -663,6 +916,8 @@ namespace SmartLib.Web.Migrations
                     b.HasKey("MaThongBao");
 
                     b.HasIndex("MaDocGia");
+
+                    b.HasIndex("MaNV");
 
                     b.HasIndex("MaSach");
 
@@ -762,6 +1017,23 @@ namespace SmartLib.Web.Migrations
                     b.ToTable("WishlistPreference");
                 });
 
+            modelBuilder.Entity("SmartLib.Web.Models.ChiTietDatTruoc", b =>
+                {
+                    b.HasOne("SmartLib.Web.Models.Reservation", "Reservation")
+                        .WithMany("ChiTietDatTruocs")
+                        .HasForeignKey("MaReservation")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartLib.Web.Models.Sach", "Sach")
+                        .WithMany()
+                        .HasForeignKey("MaSach");
+
+                    b.Navigation("Reservation");
+
+                    b.Navigation("Sach");
+                });
+
             modelBuilder.Entity("SmartLib.Web.Models.ChiTietMuonTra", b =>
                 {
                     b.HasOne("SmartLib.Web.Models.CuonSach", "CuonSach")
@@ -784,6 +1056,17 @@ namespace SmartLib.Web.Migrations
                     b.Navigation("Sach");
                 });
 
+            modelBuilder.Entity("SmartLib.Web.Models.ChucNang", b =>
+                {
+                    b.HasOne("SmartLib.Web.Models.NhomChucNang", "NhomChucNang")
+                        .WithMany("ChucNangs")
+                        .HasForeignKey("MaNhom")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("NhomChucNang");
+                });
+
             modelBuilder.Entity("SmartLib.Web.Models.CuonSach", b =>
                 {
                     b.HasOne("SmartLib.Web.Models.Sach", "Sach")
@@ -804,6 +1087,16 @@ namespace SmartLib.Web.Migrations
                         .HasForeignKey("MaSach");
 
                     b.Navigation("DocGia");
+
+                    b.Navigation("Sach");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.Ebook", b =>
+                {
+                    b.HasOne("SmartLib.Web.Models.Sach", "Sach")
+                        .WithMany()
+                        .HasForeignKey("MaSach")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Sach");
                 });
@@ -861,19 +1154,38 @@ namespace SmartLib.Web.Migrations
                     b.Navigation("NhanVien");
                 });
 
+            modelBuilder.Entity("SmartLib.Web.Models.PhanQuyenNhanVien", b =>
+                {
+                    b.HasOne("SmartLib.Web.Models.ChucNang", "ChucNang")
+                        .WithMany("PhanQuyens")
+                        .HasForeignKey("MaChucNang")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartLib.Web.Models.NhanVien", "NhanVien")
+                        .WithMany("PhanQuyens")
+                        .HasForeignKey("MaNV")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChucNang");
+
+                    b.Navigation("NhanVien");
+                });
+
             modelBuilder.Entity("SmartLib.Web.Models.Reservation", b =>
                 {
                     b.HasOne("SmartLib.Web.Models.DocGia", "DocGia")
                         .WithMany()
                         .HasForeignKey("MaDocGia");
 
-                    b.HasOne("SmartLib.Web.Models.Sach", "Sach")
+                    b.HasOne("SmartLib.Web.Models.NhanVien", "NhanVien")
                         .WithMany()
-                        .HasForeignKey("MaSach");
+                        .HasForeignKey("MaNV");
 
                     b.Navigation("DocGia");
 
-                    b.Navigation("Sach");
+                    b.Navigation("NhanVien");
                 });
 
             modelBuilder.Entity("SmartLib.Web.Models.Sach", b =>
@@ -930,7 +1242,12 @@ namespace SmartLib.Web.Migrations
                 {
                     b.HasOne("SmartLib.Web.Models.DocGia", "DocGia")
                         .WithMany()
-                        .HasForeignKey("MaDocGia");
+                        .HasForeignKey("MaDocGia")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SmartLib.Web.Models.NhanVien", "NhanVien")
+                        .WithMany()
+                        .HasForeignKey("MaNV");
 
                     b.HasOne("SmartLib.Web.Models.Sach", "Sach")
                         .WithMany()
@@ -938,6 +1255,8 @@ namespace SmartLib.Web.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("DocGia");
+
+                    b.Navigation("NhanVien");
 
                     b.Navigation("Sach");
                 });
@@ -984,6 +1303,11 @@ namespace SmartLib.Web.Migrations
                     b.Navigation("DocGia");
                 });
 
+            modelBuilder.Entity("SmartLib.Web.Models.ChucNang", b =>
+                {
+                    b.Navigation("PhanQuyens");
+                });
+
             modelBuilder.Entity("SmartLib.Web.Models.DocGia", b =>
                 {
                     b.Navigation("MuonTras");
@@ -1011,6 +1335,18 @@ namespace SmartLib.Web.Migrations
                     b.Navigation("MuonTras");
 
                     b.Navigation("NhatKyHoatDongs");
+
+                    b.Navigation("PhanQuyens");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.NhomChucNang", b =>
+                {
+                    b.Navigation("ChucNangs");
+                });
+
+            modelBuilder.Entity("SmartLib.Web.Models.Reservation", b =>
+                {
+                    b.Navigation("ChiTietDatTruocs");
                 });
 
             modelBuilder.Entity("SmartLib.Web.Models.Sach", b =>

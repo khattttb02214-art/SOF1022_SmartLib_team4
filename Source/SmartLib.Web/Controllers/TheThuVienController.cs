@@ -157,6 +157,17 @@ public class TheThuVienController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // Đổi trạng thái (Còn hiệu lực ⇄ Hết hạn) THAY VÌ xóa hẳn — giữ nguyên lịch sử thẻ.
+    public async Task<IActionResult> ToggleStatus(int id)
+    {
+        var t = await _db.TheThiViens.FindAsync(id);
+        if (t == null) return NotFound();
+        t.TrangThai = !t.TrangThai;
+        await _db.SaveChangesAsync();
+        TempData["success"] = t.TrangThai ? "Đã kích hoạt lại thẻ" : "Đã khóa thẻ (giữ nguyên dữ liệu)";
+        return RedirectToAction(nameof(Index));
+    }
+
     // ── API: get next card code (for AJAX) ───────────────
     [HttpGet]
     public async Task<IActionResult> GetNextCode()

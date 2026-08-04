@@ -237,21 +237,21 @@
             <hr />
             <div class="d-grid gap-2">
                 <a asp-action="ExportPdf" asp-route-id="@Model.MaPhieu"
-                       class="btn btn-outline-secondary btn-sm">
+                   class="btn btn-outline-secondary btn-sm">
                     <i class="fa fa-file-pdf me-2"></i>Xuất PDF
                 </a>
                 @if (dangMuon)
                 {
                     <a asp-action="ReturnBook" asp-route-id="@Model.MaPhieu"
-                           class="btn btn-success btn-sm"
-                           onclick="return confirm('Xác nhận trả sách?')">
+                       class="btn btn-success btn-sm"
+                       onclick="return confirm('Xác nhận trả sách?')">
                         <i class="fa fa-check me-2"></i>Trả sách
                     </a>
                     @if (!Model.DaGiaHan)
                     {
                         <a asp-action="Renew" asp-route-id="@Model.MaPhieu"
-                               class="btn btn-info btn-sm"
-                               onclick="return confirm('Gia hạn thêm 7 ngày?')">
+                           class="btn btn-info btn-sm"
+                           onclick="return confirm('Gia hạn thêm 7 ngày?')">
                             <i class="fa fa-rotate-right me-2"></i>Gia hạn (+7 ngày)
                         </a>
                     }
@@ -263,12 +263,13 @@
 </div>
 
 @section Scripts {
-@if (coTheThemSach)
-{
-    <script>
+    @if (coTheThemSach)
+    {
+        <script>
             /* ── Trạng thái sách sẽ thêm ── */
             let newSelected = {};  // maCuonSach → { maCuon, tenSach, maSach }
             let editTimer   = null;
+            const tenDocGiaPhieu = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocGia?.HoTen ?? ""));
             const PHIEU_ID  = '@Model.MaPhieu';
 
             function escHtml(s) {
@@ -404,6 +405,34 @@
             document.getElementById('editBookSearch').addEventListener('keydown', e => {
                 if (e.key === 'Enter') { e.preventDefault(); clearTimeout(editTimer); doEditSearch(); }
             });
+
+            /* ── Xác nhận trước khi thêm sách vào phiếu (không submit thẳng) ── */
+            const addBooksForm = document.getElementById('addBooksForm');
+            addBooksForm?.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const items = Object.values(newSelected);
+                const danhSachHtml = items.map(b =>
+                    `<li class="text-start">${escHtml(b.tenSach)} <span class="text-muted">(${escHtml(b.maCuon)})</span></li>`
+                ).join('');
+
+                Swal.fire({
+                    title: 'Xác nhận thêm sách cho mượn?',
+                    icon: 'question',
+                    html: `
+                        <div class="text-start small">
+                            <div class="mb-2"><strong>Độc giả:</strong> ${escHtml(tenDocGiaPhieu)}</div>
+                            <div class="mb-1"><strong>Thêm vào phiếu @Model.MaPhieu (${items.length} cuốn):</strong></div>
+                            <ul class="mb-0 ps-3">${danhSachHtml}</ul>
+                        </div>`,
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa fa-check me-1"></i>Xác nhận',
+                    cancelButtonText: 'Kiểm tra lại',
+                    confirmButtonColor: '#2563eb',
+                    reverseButtons: true
+                }).then(result => {
+                    if (result.isConfirmed) addBooksForm.submit();
+                });
+            });
         </script>
-}
+    }
 }

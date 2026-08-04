@@ -27,16 +27,18 @@
                         <span asp-validation-for="TenSach" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">ISBN</label>
-                        <input asp-for="ISBN" class="form-control" placeholder="ISBN" />
+                        <label class="form-label req">ISBN</label>
+                        <input asp-for="ISBN" class="form-control" placeholder="ISBN" required />
+                        <span asp-validation-for="ISBN" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Barcode</label>
-                        <input asp-for="Barcode" class="form-control" placeholder="Barcode" />
+                        <input asp-for="Barcode" class="form-control" placeholder="Để trống = lấy theo Mã sách" />
+                        <div class="form-text text-muted small"><i class="fa fa-info-circle me-1"></i>Để trống sẽ tự lấy theo Mã sách</div>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Năm xuất bản</label>
-                        <input asp-for="NamXuatBan" type="number" class="form-control" placeholder="2024" />
+                        <label class="form-label req">Năm xuất bản</label>
+                        <input asp-for="NamXuatBan" type="number" class="form-control" placeholder="2024" required />
                         <span asp-validation-for="NamXuatBan" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
@@ -67,39 +69,37 @@
                         <span asp-validation-for="MaKe" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Ngôn ngữ</label>
-                        <input asp-for="NgonNgu" class="form-control" placeholder="Tiếng Việt" />
+                        <label class="form-label req">Ngôn ngữ</label>
+                        <input asp-for="NgonNgu" class="form-control" placeholder="Tiếng Việt" required />
+                        <span asp-validation-for="NgonNgu" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Số trang</label>
-                        <input asp-for="SoTrang" type="number" class="form-control" placeholder="300" />
+                        <label class="form-label req">Số trang</label>
+                        <input asp-for="SoTrang" type="number" class="form-control" placeholder="300" required />
+                        <span asp-validation-for="SoTrang" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Số lượng kho</label>
-                        <input asp-for="SoLuongKho" type="number" class="form-control" min="0" required />
+                        <label class="form-label req">Số lượng kho</label>
+                        <input asp-for="SoLuongKho" type="number" class="form-control" min="1" required />
+                        <span asp-validation-for="SoLuongKho" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Số lượng khả dụng</label>
+                        <label class="form-label req">Số lượng khả dụng</label>
                         <input asp-for="SoLuongKhaDung" type="number" class="form-control" min="0" required />
+                        <span asp-validation-for="SoLuongKhaDung" class="text-danger small"></span>
+                        <div class="form-text text-muted small"><i class="fa fa-info-circle me-1"></i>Mặc định bằng Số lượng kho, có thể sửa thấp hơn nếu cần (không được vượt quá Số lượng kho)</div>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Mô tả</label>
-                        <textarea asp-for="MoTa" class="form-control" rows="4" placeholder="Nội dung tóm tắt..."></textarea>
+                        <textarea asp-for="MoTa" class="form-control" rows="4" placeholder="Nội dung tóm tắt... (không bắt buộc)"></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger small"></span>
                     </div>
                 </div>
             </div>
             <div class="form-card mt-3">
                 <h6 class="form-card-title">Tác giả</h6>
-                <div class="tacgia-checkboxes">
-                    @foreach (var tg in (List<SmartLib.Web.Models.TacGia>)ViewBag.TacGias)
-                    {
-                        <label class="tacgia-chip">
-                            <input type="checkbox" name="SelectedTacGias" value="@tg.MaTacGia"
-                            @(Model.SelectedTacGias.Contains(tg.MaTacGia) ? "checked" : "") />
-                            <span>@tg.TenTacGia</span>
-                        </label>
-                    }
-                </div>
+                <select asp-for="SelectedTacGias" asp-items="ViewBag.TacGias" class="form-select" id="selTacGia" multiple="multiple"></select>
+                <div class="form-text text-muted small"><i class="fa fa-info-circle me-1"></i>Gõ để tìm nhanh theo tên, có thể chọn nhiều tác giả cùng lúc</div>
             </div>
         </div>
         <div class="col-lg-4">
@@ -110,8 +110,9 @@
                     <div id="imgPlaceholder" class="text-center text-muted py-5">
                         <i class="fa fa-image fa-3x mb-2"></i><br>Chọn ảnh bìa
                     </div>
-                    <input type="file" asp-for="AnhBiaFile" accept="image/*" class="img-input" id="imgInput" />
+                    <input type="file" asp-for="AnhBiaFile" accept="image/*" class="img-input" id="imgInput" required />
                 </div>
+                <span asp-validation-for="AnhBiaFile" class="text-danger small"></span>
                 <div class="mt-4 d-grid gap-2">
                     <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu sách</button>
                     <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
@@ -150,8 +151,45 @@
     </div>
 </div>
 
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+}
+
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <script>
+        // Ô chọn Tác giả: bật Select2 để có ô tìm kiếm + chọn nhiều tác giả cùng lúc
+        // (trước đây là 1 lưới checkbox rất dài, khó tìm khi danh sách tác giả nhiều).
+        $('#selTacGia').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            placeholder: 'Gõ tên để tìm tác giả...',
+            allowClear: true,
+            language: {
+                noResults: function () { return 'Không tìm thấy tác giả nào'; },
+                searching: function () { return 'Đang tìm...'; }
+            }
+        });
+
+        // Đồng bộ "Số lượng khả dụng" theo "Số lượng kho": mặc định bằng nhau (sách
+        // mới thì mọi cuốn đều đang sẵn có), nhưng vẫn tự sửa thấp hơn được nếu cần.
+        // Chỉ NGỪNG tự động cập nhật sau khi người dùng đã từng gõ tay vào ô khả dụng
+        // — tránh ghi đè mất giá trị họ vừa chỉnh.
+        (function () {
+            var soKho = document.getElementById('SoLuongKho');
+            var soKhaDung = document.getElementById('SoLuongKhaDung');
+            if (!soKho || !soKhaDung) return;
+            var daTuSua = false;
+            soKhaDung.addEventListener('input', function () { daTuSua = true; });
+            function dongBoSoLuong() {
+                soKhaDung.max = soKho.value || 10000;
+                if (!daTuSua) soKhaDung.value = soKho.value;
+            }
+            soKho.addEventListener('input', dongBoSoLuong);
+            dongBoSoLuong(); // set giá trị ban đầu ngay khi vừa tải trang
+        })();
+
         document.getElementById('imgInput').addEventListener('change',function(e){
             const f=e.target.files[0];if(!f)return;
             const r=new FileReader();r.onload=ev=>{

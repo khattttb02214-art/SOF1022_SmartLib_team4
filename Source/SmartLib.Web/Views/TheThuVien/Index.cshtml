@@ -1,15 +1,19 @@
 @model List<SmartLib.Web.Models.TheThuVien>
-@{ ViewData["Title"] = "Quản lý thẻ thư viện"; }
+@{
+    ViewData["Title"] = "Quản lý thẻ thư viện";
+}
 <div class="page-header-card d-flex justify-content-between align-items-center">
     <h4 class="mb-0"><i class="fa fa-id-card me-2"></i>Quản lý thẻ thư viện</h4>
     <a asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus me-1"></i>Tạo thẻ mới</a>
 </div>
-<div class="card shadow-sm mb-3"><div class="card-body py-2">
-    <form method="get" class="d-flex gap-2">
-        <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:300px" placeholder="Tìm mã thẻ, tên sinh viên..." />
-        <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
-    </form>
-</div></div>
+<div class="card shadow-sm mb-3">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:300px" placeholder="Tìm mã thẻ, tên sinh viên..." />
+            <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+        </form>
+    </div>
+</div>
 <div class="row g-3">
     @foreach (var t in Model)
     {
@@ -23,10 +27,15 @@
                     <div class="lib-card-body">
                         @if (!string.IsNullOrEmpty(t.AnhThe))
                         {
-                        { <img src="/uploads/cards/@t.AnhThe" class="lib-card-photo" alt="Ảnh thẻ" /> }
+                            {
+                                <img src="/uploads/cards/@t.AnhThe" class="lib-card-photo" alt="Ảnh thẻ" />
+                            }
                         }
                         else
-                        { <div class="lib-card-photo-placeholder"><i class="fa fa-user fa-2x"></i></div> }
+                        {
+
+                            <div class="lib-card-photo-placeholder"><i class="fa fa-user fa-2x"></i></div>
+                        }
                         <div class="lib-card-info">
                             <div class="lib-card-name">@(t.DocGia?.HoTen ?? "Chưa liên kết")</div>
                             <div class="lib-card-code"><i class="fa fa-barcode me-1"></i>@t.MaThe</div>
@@ -34,16 +43,32 @@
                                 <span>Cấp: @($"{t.NgayCap:dd/MM/yyyy}")</span>
                                 <span>HH: @($"{t.NgayHetHan:dd/MM/yyyy}")</span>
                             </div>
-                            <span class="badge @(t.TrangThai?"bg-success":"bg-danger") mt-1">@(t.TrangThai?"Còn hiệu lực":"Hết hạn")</span>
+                            <span class="badge @(t.TrangThai ? "bg-success" : "bg-danger") mt-1">@(t.TrangThai ? "Còn hiệu lực" : "Hết hạn")</span>
                         </div>
                     </div>
                 </div>
                 <div class="lib-card-actions">
                     <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-xs btn-outline-primary"><i class="fa fa-pen me-1"></i>Sửa</a>
+                    <button onclick="confirmToggle('/TheThuVien/ToggleStatus/@t.Id', @(t.TrangThai ? "true" : "false"), '@t.MaThe')" class="btn btn-xs @(t.TrangThai ? "btn-outline-secondary" : "btn-outline-success")"><i class="fa @(t.TrangThai ? "fa-lock" : "fa-lock-open") me-1"></i>@(t.TrangThai ? "Khóa" : "Mở lại")</button>
                     <button onclick="confirmDelete('/TheThuVien/Delete/@t.Id')" class="btn btn-xs btn-outline-danger"><i class="fa fa-trash me-1"></i>Xóa</button>
                 </div>
             </div>
         </div>
     }
 </div>
-@section Scripts {<script>function confirmDelete(url){Swal.fire({title:'Xóa thẻ này?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}</script>}
+@section Scripts {
+    <script>
+                          function confirmDelete(url){Swal.fire({title:'Xóa thẻ này?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
+                          function confirmToggle(url, dangHoatDong, ten){
+                              const active = dangHoatDong === true || dangHoatDong === 'true';
+                              const hanhDong = active ? 'khóa' : 'mở lại';
+                              Swal.fire({
+                                  title: active ? 'Khóa thẻ này?' : 'Mở lại thẻ này?',
+                                  html: `Bạn muốn ${hanhDong} thẻ <strong>${ten}</strong>?<br><small class="text-muted">Dữ liệu thẻ vẫn được giữ nguyên.</small>`,
+                                  icon: 'question', showCancelButton: true,
+                                  confirmButtonColor: active ? '#6c757d' : '#198754',
+                                  cancelButtonText: 'Hủy', confirmButtonText: active ? 'Khóa' : 'Mở lại'
+                              }).then(r=>{if(r.isConfirmed) window.location.href = url;});
+                          }
+    </script>
+}

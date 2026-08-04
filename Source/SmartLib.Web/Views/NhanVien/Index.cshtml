@@ -1,54 +1,77 @@
 @model List<SmartLib.Web.Models.NhanVien>
-@{ ViewData["Title"] = "Quản lý nhân viên"; }
+@{
+    ViewData["Title"] = "Quản lý nhân viên";
+}
 <div class="page-header-card d-flex justify-content-between align-items-center">
     <h4 class="mb-0"><i class="fa fa-user-tie me-2"></i>Quản lý nhân viên</h4>
     <a asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus me-1"></i>Thêm nhân viên</a>
 </div>
-<div class="card shadow-sm mb-3"><div class="card-body py-2">
-    <form method="get" class="d-flex gap-2">
-        <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:300px" placeholder="Tìm họ tên, email..." />
-        <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
-    </form>
-</div></div>
-<div class="card shadow-sm"><div class="card-body p-0">
-    <table class="table table-hover mb-0" id="nvTable">
-        <thead class="table-light">
-            <tr><th>Ảnh</th><th>Họ tên</th><th>Email</th><th>Chức vụ</th><th>SĐT</th><th>Trạng thái</th><th></th></tr>
-        </thead>
-        <tbody>
-            @foreach (var n in Model)
-            {
-                <tr>
-                    <td>
-                        @if (!string.IsNullOrEmpty(n.AnhDaiDien))
-                        {
-                        { <img src="/uploads/staff/@n.AnhDaiDien" width="40" height="40" class="rounded-circle object-fit-cover" /> }
-                        }
-                        else
-                        { <div class="avatar-initials">@n.HoTen.Substring(0,1).ToUpper()</div> }
-                    </td>
-                    <td><div class="fw-semibold">@n.HoTen</div><small class="text-muted">@n.MaNV</small></td>
-                    <td>@n.Email</td>
-                    <td><span class="badge @(n.MaChucVu=="ADMIN"?"bg-danger":n.MaChucVu=="LIB"?"bg-info text-dark":"bg-secondary")">@(n.ChucVu?.TenChucVu ?? n.MaChucVu)</span></td>
-                    <td>@n.SoDienThoai</td>
-                    <td><span class="badge @(n.TrangThai?"bg-success":"bg-secondary")">@(n.TrangThai?"Hoạt động":"Đã khóa")</span></td>
-                    <td>
-                        <div class="d-flex gap-1">
-                            <a asp-action="Edit" asp-route-id="@n.MaNV" class="btn btn-xs btn-outline-primary"><i class="fa fa-pen"></i></a>
-                            @if (n.MaNV != "NV001")
+<div class="card shadow-sm mb-3">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:300px" placeholder="Tìm họ tên, email..." />
+            <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+        </form>
+    </div>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0" id="nvTable">
+            <thead class="table-light">
+                <tr><th>Ảnh</th><th>Họ tên</th><th>Email</th><th>Chức vụ</th><th>SĐT</th><th>Trạng thái</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var n in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(n.AnhDaiDien))
                             {
-                            { <button onclick="confirmDelete('/NhanVien/Delete/@n.MaNV')" class="btn btn-xs btn-outline-danger"><i class="fa fa-trash"></i></button> }
+                                {
+                                    <img src="/uploads/staff/@n.AnhDaiDien" width="40" height="40" class="rounded-circle object-fit-cover" />
+                                }
                             }
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div></div>
+                            else
+                            {
+
+                                <div class="avatar-initials">@n.HoTen.Substring(0, 1).ToUpper()</div>
+                            }
+                        </td>
+                        <td><div class="fw-semibold">@n.HoTen</div><small class="text-muted">@n.MaNV</small></td>
+                        <td>@n.Email</td>
+                        <td><span class="badge @(n.MaChucVu == "ADMIN" ? "bg-danger" : n.MaChucVu == "LIB" ? "bg-info text-dark" : "bg-secondary")">@(n.ChucVu?.TenChucVu ?? n.MaChucVu)</span></td>
+                        <td>@n.SoDienThoai</td>
+                        <td><span class="badge @(n.TrangThai ? "bg-success" : "bg-secondary")">@(n.TrangThai ? "Hoạt động" : "Đã khóa")</span></td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a asp-action="Edit" asp-route-id="@n.MaNV" class="btn btn-xs btn-outline-primary" title="Sửa"><i class="fa fa-pen"></i></a>
+                                @if (n.MaNV != "NV001")
+                                {
+                                    <button onclick="confirmToggle('/NhanVien/ToggleStatus/@n.MaNV', @(n.TrangThai ? "true" : "false"), '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(n.HoTen))')" class="btn btn-xs @(n.TrangThai ? "btn-outline-secondary" : "btn-outline-success")" title="@(n.TrangThai ? "Khóa tài khoản" : "Kích hoạt lại")"><i class="fa @(n.TrangThai ? "fa-lock" : "fa-lock-open")"></i></button>
+                                    <button onclick="confirmDelete('/NhanVien/Delete/@n.MaNV')" class="btn btn-xs btn-outline-danger" title="Xóa"><i class="fa fa-trash"></i></button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 @section Scripts {
-<script>
-$('#nvTable').DataTable({language:{url:'//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'},pageLength:20});
-function confirmDelete(url){Swal.fire({title:'Xóa nhân viên?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
-</script>
+    <script>
+        $('#nvTable').DataTable({language:{url:'//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'},pageLength:20});
+        function confirmDelete(url){Swal.fire({title:'Xóa nhân viên?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
+        function confirmToggle(url, dangHoatDong, ten){
+            const active = dangHoatDong === true || dangHoatDong === 'true';
+            const hanhDong = active ? 'khóa' : 'kích hoạt lại';
+            Swal.fire({
+                title: active ? 'Khóa tài khoản nhân viên này?' : 'Kích hoạt lại tài khoản này?',
+                html: `Bạn muốn ${hanhDong} tài khoản <strong>${ten}</strong>?<br><small class="text-muted">Toàn bộ dữ liệu, lịch sử xử lý phiếu vẫn được giữ nguyên.</small>`,
+                icon: 'question', showCancelButton: true,
+                confirmButtonColor: active ? '#6c757d' : '#198754',
+                cancelButtonText: 'Hủy', confirmButtonText: active ? 'Khóa tài khoản' : 'Kích hoạt lại'
+            }).then(r=>{if(r.isConfirmed) window.location.href = url;});
+        }
+    </script>
 }

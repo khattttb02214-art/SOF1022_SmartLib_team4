@@ -1,0 +1,261 @@
+@{
+    ViewData["Title"] = "Đặt/Đổi mật khẩu";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --otp-indigo: #4f46e5;
+            --otp-violet: #7c3aed;
+            --otp-pink: #ec4899;
+        }
+
+        .otp-page {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .otp-card {
+            background: #fff;
+            border: 1.5px solid #e0e7ff;
+            border-radius: 28px;
+            box-shadow: 0 8px 48px rgba(79,70,229,.16);
+            width: 100%;
+            max-width: 440px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .otp-card__strip {
+            height: 6px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+        }
+
+        .otp-card__header {
+            text-align: center;
+            padding: 36px 32px 20px;
+            position: relative;
+        }
+
+        .otp-shield-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
+            border: 2px solid #c4b5fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #7c3aed;
+            margin: 0 auto 18px;
+        }
+
+        .otp-card__title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e1b4b;
+            margin: 0 0 8px;
+        }
+
+        .otp-card__sub {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin: 0;
+            max-width: 320px;
+            margin-inline: auto;
+        }
+
+        .otp-alert {
+            margin: 0 28px 4px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+            .otp-alert i {
+                flex-shrink: 0;
+                margin-top: 1px;
+            }
+
+        .otp-alert--info {
+            background: #ede9fe;
+            border: 1.5px solid #c4b5fd;
+            color: #4338ca;
+        }
+
+        .otp-alert--error {
+            background: #fee2e2;
+            border: 1.5px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .otp-form-body {
+            padding: 24px 32px 32px;
+        }
+
+        .otp-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #4338ca;
+            margin-bottom: 10px;
+            letter-spacing: .4px;
+            text-align: center;
+        }
+
+        .otp-input-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .otp-input-field {
+            width: 100%;
+            border: 2px solid #e0e7ff;
+            border-radius: 16px;
+            padding: 16px 20px;
+            font-size: 26px;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            letter-spacing: 10px;
+            color: #1e1b4b;
+            background: #faf9ff;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+            .otp-input-field:focus {
+                border-color: #7c3aed;
+                box-shadow: 0 0 0 4px rgba(124,58,237,.12);
+                background: #fff;
+            }
+
+        .pw-input-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .pw-input-field {
+            width: 100%;
+            border: 1.5px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #1e1b4b;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color .2s;
+        }
+
+            .pw-input-field:focus {
+                border-color: #7c3aed;
+            }
+
+        .pw-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 6px;
+        }
+
+        .otp-submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(79,70,229,.35);
+            margin-bottom: 14px;
+        }
+
+        .otp-resend-link {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            border: 1.5px solid #e0e7ff;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all .15s;
+            background: #faf9ff;
+        }
+
+            .otp-resend-link:hover {
+                border-color: #c4b5fd;
+                color: #7c3aed;
+                background: #f3f0ff;
+            }
+    </style>
+}
+
+<div class="otp-page">
+    <div class="otp-card">
+        <div class="otp-card__strip"></div>
+
+        <div class="otp-card__header">
+            <div class="otp-shield-icon"><i class="fa fa-key"></i></div>
+            <h3 class="otp-card__title">@(ViewBag.DaDatMatKhau == true ? "Đổi mật khẩu" : "Đặt mật khẩu đăng nhập")</h3>
+            <p class="otp-card__sub">Nhập mã xác nhận vừa gửi tới email của bạn và mật khẩu mới.</p>
+        </div>
+
+        @if (TempData["success"] != null)
+        {
+            <div class="otp-alert otp-alert--info"><i class="fa fa-circle-info"></i><span>@TempData["success"]</span></div>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <div class="otp-alert otp-alert--error"><i class="fa fa-circle-xmark"></i><span>@ViewBag.Error</span></div>
+        }
+
+        <div class="otp-form-body">
+            <form method="post" asp-action="DoiMatKhau">
+                @Html.AntiForgeryToken()
+
+                <label class="otp-label"><i class="fa fa-hashtag me-1"></i>MÃ OTP (6 CHỮ SỐ)</label>
+                <div class="otp-input-wrap">
+                    <input type="text" name="otp" class="otp-input-field" maxlength="6" placeholder="——————"
+                           required autofocus autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]{6}" />
+                </div>
+
+                <label class="pw-label">Mật khẩu mới</label>
+                <div class="pw-input-wrap">
+                    <input type="password" name="matKhauMoi" class="pw-input-field" placeholder="Ít nhất 6 ký tự" required minlength="6" />
+                </div>
+
+                <label class="pw-label">Xác nhận mật khẩu mới</label>
+                <div class="pw-input-wrap">
+                    <input type="password" name="xacNhanMatKhau" class="pw-input-field" placeholder="Nhập lại mật khẩu mới" required minlength="6" />
+                </div>
+
+                <button type="submit" class="otp-submit-btn">
+                    <i class="fa fa-check-circle"></i>
+                    @(ViewBag.DaDatMatKhau == true ? "Đổi mật khẩu" : "Đặt mật khẩu")
+                </button>
+
+                <a asp-action="EditProfile" class="otp-resend-link">
+                    <i class="fa fa-arrow-left me-1"></i>Quay lại hồ sơ (gửi lại mã nếu cần)
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

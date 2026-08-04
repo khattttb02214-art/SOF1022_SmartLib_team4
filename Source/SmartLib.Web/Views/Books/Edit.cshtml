@@ -22,16 +22,17 @@
                         <span asp-validation-for="TenSach" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">ISBN</label>
-                        <input asp-for="ISBN" class="form-control" />
+                        <label class="form-label req">ISBN</label>
+                        <input asp-for="ISBN" class="form-control" required />
+                        <span asp-validation-for="ISBN" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Barcode</label>
-                        <input asp-for="Barcode" class="form-control" />
+                        <input asp-for="Barcode" class="form-control" placeholder="Để trống = lấy theo Mã sách" />
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Năm xuất bản</label>
-                        <input asp-for="NamXuatBan" type="number" class="form-control" />
+                        <label class="form-label req">Năm xuất bản</label>
+                        <input asp-for="NamXuatBan" type="number" class="form-control" required />
                         <span asp-validation-for="NamXuatBan" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
@@ -61,39 +62,35 @@
                         <span asp-validation-for="MaKe" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Ngôn ngữ</label>
-                        <input asp-for="NgonNgu" class="form-control" />
+                        <label class="form-label req">Ngôn ngữ</label>
+                        <input asp-for="NgonNgu" class="form-control" required />
+                        <span asp-validation-for="NgonNgu" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Số trang</label>
-                        <input asp-for="SoTrang" type="number" class="form-control" />
+                        <label class="form-label req">Số trang</label>
+                        <input asp-for="SoTrang" type="number" class="form-control" required />
+                        <span asp-validation-for="SoTrang" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Số lượng kho</label>
-                        <input asp-for="SoLuongKho" type="number" class="form-control" min="0" />
+                        <input asp-for="SoLuongKho" type="number" class="form-control bg-light" readonly title="Vào mục Kho để nhập thêm/bớt số lượng" />
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Số lượng khả dụng</label>
-                        <input asp-for="SoLuongKhaDung" type="number" class="form-control" min="0" />
+                        <input asp-for="SoLuongKhaDung" type="number" class="form-control bg-light" readonly />
+                        <div class="form-text text-muted small"><i class="fa fa-info-circle me-1"></i>Vào mục <strong>Kho</strong> để nhập thêm hoặc xóa cuốn, số lượng ở đây sẽ tự cập nhật theo</div>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Mô tả</label>
-                        <textarea asp-for="MoTa" class="form-control" rows="4"></textarea>
+                        <textarea asp-for="MoTa" class="form-control" rows="4" placeholder="Nội dung tóm tắt... (không bắt buộc)"></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger small"></span>
                     </div>
                 </div>
             </div>
             <div class="form-card mt-3">
                 <h6 class="form-card-title">Tác giả</h6>
-                <div class="tacgia-checkboxes">
-                    @foreach (var tg in (List<SmartLib.Web.Models.TacGia>)ViewBag.TacGias)
-                    {
-                        <label class="tacgia-chip">
-                            <input type="checkbox" name="SelectedTacGias" value="@tg.MaTacGia"
-                            @(Model.SelectedTacGias.Contains(tg.MaTacGia) ? "checked" : "") />
-                            <span>@tg.TenTacGia</span>
-                        </label>
-                    }
-                </div>
+                <select asp-for="SelectedTacGias" asp-items="ViewBag.TacGias" class="form-select" id="selTacGia" multiple="multiple"></select>
+                <div class="form-text text-muted small"><i class="fa fa-info-circle me-1"></i>Gõ để tìm nhanh theo tên, có thể chọn nhiều tác giả cùng lúc</div>
             </div>
         </div>
         <div class="col-lg-4">
@@ -152,8 +149,27 @@
     </div>
 </div>
 
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+}
+
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <script>
+        // Ô chọn Tác giả: bật Select2 để có ô tìm kiếm + chọn nhiều tác giả cùng lúc
+        // (trước đây là 1 lưới checkbox rất dài, khó tìm khi danh sách tác giả nhiều).
+        $('#selTacGia').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            placeholder: 'Gõ tên để tìm tác giả...',
+            allowClear: true,
+            language: {
+                noResults: function () { return 'Không tìm thấy tác giả nào'; },
+                searching: function () { return 'Đang tìm...'; }
+            }
+        });
+
         document.getElementById('imgInput').addEventListener('change', function(e) {
             const f = e.target.files[0]; if (!f) return;
             const r = new FileReader();

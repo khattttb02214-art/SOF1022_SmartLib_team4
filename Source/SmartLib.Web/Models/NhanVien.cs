@@ -43,6 +43,17 @@ public class NhanVien
     // Google OAuth ID — dùng để liên kết tài khoản Google
     [StringLength(100)]
     public string? GoogleId { get; set; }
+
+    // Đã từng tự đặt mật khẩu thật hay chưa. Tài khoản đăng ký thường = true ngay
+    // từ đầu; tài khoản tạo qua Google = false (đang giữ mật khẩu ngẫu nhiên không
+    // ai biết) cho tới khi tự đặt mật khẩu lần đầu qua chức năng "Đặt mật khẩu".
+    public bool MatKhauTuDat { get; set; } = true;
+
+    // OTP dùng riêng cho luồng Quên mật khẩu / Đặt-đổi mật khẩu — tách biệt hẳn với
+    // OtpCode (dùng cho đổi thông tin/email) để 2 luồng không đụng nhau.
+    [StringLength(6)]
+    public string? OtpResetMatKhau { get; set; }
+    public DateTime? OtpResetMatKhauHetHan { get; set; }
     [ForeignKey("MaChucVu")]
     public virtual ChucVu? ChucVu { get; set; }
     public virtual ICollection<MuonTra> MuonTras { get; set; } = new List<MuonTra>();

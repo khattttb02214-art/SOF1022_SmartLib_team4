@@ -8,31 +8,6 @@ using SmartLib.Web.Models;
 
 namespace SmartLib.Web.Filters;
 
-/// <summary>
-/// Filter TOÀN CỤC thực thi ma trận phân quyền chi tiết (bảng PhanQuyenNhanVien –
-/// 4 quyền Xem/Thêm/Sửa/Xóa theo từng nhân viên, theo từng chức năng).
-///
-/// Trước đây màn hình Phân quyền (PhanQuyenController) chỉ LƯU dữ liệu — chưa có
-/// chỗ nào thực sự KIỂM TRA nó. Filter này là nơi kiểm tra, chạy trước MỌI action
-/// của MỌI controller.
-///
-/// Cách hoạt động — dựa vào cột ChucNang.Controller (tên Controller trong code):
-///   1) Nhân viên có role ADMIN (kể cả được cấp cờ LaAdmin) → luôn được phép, bỏ qua.
-///   2) Không phải phiên đăng nhập của NHÂN VIÊN (VD: độc giả/sinh viên) → bỏ qua,
-///      vì ma trận này chỉ áp dụng cho nhân viên.
-///   3) Action/Controller gắn [BoQuaPhanQuyen] → luôn được phép.
-///   4) Không tìm thấy ChucNang nào khớp Controller hiện tại → coi như module đó
-///      chưa được đưa vào phân quyền, KHÔNG giới hạn (an toàn – không khoá nhầm
-///      các trang như Home/Auth/Dashboard/Student/Wishlist).
-///   5) Có ChucNang khớp → xác định loại quyền cần thiết (Xem/Thêm/Sửa/Xóa) rồi
-///      đối chiếu với dòng PhanQuyenNhanVien của nhân viên đó. Thiếu quyền → chặn
-///      ngay (không cho action chạy), báo lỗi qua TempData (hiện toastr) và quay
-///      lại trang trước đó — giống hệt cách các lỗi khác trong hệ thống đang hiển thị.
-///
-/// Vì đọc thẳng từ DB mỗi request (không đọc từ Claims/cookie), khi ADMIN vừa bấm
-/// Lưu ở màn Phân quyền thì nhân viên bị ảnh hưởng có hiệu lực NGAY LẬP TỨC ở
-/// request kế tiếp — không cần đăng xuất/đăng nhập lại.
-/// </summary>
 public class PhanQuyenActionFilter : IAsyncActionFilter
 {
     private readonly SmartLibDbContext _db;
@@ -51,6 +26,9 @@ public class PhanQuyenActionFilter : IAsyncActionFilter
 
         if (user.Identity?.IsAuthenticated != true
             || user.IsInRole("ADMIN")
+            || user.IsInRole("STU")   // Sinh viên cũng là bản ghi NhanVien (nên cũng có claim MaNV) nhưng
+                                      // ma trận PhanQuyenNhanVien chỉ dành cho nhân viên (ADMIN/LIB) — sinh
+                                      // viên KHÔNG BAO GIỜ được đối chiếu với ma trận này.
             || string.IsNullOrEmpty(controllerName)
             || ControllerLuonMienTru.Contains(controllerName)
             || context.ActionDescriptor.EndpointMetadata.OfType<BoQuaPhanQuyenAttribute>().Any())
@@ -62,7 +40,7 @@ public class PhanQuyenActionFilter : IAsyncActionFilter
         var maNV = user.FindFirst("MaNV")?.Value;
         if (string.IsNullOrEmpty(maNV))
         {
-            // Không phải phiên nhân viên (VD: độc giả/sinh viên) → ma trận này không áp dụng.
+            // Không phải phiên nhân viên/sinh viên có MaNV hợp lệ → bỏ qua an toàn.
             await next();
             return;
         }

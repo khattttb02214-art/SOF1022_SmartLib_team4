@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +58,21 @@ public class BorrowController : Controller
     }
 
     // ── CREATE ────────────────────────────────────────────────────────────────
-    public async Task<IActionResult> Create()
+
+    public async Task<IActionResult> Details(string id)
+    {
+        var b = await _db.MuonTras
+            .Include(x => x.DocGia)
+            .Include(x => x.NhanVien)
+            .Include(x => x.ChiTietMuonTras)
+                .ThenInclude(x => x.Sach)
+            .Include(x => x.ChiTietMuonTras)
+                .ThenInclude(x => x.CuonSach)
+            .FirstOrDefaultAsync(x => x.MaPhieu == id);
+        
+        if (b == null) return NotFound();
+        return View(b);
+    }    public async Task<IActionResult> Create()
     {
         await LoadForm();
         return View(new BorrowViewModel());
@@ -74,6 +88,55 @@ public class BorrowController : Controller
             ModelState.AddModelError("SelectedBooks", "Vui lòng chọn ít nhất 1 cuốn sách");
             await LoadForm();
             return View(model);
+        }
+
+        // ── Độc giả này đã có phiếu "Đang Mượn" tạo TRONG NGÀY HÔM NAY chưa? ──
+        // Có thì gộp các cuốn vừa chọn vào phiếu đó, KHÔNG tách thành phiếu riêng.
+        var phieuHomNay = await _db.MuonTras
+            .Include(x => x.ChiTietMuonTras)
+            .Where(x => x.MaDocGia == model.MaDocGia
+                     && x.TrangThai == "Đang Mượn"
+                     && x.NgayMuon.Date == DateTime.Today)
+            .OrderByDescending(x => x.NgayMuon)
+            .FirstOrDefaultAsync();
+
+        if (phieuHomNay != null)
+        {
+            var daCoTrongPhieu = phieuHomNay.ChiTietMuonTras.Select(c => c.MaCuonSach).ToHashSet();
+            var affectedSachGop = new HashSet<string>();
+            int themVao = 0;
+
+            foreach (var maCuon in model.SelectedBooks)
+            {
+                if (daCoTrongPhieu.Contains(maCuon)) continue; // cuốn này đã có sẵn trong phiếu, bỏ qua tránh trùng
+                var cuon = await _db.CuonSaches.FirstOrDefaultAsync(c => c.MaCuonSach == maCuon);
+                if (cuon == null || cuon.TrangThai != "Có Sẵn") continue;
+                cuon.TrangThai = "Đang Mượn";
+                if (!string.IsNullOrEmpty(cuon.MaSach)) affectedSachGop.Add(cuon.MaSach);
+                _db.ChiTietMuonTras.Add(new ChiTietMuonTra
+                {
+                    MaPhieu = phieuHomNay.MaPhieu,
+                    MaCuonSach = cuon.MaCuonSach,
+                    MaSach = cuon.MaSach,
+                    SoLuong = 1,
+                    TienPhat = 0
+                });
+                themVao++;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.GhiChu))
+                phieuHomNay.GhiChu = string.IsNullOrWhiteSpace(phieuHomNay.GhiChu)
+                    ? model.GhiChu
+                    : $"{phieuHomNay.GhiChu}; {model.GhiChu}";
+
+            await _db.SaveChangesAsync();
+            foreach (var ma in affectedSachGop) await SyncSoLuongKhaDung(ma);
+            await _db.SaveChangesAsync();
+
+            TempData["success"] = themVao > 0
+                ? $"Độc giả đã có phiếu mượn hôm nay ({phieuHomNay.MaPhieu}) — đã gộp thêm {themVao} cuốn vào phiếu đó thay vì tạo phiếu mới."
+                : $"Độc giả đã có phiếu mượn hôm nay ({phieuHomNay.MaPhieu}). Các cuốn vừa chọn đã có sẵn trong phiếu này rồi.";
+            return RedirectToAction(nameof(Edit), new { id = phieuHomNay.MaPhieu });
         }
 
         // Auto-gen mã phiếu

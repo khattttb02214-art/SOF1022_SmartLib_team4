@@ -1,0 +1,1072 @@
+2026-07-16 18:51:50.568 +07:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-07-16 18:51:51.968 +07:00 [INF] Now listening on: https://localhost:7186
+2026-07-16 18:51:51.974 +07:00 [INF] Now listening on: http://localhost:5149
+2026-07-16 18:51:52.123 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-07-16 18:51:52.126 +07:00 [INF] Hosting environment: Development
+2026-07-16 18:51:52.128 +07:00 [INF] Content root path: D:\file thư viện soff 1022\SmartLib.Web
+2026-07-16 18:51:55.190 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/ - null null
+2026-07-16 18:51:56.725 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-07-16 18:52:00.224 +07:00 [INF] Route matched with {action = "Index", controller = "Home", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller SmartLib.Web.Controllers.HomeController (SmartLib.Web).
+2026-07-16 18:52:03.260 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-07-16 18:52:03.264 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-07-16 18:52:08.721 +07:00 [INF] Executed DbCommand (446ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+2026-07-16 18:52:09.026 +07:00 [INF] Executed DbCommand (65ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [TheLoai] AS [t]
+2026-07-16 18:52:09.122 +07:00 [INF] Executed DbCommand (32ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[SoLuongKhaDung] > 0 AND [s].[TrangThai] = CAST(1 AS bit)
+2026-07-16 18:52:10.096 +07:00 [INF] Executed DbCommand (487ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[TenSach], CASE
+    WHEN [t].[MaTheLoai] IS NOT NULL THEN [t].[TenTheLoai]
+    ELSE N'Chưa phân loại'
+END AS [TenTheLoai], [s0].[AnhBia], [s0].[SoLuongKhaDung]
+FROM (
+    SELECT TOP(@__p_0) [s].[MaSach], [s].[AnhBia], [s].[MaTheLoai], [s].[NgayTao], [s].[SoLuongKhaDung], [s].[TenSach]
+    FROM [Sach] AS [s]
+    WHERE [s].[TrangThai] = CAST(1 AS bit)
+    ORDER BY [s].[NgayTao] DESC
+) AS [s0]
+LEFT JOIN [TheLoai] AS [t] ON [s0].[MaTheLoai] = [t].[MaTheLoai]
+ORDER BY [s0].[NgayTao] DESC
+2026-07-16 18:52:10.235 +07:00 [INF] Executed DbCommand (49ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[TenTheLoai], (
+    SELECT COUNT(*)
+    FROM [Sach] AS [s]
+    WHERE [s].[MaTheLoai] = [t].[MaTheLoai]) AS [SoLuongSach]
+FROM [TheLoai] AS [t]
+2026-07-16 18:52:10.337 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:52:12.820 +07:00 [INF] Executed ViewResult - view Index executed in 2494.34ms.
+2026-07-16 18:52:12.845 +07:00 [INF] Executed action SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web) in 12611.2941ms
+2026-07-16 18:52:12.859 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-07-16 18:52:12.963 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/css/site.css?v=Km5GxfgPc1iaC_CX1jjGdnlyB7xtAkcNBZzrC3_mLJU - null null
+2026-07-16 18:52:12.993 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/ - 200 null text/html; charset=utf-8 17844.6374ms
+2026-07-16 18:52:13.099 +07:00 [INF] Sending file. Request path: '/css/site.css'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\css\site.css'
+2026-07-16 18:52:13.109 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/css/site.css?v=Km5GxfgPc1iaC_CX1jjGdnlyB7xtAkcNBZzrC3_mLJU - 200 41873 text/css 146.5246ms
+2026-07-16 18:52:14.581 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg - null null
+2026-07-16 18:52:14.585 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg - null null
+2026-07-16 18:52:14.587 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg - null null
+2026-07-16 18:52:14.655 +07:00 [INF] Sending file. Request path: '/uploads/books/d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg'
+2026-07-16 18:52:14.663 +07:00 [INF] Sending file. Request path: '/uploads/books/84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg'
+2026-07-16 18:52:14.669 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg - 200 24938 image/jpeg 87.4697ms
+2026-07-16 18:52:14.678 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg - 200 20925 image/jpeg 92.2423ms
+2026-07-16 18:52:14.698 +07:00 [INF] Sending file. Request path: '/uploads/books/afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg'
+2026-07-16 18:52:14.761 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg - 200 10179 image/jpeg 173.3492ms
+2026-07-16 18:52:16.748 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/assets/js/home.js - null null
+2026-07-16 18:52:16.777 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/assets/js/home.js - 404 0 null 28.9317ms
+2026-07-16 18:52:16.788 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7186/assets/js/home.js, Response status code: 404
+2026-07-16 18:52:16.798 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:52:16.798 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - null null
+2026-07-16 18:52:16.817 +07:00 [INF] Sending file. Request path: '/js/site.js'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\js\site.js'
+2026-07-16 18:52:16.821 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 23.2135ms
+2026-07-16 18:52:16.821 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - 200 8847 text/javascript 23.3252ms
+2026-07-16 18:52:16.826 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:52:17.134 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 308.2131ms
+2026-07-16 18:52:17.309 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:52:17.341 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:17.387 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:17.394 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 84.9359ms
+2026-07-16 18:52:17.454 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=PtshoQ97wCcKOfkifoP-UQ - null null
+2026-07-16 18:52:17.471 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:52:21.154 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Auth/Login - null null
+2026-07-16 18:52:21.177 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-16 18:52:21.204 +07:00 [INF] Route matched with {action = "Login", controller = "Auth", area = ""}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Login() on controller SmartLib.Web.Controllers.AuthController (SmartLib.Web).
+2026-07-16 18:52:21.242 +07:00 [INF] Executing ViewResult, running view Login.
+2026-07-16 18:52:21.393 +07:00 [INF] Executed ViewResult - view Login executed in 156.1791ms.
+2026-07-16 18:52:21.399 +07:00 [INF] Executed action SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web) in 189.5161ms
+2026-07-16 18:52:21.403 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-16 18:52:21.408 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Auth/Login - 200 null text/html; charset=utf-8 253.545ms
+2026-07-16 18:52:21.437 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:52:21.437 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:52:21.494 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 56.5051ms
+2026-07-16 18:52:21.543 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 105.2692ms
+2026-07-16 18:52:21.586 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:52:21.610 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:52:21.636 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=PtshoQ97wCcKOfkifoP-UQ - 200 null null 4182.5464ms
+2026-07-16 18:52:21.640 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:21.656 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:21.662 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 76.3052ms
+2026-07-16 18:52:21.671 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=dCISQ48D1Fwacwy2kcRPuA - null null
+2026-07-16 18:52:21.687 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:52:33.449 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/Auth/Login - application/x-www-form-urlencoded 222
+2026-07-16 18:52:33.473 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-16 18:52:33.534 +07:00 [INF] Route matched with {action = "Login", controller = "Auth", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(SmartLib.Web.ViewModels.LoginViewModel) on controller SmartLib.Web.Controllers.AuthController (SmartLib.Web).
+2026-07-16 18:52:34.123 +07:00 [INF] Executed DbCommand (113ms) [Parameters=[@__model_Email_0='?' (Size = 100)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [n].[MaNV], [n].[AnhDaiDien], [n].[DiaChi], [n].[Email], [n].[EmailVerified], [n].[GoogleId], [n].[HoTen], [n].[LaAdmin], [n].[MaChucVu], [n].[MaDocGia], [n].[MatKhau], [n].[NgayCapNhat], [n].[NgayTao], [n].[OtpCode], [n].[OtpExpiry], [n].[PendingEmail], [n].[SoDienThoai], [n].[TrangThai], [c].[MaChucVu], [c].[TenChucVu]
+FROM [NhanVien] AS [n]
+LEFT JOIN [ChucVu] AS [c] ON [n].[MaChucVu] = [c].[MaChucVu]
+WHERE [n].[Email] = @__model_Email_0
+2026-07-16 18:52:35.491 +07:00 [INF] AuthenticationScheme: Cookies signed in.
+2026-07-16 18:52:36.122 +07:00 [INF] Executed DbCommand (71ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (Size = 10), @p2='?' (Size = 4000), @p3='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [NhatKyHoatDong] ([HanhDong], [MaNV], [MoTa], [ThoiGian])
+OUTPUT INSERTED.[MaLog]
+VALUES (@p0, @p1, @p2, @p3);
+2026-07-16 18:52:36.219 +07:00 [INF] Executing RedirectResult, redirecting to /Staff.
+2026-07-16 18:52:36.225 +07:00 [INF] Executed action SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web) in 2685.7138ms
+2026-07-16 18:52:36.227 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-16 18:52:36.230 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/Auth/Login - 302 null null 2780.3366ms
+2026-07-16 18:52:36.240 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Staff - null null
+2026-07-16 18:52:36.276 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.StaffController.Index (SmartLib.Web)'
+2026-07-16 18:52:36.293 +07:00 [INF] Route matched with {action = "Index", controller = "Staff", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller SmartLib.Web.Controllers.StaffController (SmartLib.Web).
+2026-07-16 18:52:36.638 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+2026-07-16 18:52:36.668 +07:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+2026-07-16 18:52:36.709 +07:00 [INF] Executed DbCommand (19ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [NhanVien] AS [n]
+2026-07-16 18:52:36.749 +07:00 [INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn'
+2026-07-16 18:52:36.831 +07:00 [INF] Executed DbCommand (19ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:52:36.879 +07:00 [INF] Executed DbCommand (24ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[TenSach], CASE
+    WHEN [t].[MaTheLoai] IS NOT NULL THEN [t].[TenTheLoai]
+    ELSE N'Chưa phân loại'
+END AS [TenTheLoai], [s0].[AnhBia], [s0].[SoLuongKhaDung]
+FROM (
+    SELECT TOP(@__p_0) [s].[MaSach], [s].[AnhBia], [s].[MaTheLoai], [s].[NgayTao], [s].[SoLuongKhaDung], [s].[TenSach]
+    FROM [Sach] AS [s]
+    WHERE [s].[TrangThai] = CAST(1 AS bit)
+    ORDER BY [s].[NgayTao] DESC
+) AS [s0]
+LEFT JOIN [TheLoai] AS [t] ON [s0].[MaTheLoai] = [t].[MaTheLoai]
+ORDER BY [s0].[NgayTao] DESC
+2026-07-16 18:52:36.921 +07:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[TenTheLoai], (
+    SELECT COUNT(*)
+    FROM [Sach] AS [s]
+    WHERE [s].[MaTheLoai] = [t].[MaTheLoai]) AS [SoLuongSach]
+FROM [TheLoai] AS [t]
+2026-07-16 18:52:36.975 +07:00 [INF] Executed DbCommand (22ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [m0].[MaPhieu], CASE
+    WHEN [d].[MaDocGia] IS NOT NULL THEN [d].[HoTen]
+    ELSE N'—'
+END AS [TenDocGia], [m0].[NgayMuon], [m0].[NgayHenTra], [m0].[TrangThai]
+FROM (
+    SELECT TOP(@__p_0) [m].[MaPhieu], [m].[MaDocGia], [m].[NgayHenTra], [m].[NgayMuon], [m].[TrangThai]
+    FROM [MuonTra] AS [m]
+    ORDER BY [m].[NgayMuon] DESC
+) AS [m0]
+LEFT JOIN [DocGia] AS [d] ON [m0].[MaDocGia] = [d].[MaDocGia]
+ORDER BY [m0].[NgayMuon] DESC
+2026-07-16 18:52:36.984 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:52:37.107 +07:00 [INF] Executed ViewResult - view Index executed in 125.3384ms.
+2026-07-16 18:52:37.110 +07:00 [INF] Executed action SmartLib.Web.Controllers.StaffController.Index (SmartLib.Web) in 813.4125ms
+2026-07-16 18:52:37.112 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.StaffController.Index (SmartLib.Web)'
+2026-07-16 18:52:37.115 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Staff - 200 null text/html; charset=utf-8 875.6885ms
+2026-07-16 18:52:37.135 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:52:37.135 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:52:37.137 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:52:37.146 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 10.2083ms
+2026-07-16 18:52:37.149 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=dCISQ48D1Fwacwy2kcRPuA - 200 null null 15478.3654ms
+2026-07-16 18:52:37.151 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 15.7018ms
+2026-07-16 18:52:37.221 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:52:37.223 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:52:37.229 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:37.235 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:37.235 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:37.244 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 22.9806ms
+2026-07-16 18:52:37.258 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:52:37.297 +07:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:52:37.323 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=uHgnMEx4Yrz8oaEicpec9A - null null
+2026-07-16 18:52:37.329 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:52:37.331 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:52:37.351 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:52:37.376 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 113.5018ms
+2026-07-16 18:52:37.379 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:37.382 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 159.5001ms
+2026-07-16 18:52:41.420 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Books - null null
+2026-07-16 18:52:41.436 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web)'
+2026-07-16 18:52:41.462 +07:00 [INF] Route matched with {action = "Index", controller = "Books", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String) on controller SmartLib.Web.Controllers.BooksController (SmartLib.Web).
+2026-07-16 18:52:41.507 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai]
+FROM [TheLoai] AS [t]
+2026-07-16 18:52:41.648 +07:00 [INF] Executed DbCommand (37ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [Sach] AS [s]
+LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+LEFT JOIN [NhaXuatBan] AS [n] ON [s].[MaNXB] = [n].[MaNXB]
+ORDER BY [s].[NgayTao] DESC
+2026-07-16 18:52:41.898 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:52:41.987 +07:00 [INF] Executed ViewResult - view Index executed in 91.7752ms.
+2026-07-16 18:52:41.990 +07:00 [INF] Executed action SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web) in 524.7193ms
+2026-07-16 18:52:41.994 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web)'
+2026-07-16 18:52:41.995 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:52:41.997 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Books - 200 null text/html; charset=utf-8 576.2996ms
+2026-07-16 18:52:41.998 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=uHgnMEx4Yrz8oaEicpec9A - 200 null null 4675.0798ms
+2026-07-16 18:52:42.001 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/25357d41-b856-443a-892b-2a6e2b3485a0.jpg - null null
+2026-07-16 18:52:42.001 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg - null null
+2026-07-16 18:52:42.019 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/517d8d64-d16a-4281-9932-dc7776bebfde.jpg - null null
+2026-07-16 18:52:42.012 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg - null null
+2026-07-16 18:52:42.002 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:52:42.047 +07:00 [INF] Sending file. Request path: '/uploads/books/25357d41-b856-443a-892b-2a6e2b3485a0.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\25357d41-b856-443a-892b-2a6e2b3485a0.jpg'
+2026-07-16 18:52:42.012 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg - null null
+2026-07-16 18:52:42.052 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/25357d41-b856-443a-892b-2a6e2b3485a0.jpg - 200 16261 image/jpeg 51.318ms
+2026-07-16 18:52:42.060 +07:00 [INF] Sending file. Request path: '/uploads/books/517d8d64-d16a-4281-9932-dc7776bebfde.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\517d8d64-d16a-4281-9932-dc7776bebfde.jpg'
+2026-07-16 18:52:42.055 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:52:42.012 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg - null null
+2026-07-16 18:52:42.012 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg - null null
+2026-07-16 18:52:42.056 +07:00 [INF] Sending file. Request path: '/uploads/books/e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg'
+2026-07-16 18:52:42.049 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 47.2017ms
+2026-07-16 18:52:42.067 +07:00 [INF] Sending file. Request path: '/uploads/books/a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg'
+2026-07-16 18:52:42.076 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/517d8d64-d16a-4281-9932-dc7776bebfde.jpg - 200 11235 image/jpeg 58.2204ms
+2026-07-16 18:52:42.084 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:42.086 +07:00 [INF] Sending file. Request path: '/uploads/books/48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg'
+2026-07-16 18:52:42.100 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg - 200 10514 image/jpeg 98.768ms
+2026-07-16 18:52:42.105 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/f5869f56-72e5-424e-a4ee-75849c2d9709.jpg - null null
+2026-07-16 18:52:42.113 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg - 200 9364 image/jpeg 100.2684ms
+2026-07-16 18:52:42.119 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/b7aedacc-9b62-4864-be75-2237fb244850.jpg - null null
+2026-07-16 18:52:42.124 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:42.125 +07:00 [INF] Sending file. Request path: '/uploads/books/86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg'
+2026-07-16 18:52:42.127 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg - 200 13307 image/jpeg 114.4357ms
+2026-07-16 18:52:42.133 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg - null null
+2026-07-16 18:52:42.133 +07:00 [INF] Sending file. Request path: '/uploads/books/17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg'
+2026-07-16 18:52:42.159 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 104.1888ms
+2026-07-16 18:52:42.162 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg - 200 11542 image/jpeg 150.0406ms
+2026-07-16 18:52:42.162 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/0514533f-6a90-4795-b654-46642d70f1d6.jpg - null null
+2026-07-16 18:52:42.162 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg - null null
+2026-07-16 18:52:42.162 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/a332bc37-192b-4467-8981-76cd9be3a5d9.jpg - null null
+2026-07-16 18:52:42.166 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg - null null
+2026-07-16 18:52:42.167 +07:00 [INF] Sending file. Request path: '/uploads/books/f5869f56-72e5-424e-a4ee-75849c2d9709.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\f5869f56-72e5-424e-a4ee-75849c2d9709.jpg'
+2026-07-16 18:52:42.182 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg - 200 11205 image/jpeg 169.7569ms
+2026-07-16 18:52:42.183 +07:00 [INF] Sending file. Request path: '/uploads/books/b7aedacc-9b62-4864-be75-2237fb244850.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\b7aedacc-9b62-4864-be75-2237fb244850.jpg'
+2026-07-16 18:52:42.186 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5023937a-5841-4f58-9798-f479725fd025.jpeg - null null
+2026-07-16 18:52:42.216 +07:00 [INF] Sending file. Request path: '/uploads/books/beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg'
+2026-07-16 18:52:42.238 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:52:42.253 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/f5869f56-72e5-424e-a4ee-75849c2d9709.jpg - 200 10617 image/jpeg 148.7352ms
+2026-07-16 18:52:42.264 +07:00 [INF] Sending file. Request path: '/uploads/books/a332bc37-192b-4467-8981-76cd9be3a5d9.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\a332bc37-192b-4467-8981-76cd9be3a5d9.jpg'
+2026-07-16 18:52:42.270 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/b7aedacc-9b62-4864-be75-2237fb244850.jpg - 200 15506 image/jpeg 151.5313ms
+2026-07-16 18:52:42.287 +07:00 [INF] Sending file. Request path: '/uploads/books/0514533f-6a90-4795-b654-46642d70f1d6.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\0514533f-6a90-4795-b654-46642d70f1d6.jpg'
+2026-07-16 18:52:42.287 +07:00 [INF] Sending file. Request path: '/uploads/books/4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg'
+2026-07-16 18:52:42.289 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg - 200 15874 image/jpeg 155.8282ms
+2026-07-16 18:52:42.305 +07:00 [INF] Sending file. Request path: '/uploads/books/053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg'
+2026-07-16 18:52:42.311 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:42.324 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/a332bc37-192b-4467-8981-76cd9be3a5d9.jpg - 200 71358 image/jpeg 161.4593ms
+2026-07-16 18:52:42.326 +07:00 [INF] Sending file. Request path: '/uploads/books/5023937a-5841-4f58-9798-f479725fd025.jpeg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5023937a-5841-4f58-9798-f479725fd025.jpeg'
+2026-07-16 18:52:42.330 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg - null null
+2026-07-16 18:52:42.336 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/0514533f-6a90-4795-b654-46642d70f1d6.jpg - 200 481661 image/jpeg 173.6642ms
+2026-07-16 18:52:42.342 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg - 200 387722 image/jpeg 179.5451ms
+2026-07-16 18:52:42.345 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg - null null
+2026-07-16 18:52:42.352 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg - null null
+2026-07-16 18:52:42.355 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg - 200 265381 image/jpeg 188.5876ms
+2026-07-16 18:52:42.360 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:52:42.367 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg - null null
+2026-07-16 18:52:42.379 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5023937a-5841-4f58-9798-f479725fd025.jpeg - 200 238337 image/jpeg 192.7721ms
+2026-07-16 18:52:42.407 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg - null null
+2026-07-16 18:52:42.448 +07:00 [INF] Sending file. Request path: '/uploads/books/d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg'
+2026-07-16 18:52:42.486 +07:00 [INF] Sending file. Request path: '/uploads/books/6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg'
+2026-07-16 18:52:42.486 +07:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:52:42.502 +07:00 [INF] Sending file. Request path: '/uploads/books/75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg'
+2026-07-16 18:52:42.525 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg - 200 55362 image/jpeg 195.0079ms
+2026-07-16 18:52:42.529 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg - 200 16447 image/jpeg 183.8834ms
+2026-07-16 18:52:42.552 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg - 200 18702 image/jpeg 200.1203ms
+2026-07-16 18:52:42.558 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:52:42.563 +07:00 [INF] Sending file. Request path: '/uploads/books/b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg'
+2026-07-16 18:52:42.570 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg - null null
+2026-07-16 18:52:42.590 +07:00 [INF] Sending file. Request path: '/uploads/books/5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg'
+2026-07-16 18:52:42.593 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg - null null
+2026-07-16 18:52:42.593 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/aad28e05-860b-40ca-9958-14d61da84212.jpg - null null
+2026-07-16 18:52:42.626 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:52:42.632 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg - 200 16375 image/jpeg 263.8948ms
+2026-07-16 18:52:42.648 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5991f687-7b32-4d07-a9d9-7bd3257da660.jpg - null null
+2026-07-16 18:52:42.652 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg - 200 17043 image/jpeg 245.6575ms
+2026-07-16 18:52:42.698 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/2a4a671c-481f-4b0b-808e-cd2f14830291.jpg - null null
+2026-07-16 18:52:42.701 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 223.7953ms
+2026-07-16 18:52:42.714 +07:00 [INF] Sending file. Request path: '/uploads/books/eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg'
+2026-07-16 18:52:42.729 +07:00 [INF] Sending file. Request path: '/uploads/books/aad28e05-860b-40ca-9958-14d61da84212.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\aad28e05-860b-40ca-9958-14d61da84212.jpg'
+2026-07-16 18:52:42.734 +07:00 [INF] Sending file. Request path: '/uploads/books/a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg'
+2026-07-16 18:52:42.741 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:42.745 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg - 200 18745 image/jpeg 174.6459ms
+2026-07-16 18:52:42.749 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/aad28e05-860b-40ca-9958-14d61da84212.jpg - 200 16677 image/jpeg 155.7404ms
+2026-07-16 18:52:42.752 +07:00 [INF] Sending file. Request path: '/uploads/books/5991f687-7b32-4d07-a9d9-7bd3257da660.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5991f687-7b32-4d07-a9d9-7bd3257da660.jpg'
+2026-07-16 18:52:42.752 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg - 200 19101 image/jpeg 159.957ms
+2026-07-16 18:52:42.756 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 519.2167ms
+2026-07-16 18:52:42.757 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5f1cd73e-ae54-40fd-b895-bda241704917.jpg - null null
+2026-07-16 18:52:42.759 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/77532596-9254-47fb-acd8-2b67b88566ba.jpg - null null
+2026-07-16 18:52:42.764 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/b07adaee-679d-4c23-b353-46530076cd67.jpg - null null
+2026-07-16 18:52:42.765 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg - null null
+2026-07-16 18:52:42.765 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/607f7914-baa6-4b53-ac12-374a0e1583e8.jpg - null null
+2026-07-16 18:52:42.765 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg - null null
+2026-07-16 18:52:42.769 +07:00 [INF] Sending file. Request path: '/uploads/books/2a4a671c-481f-4b0b-808e-cd2f14830291.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\2a4a671c-481f-4b0b-808e-cd2f14830291.jpg'
+2026-07-16 18:52:42.782 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5991f687-7b32-4d07-a9d9-7bd3257da660.jpg - 200 17936 image/jpeg 135.5773ms
+2026-07-16 18:52:42.789 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:52:42.848 +07:00 [INF] Sending file. Request path: '/uploads/books/5f1cd73e-ae54-40fd-b895-bda241704917.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5f1cd73e-ae54-40fd-b895-bda241704917.jpg'
+2026-07-16 18:52:42.895 +07:00 [INF] Sending file. Request path: '/uploads/books/607f7914-baa6-4b53-ac12-374a0e1583e8.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\607f7914-baa6-4b53-ac12-374a0e1583e8.jpg'
+2026-07-16 18:52:42.866 +07:00 [INF] Sending file. Request path: '/uploads/books/b07adaee-679d-4c23-b353-46530076cd67.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\b07adaee-679d-4c23-b353-46530076cd67.jpg'
+2026-07-16 18:52:42.856 +07:00 [INF] Sending file. Request path: '/uploads/books/77532596-9254-47fb-acd8-2b67b88566ba.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\77532596-9254-47fb-acd8-2b67b88566ba.jpg'
+2026-07-16 18:52:42.877 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/2a4a671c-481f-4b0b-808e-cd2f14830291.jpg - 200 16264 image/jpeg 179.1071ms
+2026-07-16 18:52:42.883 +07:00 [INF] Sending file. Request path: '/uploads/books/4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg'
+2026-07-16 18:52:42.900 +07:00 [INF] Sending file. Request path: '/uploads/books/0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg'
+2026-07-16 18:52:42.901 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5f1cd73e-ae54-40fd-b895-bda241704917.jpg - 200 18464 image/jpeg 143.7038ms
+2026-07-16 18:52:42.904 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/607f7914-baa6-4b53-ac12-374a0e1583e8.jpg - 200 22804 image/jpeg 139.4904ms
+2026-07-16 18:52:42.909 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 120.1389ms
+2026-07-16 18:52:42.910 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/b07adaee-679d-4c23-b353-46530076cd67.jpg - 200 13884 image/jpeg 145.5566ms
+2026-07-16 18:52:42.916 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/77532596-9254-47fb-acd8-2b67b88566ba.jpg - 200 14956 image/jpeg 156.7213ms
+2026-07-16 18:52:42.934 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg - 200 18867 image/jpeg 169.0368ms
+2026-07-16 18:52:42.938 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg - 200 15166 image/jpeg 172.485ms
+2026-07-16 18:52:42.942 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=jFjB72GA8ekkQFEcrjzP4Q - null null
+2026-07-16 18:52:43.015 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:52:52.989 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/TacGia - null null
+2026-07-16 18:52:53.001 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.TacGiaController.Index (SmartLib.Web)'
+2026-07-16 18:52:53.031 +07:00 [INF] Route matched with {action = "Index", controller = "TacGia", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.TacGiaController (SmartLib.Web).
+2026-07-16 18:52:53.072 +07:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTacGia], [t].[AnhDaiDien], [t].[ButDanh], [t].[NamMat], [t].[NamSinh], [t].[QuocTich], [t].[TenTacGia], [t].[TieuSu], [t].[TrangThai]
+FROM [TacGia] AS [t]
+ORDER BY [t].[TenTacGia]
+2026-07-16 18:52:53.150 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:52:53.249 +07:00 [INF] Executed ViewResult - view Index executed in 102.4438ms.
+2026-07-16 18:52:53.252 +07:00 [INF] Executed action SmartLib.Web.Controllers.TacGiaController.Index (SmartLib.Web) in 214.6913ms
+2026-07-16 18:52:53.255 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.TacGiaController.Index (SmartLib.Web)'
+2026-07-16 18:52:53.258 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/TacGia - 200 null text/html; charset=utf-8 269.2654ms
+2026-07-16 18:52:53.267 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:52:53.270 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=jFjB72GA8ekkQFEcrjzP4Q - 200 null null 10327.8213ms
+2026-07-16 18:52:53.275 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:52:53.275 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:52:53.283 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 8.5742ms
+2026-07-16 18:52:53.299 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 24.3876ms
+2026-07-16 18:52:53.337 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:52:53.339 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:52:53.343 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:53.351 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:53.353 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:53.358 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:52:53.361 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 23.5049ms
+2026-07-16 18:52:53.379 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:52:53.404 +07:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:52:53.410 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:52:53.415 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 49.9634ms
+2026-07-16 18:52:53.418 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:53.419 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 81.0131ms
+2026-07-16 18:52:53.541 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=fTBbXjNhND8REIDYhQ6bYw - null null
+2026-07-16 18:52:53.552 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:52:59.554 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhaXuatBan - null null
+2026-07-16 18:52:59.565 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhaXuatBanController.Index (SmartLib.Web)'
+2026-07-16 18:52:59.586 +07:00 [INF] Route matched with {action = "Index", controller = "NhaXuatBan", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.NhaXuatBanController (SmartLib.Web).
+2026-07-16 18:52:59.648 +07:00 [INF] Executed DbCommand (31ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [NhaXuatBan] AS [n]
+ORDER BY [n].[TenNXB]
+2026-07-16 18:52:59.653 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:52:59.699 +07:00 [INF] Executed ViewResult - view Index executed in 46.8408ms.
+2026-07-16 18:52:59.701 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhaXuatBanController.Index (SmartLib.Web) in 111.7295ms
+2026-07-16 18:52:59.704 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhaXuatBanController.Index (SmartLib.Web)'
+2026-07-16 18:52:59.707 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhaXuatBan - 200 null text/html; charset=utf-8 152.6865ms
+2026-07-16 18:52:59.717 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:52:59.719 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=fTBbXjNhND8REIDYhQ6bYw - 200 null null 6178.0445ms
+2026-07-16 18:52:59.722 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:52:59.722 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:52:59.730 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 7.7812ms
+2026-07-16 18:52:59.743 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.4466ms
+2026-07-16 18:52:59.765 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:52:59.766 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:52:59.770 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:59.774 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:52:59.775 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:52:59.777 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:52:59.778 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 13.0018ms
+2026-07-16 18:52:59.898 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=2ImN5vcF6kKzl-KN6gzrdA - null null
+2026-07-16 18:52:59.913 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:52:59.916 +07:00 [INF] Executed DbCommand (24ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:52:59.968 +07:00 [INF] Executed DbCommand (43ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:52:59.983 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:52:59.991 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 210.0759ms
+2026-07-16 18:52:59.995 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:00.005 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 238.2068ms
+2026-07-16 18:53:01.677 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/DocGia - null null
+2026-07-16 18:53:01.703 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.DocGiaController.Index (SmartLib.Web)'
+2026-07-16 18:53:01.724 +07:00 [INF] Route matched with {action = "Index", controller = "DocGia", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.DocGiaController (SmartLib.Web).
+2026-07-16 18:53:01.763 +07:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [DocGia] AS [d]
+ORDER BY [d].[HoTen]
+2026-07-16 18:53:01.886 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:01.933 +07:00 [INF] Executed ViewResult - view Index executed in 48.8071ms.
+2026-07-16 18:53:01.936 +07:00 [INF] Executed action SmartLib.Web.Controllers.DocGiaController.Index (SmartLib.Web) in 207.6134ms
+2026-07-16 18:53:01.940 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.DocGiaController.Index (SmartLib.Web)'
+2026-07-16 18:53:01.943 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/DocGia - 200 null text/html; charset=utf-8 266.0339ms
+2026-07-16 18:53:01.949 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:01.953 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:01.953 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/readers/32fdcf97-ad94-492d-9efc-437a9dbac8f6.png - null null
+2026-07-16 18:53:01.953 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/readers/d4874059-7ce7-4d7f-b939-3123089d5609.jpg - null null
+2026-07-16 18:53:01.953 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=2ImN5vcF6kKzl-KN6gzrdA - 200 null null 2055.3762ms
+2026-07-16 18:53:01.958 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 5.0381ms
+2026-07-16 18:53:01.961 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:01.975 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:01.977 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:01.990 +07:00 [INF] Sending file. Request path: '/uploads/readers/d4874059-7ce7-4d7f-b939-3123089d5609.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\readers\d4874059-7ce7-4d7f-b939-3123089d5609.jpg'
+2026-07-16 18:53:01.991 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:01.992 +07:00 [INF] Sending file. Request path: '/uploads/readers/32fdcf97-ad94-492d-9efc-437a9dbac8f6.png'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\readers\32fdcf97-ad94-492d-9efc-437a9dbac8f6.png'
+2026-07-16 18:53:01.993 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 32.719ms
+2026-07-16 18:53:01.998 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:01.999 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/readers/d4874059-7ce7-4d7f-b939-3123089d5609.jpg - 200 27931 image/jpeg 46.3673ms
+2026-07-16 18:53:02.002 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:02.004 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/readers/32fdcf97-ad94-492d-9efc-437a9dbac8f6.png - 200 153686 image/png 51.2593ms
+2026-07-16 18:53:02.014 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:02.025 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 49.9024ms
+2026-07-16 18:53:02.041 +07:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:02.071 +07:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:02.079 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:02.081 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 47.1527ms
+2026-07-16 18:53:02.084 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:02.089 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 112.1666ms
+2026-07-16 18:53:02.142 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=R6Kv5HVtspQEWGCxpko4Qw - null null
+2026-07-16 18:53:02.150 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:07.714 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/DocGia/Edit/DG006 - null null
+2026-07-16 18:53:07.726 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.DocGiaController.Edit (SmartLib.Web)'
+2026-07-16 18:53:07.753 +07:00 [INF] Route matched with {action = "Edit", controller = "DocGia", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Edit(System.String) on controller SmartLib.Web.Controllers.DocGiaController (SmartLib.Web).
+2026-07-16 18:53:07.890 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__p_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [DocGia] AS [d]
+WHERE [d].[MaDocGia] = @__p_0
+2026-07-16 18:53:07.897 +07:00 [INF] Executing ViewResult, running view Edit.
+2026-07-16 18:53:07.944 +07:00 [INF] Executed ViewResult - view Edit executed in 48.6015ms.
+2026-07-16 18:53:07.947 +07:00 [INF] Executed action SmartLib.Web.Controllers.DocGiaController.Edit (SmartLib.Web) in 186.1317ms
+2026-07-16 18:53:07.950 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.DocGiaController.Edit (SmartLib.Web)'
+2026-07-16 18:53:07.953 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/DocGia/Edit/DG006 - 200 null text/html; charset=utf-8 238.4014ms
+2026-07-16 18:53:07.964 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:07.969 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=R6Kv5HVtspQEWGCxpko4Qw - 200 null null 5826.5431ms
+2026-07-16 18:53:07.971 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:07.971 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:07.982 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 10.6896ms
+2026-07-16 18:53:07.995 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 23.3766ms
+2026-07-16 18:53:08.018 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:08.021 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:08.026 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:08.032 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:08.034 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:08.038 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:08.041 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 23.1577ms
+2026-07-16 18:53:08.052 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:08.061 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:08.065 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:08.067 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 20.2537ms
+2026-07-16 18:53:08.072 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=OBnt7TRjVhd8P1ryyDJ1eg - null null
+2026-07-16 18:53:08.074 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:08.080 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:08.083 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 61.3952ms
+2026-07-16 18:53:12.679 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/DocGia - null null
+2026-07-16 18:53:12.689 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.DocGiaController.Index (SmartLib.Web)'
+2026-07-16 18:53:12.691 +07:00 [INF] Route matched with {action = "Index", controller = "DocGia", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.DocGiaController (SmartLib.Web).
+2026-07-16 18:53:12.701 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [DocGia] AS [d]
+ORDER BY [d].[HoTen]
+2026-07-16 18:53:12.707 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:12.714 +07:00 [INF] Executed ViewResult - view Index executed in 6.4085ms.
+2026-07-16 18:53:12.719 +07:00 [INF] Executed action SmartLib.Web.Controllers.DocGiaController.Index (SmartLib.Web) in 23.3869ms
+2026-07-16 18:53:12.723 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.DocGiaController.Index (SmartLib.Web)'
+2026-07-16 18:53:12.726 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/DocGia - 200 null text/html; charset=utf-8 47.0668ms
+2026-07-16 18:53:12.733 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:12.736 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:12.736 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=OBnt7TRjVhd8P1ryyDJ1eg - 200 null null 4664.4806ms
+2026-07-16 18:53:12.736 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:12.740 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 4.4286ms
+2026-07-16 18:53:12.755 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.6802ms
+2026-07-16 18:53:12.770 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:12.772 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:12.776 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:12.780 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:12.782 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:12.783 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:12.784 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 14.2313ms
+2026-07-16 18:53:12.789 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:12.795 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:12.798 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:12.800 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 13.3421ms
+2026-07-16 18:53:12.802 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:12.803 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 31.5094ms
+2026-07-16 18:53:12.849 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=nJc3tBr5VtLynV3KBQENVg - null null
+2026-07-16 18:53:12.858 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:23.957 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Borrow - null null
+2026-07-16 18:53:23.972 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.BorrowController.Index (SmartLib.Web)'
+2026-07-16 18:53:24.000 +07:00 [INF] Route matched with {action = "Index", controller = "Borrow", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String) on controller SmartLib.Web.Controllers.BorrowController (SmartLib.Web).
+2026-07-16 18:53:24.072 +07:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [m].[MaPhieu], [m].[DaGiaHan], [m].[GhiChu], [m].[MaDocGia], [m].[MaNV], [m].[NgayHenTra], [m].[NgayMuon], [m].[NgayTraThucTe], [m].[TienPhat], [m].[TrangThai], [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [MuonTra] AS [m]
+LEFT JOIN [DocGia] AS [d] ON [m].[MaDocGia] = [d].[MaDocGia]
+ORDER BY [m].[NgayMuon] DESC
+2026-07-16 18:53:24.139 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:24.234 +07:00 [INF] Executed ViewResult - view Index executed in 95.5251ms.
+2026-07-16 18:53:24.237 +07:00 [INF] Executed action SmartLib.Web.Controllers.BorrowController.Index (SmartLib.Web) in 234.7599ms
+2026-07-16 18:53:24.240 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.BorrowController.Index (SmartLib.Web)'
+2026-07-16 18:53:24.242 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Borrow - 200 null text/html; charset=utf-8 284.7191ms
+2026-07-16 18:53:24.250 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:24.252 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=nJc3tBr5VtLynV3KBQENVg - 200 null null 11402.9969ms
+2026-07-16 18:53:24.253 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:24.253 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:24.262 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 8.6512ms
+2026-07-16 18:53:24.272 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.2565ms
+2026-07-16 18:53:24.287 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:24.289 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:24.293 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:24.299 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:24.300 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:24.302 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:24.304 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 16.6662ms
+2026-07-16 18:53:24.326 +07:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:24.340 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:24.353 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:24.356 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 46.6665ms
+2026-07-16 18:53:24.359 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:24.361 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 72.1278ms
+2026-07-16 18:53:24.364 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=tDF2-xYA2NO3DamU0rGw5w - null null
+2026-07-16 18:53:24.384 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:27.312 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Reservation - null null
+2026-07-16 18:53:27.321 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.ReservationController.Index (SmartLib.Web)'
+2026-07-16 18:53:27.343 +07:00 [INF] Route matched with {action = "Index", controller = "Reservation", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String) on controller SmartLib.Web.Controllers.ReservationController (SmartLib.Web).
+2026-07-16 18:53:27.432 +07:00 [INF] Executed DbCommand (24ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [r].[MaReservation], [r].[DaMuon], [r].[MaDocGia], [r].[MaPhieuMuon], [r].[MaSach], [r].[NgayDat], [r].[TrangThai], [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [Reservation] AS [r]
+LEFT JOIN [Sach] AS [s] ON [r].[MaSach] = [s].[MaSach]
+LEFT JOIN [DocGia] AS [d] ON [r].[MaDocGia] = [d].[MaDocGia]
+ORDER BY [r].[NgayDat] DESC
+2026-07-16 18:53:27.487 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:27.584 +07:00 [INF] Executed ViewResult - view Index executed in 98.4863ms.
+2026-07-16 18:53:27.589 +07:00 [INF] Executed action SmartLib.Web.Controllers.ReservationController.Index (SmartLib.Web) in 237.4004ms
+2026-07-16 18:53:27.592 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.ReservationController.Index (SmartLib.Web)'
+2026-07-16 18:53:27.595 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Reservation - 200 null text/html; charset=utf-8 283.2787ms
+2026-07-16 18:53:27.602 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:27.608 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:27.608 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:27.609 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=tDF2-xYA2NO3DamU0rGw5w - 200 null null 3244.2382ms
+2026-07-16 18:53:27.615 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 7.0266ms
+2026-07-16 18:53:27.632 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 24.1756ms
+2026-07-16 18:53:27.651 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:27.652 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:27.657 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:27.661 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:27.663 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:27.665 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:27.666 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 14.812ms
+2026-07-16 18:53:27.673 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:27.684 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:27.690 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:27.693 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 23.7818ms
+2026-07-16 18:53:27.697 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:27.700 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 47.3234ms
+2026-07-16 18:53:27.939 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=vdot5c_hu9m1jpwUwiYEFg - null null
+2026-07-16 18:53:27.949 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:31.579 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Kho - null null
+2026-07-16 18:53:31.589 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web)'
+2026-07-16 18:53:31.617 +07:00 [INF] Route matched with {action = "Index", controller = "Kho", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.KhoController (SmartLib.Web).
+2026-07-16 18:53:31.803 +07:00 [INF] Executed DbCommand (93ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [k].[MaKe], [k].[MaNXBPhuTrach], [k].[MaTheLoaiPhuTrach], [k].[MoTa], [k].[Phong], [k].[SucChua], [k].[Tang], [k].[TenKe], [k].[TrangThai], [k].[ViTri], [c].[MaCuonSach], [c].[Barcode], [c].[MaSach], [c].[NgayNhap], [c].[TrangThai]
+FROM [Sach] AS [s]
+LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+LEFT JOIN [KeSach] AS [k] ON [s].[MaKe] = [k].[MaKe]
+LEFT JOIN [CuonSach] AS [c] ON [s].[MaSach] = [c].[MaSach]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+ORDER BY [s].[MaSach], [t].[MaTheLoai], [k].[MaKe]
+2026-07-16 18:53:32.055 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:32.131 +07:00 [INF] Executed ViewResult - view Index executed in 77.2499ms.
+2026-07-16 18:53:32.134 +07:00 [INF] Executed action SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web) in 510.4806ms
+2026-07-16 18:53:32.137 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web)'
+2026-07-16 18:53:32.140 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Kho - 200 null text/html; charset=utf-8 561.138ms
+2026-07-16 18:53:32.145 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:32.151 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=vdot5c_hu9m1jpwUwiYEFg - 200 null null 4211.8377ms
+2026-07-16 18:53:32.152 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:32.165 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 12.7555ms
+2026-07-16 18:53:32.195 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:32.200 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:32.200 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:32.201 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:32.210 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:32.212 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:32.214 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 14.2666ms
+2026-07-16 18:53:32.215 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:32.216 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 21.523ms
+2026-07-16 18:53:32.235 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:32.247 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:32.250 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:32.253 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 27.8647ms
+2026-07-16 18:53:32.263 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:32.266 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 65.9219ms
+2026-07-16 18:53:32.626 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=jLuiBsYAh3ZAFUTaL_iwkg - null null
+2026-07-16 18:53:32.641 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:35.505 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Kho/DanhSachCuon?maSach=CN003 - null null
+2026-07-16 18:53:35.513 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.KhoController.DanhSachCuon (SmartLib.Web)'
+2026-07-16 18:53:35.540 +07:00 [INF] Route matched with {action = "DanhSachCuon", controller = "Kho", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DanhSachCuon(System.String) on controller SmartLib.Web.Controllers.KhoController (SmartLib.Web).
+2026-07-16 18:53:35.635 +07:00 [INF] Executed DbCommand (18ms) [Parameters=[@__maSach_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[AnhBia], [s0].[Barcode], [s0].[ISBN], [s0].[MaKe], [s0].[MaNXB], [s0].[MaTheLoai], [s0].[MoTa], [s0].[NamXuatBan], [s0].[NgayCapNhat], [s0].[NgayTao], [s0].[NgonNgu], [s0].[SoLuongKhaDung], [s0].[SoLuongKho], [s0].[SoTrang], [s0].[TenSach], [s0].[TrangThai], [s0].[MaTheLoai0], [s0].[MoTa0], [s0].[TenTheLoai], [c].[MaCuonSach], [c].[Barcode], [c].[MaSach], [c].[NgayNhap], [c].[TrangThai]
+FROM (
+    SELECT TOP(1) [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai] AS [MaTheLoai0], [t].[MoTa] AS [MoTa0], [t].[TenTheLoai]
+    FROM [Sach] AS [s]
+    LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+    WHERE [s].[MaSach] = @__maSach_0
+) AS [s0]
+LEFT JOIN [CuonSach] AS [c] ON [s0].[MaSach] = [c].[MaSach]
+ORDER BY [s0].[MaSach], [s0].[MaTheLoai0]
+2026-07-16 18:53:35.666 +07:00 [INF] Executing ViewResult, running view DanhSachCuon.
+2026-07-16 18:53:35.734 +07:00 [INF] Executed ViewResult - view DanhSachCuon executed in 68.157ms.
+2026-07-16 18:53:35.739 +07:00 [INF] Executed action SmartLib.Web.Controllers.KhoController.DanhSachCuon (SmartLib.Web) in 194.8972ms
+2026-07-16 18:53:35.743 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.KhoController.DanhSachCuon (SmartLib.Web)'
+2026-07-16 18:53:35.744 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:35.746 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Kho/DanhSachCuon?maSach=CN003 - 200 null text/html; charset=utf-8 240.9305ms
+2026-07-16 18:53:35.748 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=jLuiBsYAh3ZAFUTaL_iwkg - 200 null null 3121.8727ms
+2026-07-16 18:53:35.752 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:35.752 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:35.762 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 10.253ms
+2026-07-16 18:53:35.774 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 21.729ms
+2026-07-16 18:53:35.784 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:35.784 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:35.790 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:35.795 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:35.797 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:35.799 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:35.800 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 16.9103ms
+2026-07-16 18:53:35.807 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:35.815 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:35.818 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:35.821 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 16.7163ms
+2026-07-16 18:53:35.824 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:35.826 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 41.1854ms
+2026-07-16 18:53:35.889 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=b-sUAcQ4Dryl3V6fETNVaw - null null
+2026-07-16 18:53:35.894 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:43.216 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Kho - null null
+2026-07-16 18:53:43.224 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web)'
+2026-07-16 18:53:43.226 +07:00 [INF] Route matched with {action = "Index", controller = "Kho", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.KhoController (SmartLib.Web).
+2026-07-16 18:53:43.276 +07:00 [INF] Executed DbCommand (42ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [k].[MaKe], [k].[MaNXBPhuTrach], [k].[MaTheLoaiPhuTrach], [k].[MoTa], [k].[Phong], [k].[SucChua], [k].[Tang], [k].[TenKe], [k].[TrangThai], [k].[ViTri], [c].[MaCuonSach], [c].[Barcode], [c].[MaSach], [c].[NgayNhap], [c].[TrangThai]
+FROM [Sach] AS [s]
+LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+LEFT JOIN [KeSach] AS [k] ON [s].[MaKe] = [k].[MaKe]
+LEFT JOIN [CuonSach] AS [c] ON [s].[MaSach] = [c].[MaSach]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+ORDER BY [s].[MaSach], [t].[MaTheLoai], [k].[MaKe]
+2026-07-16 18:53:43.397 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:43.411 +07:00 [INF] Executed ViewResult - view Index executed in 13.2934ms.
+2026-07-16 18:53:43.416 +07:00 [INF] Executed action SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web) in 184.5824ms
+2026-07-16 18:53:43.419 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web)'
+2026-07-16 18:53:43.425 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:43.425 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Kho - 200 null text/html; charset=utf-8 208.8152ms
+2026-07-16 18:53:43.427 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=b-sUAcQ4Dryl3V6fETNVaw - 200 null null 7538.1492ms
+2026-07-16 18:53:43.434 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:43.434 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:43.444 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 9.6073ms
+2026-07-16 18:53:43.455 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 21.0626ms
+2026-07-16 18:53:43.462 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:43.465 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:43.467 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:43.472 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:43.473 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:43.475 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:43.476 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 14.0435ms
+2026-07-16 18:53:43.482 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:43.490 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:43.493 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:43.495 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 15.6699ms
+2026-07-16 18:53:43.497 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:43.499 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 33.7519ms
+2026-07-16 18:53:43.731 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=y7lNA9883NvAREI5ZVg8YQ - null null
+2026-07-16 18:53:43.742 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:45.833 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Kho/DanhSachCuon?maSach=CN003 - null null
+2026-07-16 18:53:45.845 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.KhoController.DanhSachCuon (SmartLib.Web)'
+2026-07-16 18:53:45.850 +07:00 [INF] Route matched with {action = "DanhSachCuon", controller = "Kho", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DanhSachCuon(System.String) on controller SmartLib.Web.Controllers.KhoController (SmartLib.Web).
+2026-07-16 18:53:45.892 +07:00 [INF] Executed DbCommand (32ms) [Parameters=[@__maSach_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[AnhBia], [s0].[Barcode], [s0].[ISBN], [s0].[MaKe], [s0].[MaNXB], [s0].[MaTheLoai], [s0].[MoTa], [s0].[NamXuatBan], [s0].[NgayCapNhat], [s0].[NgayTao], [s0].[NgonNgu], [s0].[SoLuongKhaDung], [s0].[SoLuongKho], [s0].[SoTrang], [s0].[TenSach], [s0].[TrangThai], [s0].[MaTheLoai0], [s0].[MoTa0], [s0].[TenTheLoai], [c].[MaCuonSach], [c].[Barcode], [c].[MaSach], [c].[NgayNhap], [c].[TrangThai]
+FROM (
+    SELECT TOP(1) [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai] AS [MaTheLoai0], [t].[MoTa] AS [MoTa0], [t].[TenTheLoai]
+    FROM [Sach] AS [s]
+    LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+    WHERE [s].[MaSach] = @__maSach_0
+) AS [s0]
+LEFT JOIN [CuonSach] AS [c] ON [s0].[MaSach] = [c].[MaSach]
+ORDER BY [s0].[MaSach], [s0].[MaTheLoai0]
+2026-07-16 18:53:45.916 +07:00 [INF] Executing ViewResult, running view DanhSachCuon.
+2026-07-16 18:53:45.959 +07:00 [INF] Executed ViewResult - view DanhSachCuon executed in 42.5753ms.
+2026-07-16 18:53:45.967 +07:00 [INF] Executed action SmartLib.Web.Controllers.KhoController.DanhSachCuon (SmartLib.Web) in 111.3032ms
+2026-07-16 18:53:45.974 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.KhoController.DanhSachCuon (SmartLib.Web)'
+2026-07-16 18:53:45.982 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Kho/DanhSachCuon?maSach=CN003 - 200 null text/html; charset=utf-8 148.3219ms
+2026-07-16 18:53:45.994 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:46.001 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=y7lNA9883NvAREI5ZVg8YQ - 200 null null 2269.6937ms
+2026-07-16 18:53:46.004 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:46.004 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:46.014 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 10.4964ms
+2026-07-16 18:53:46.028 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 24.4466ms
+2026-07-16 18:53:46.038 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:46.043 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:46.045 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:46.050 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:46.053 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:46.057 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:46.059 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 20.9595ms
+2026-07-16 18:53:46.072 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:46.093 +07:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:46.100 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:46.104 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 40.8974ms
+2026-07-16 18:53:46.108 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:46.113 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 70.6206ms
+2026-07-16 18:53:46.179 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=V_Q78JGcgjOlnISaBFJ89w - null null
+2026-07-16 18:53:46.195 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:54.673 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Kho - null null
+2026-07-16 18:53:54.685 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web)'
+2026-07-16 18:53:54.695 +07:00 [INF] Route matched with {action = "Index", controller = "Kho", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.KhoController (SmartLib.Web).
+2026-07-16 18:53:54.749 +07:00 [INF] Executed DbCommand (47ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [k].[MaKe], [k].[MaNXBPhuTrach], [k].[MaTheLoaiPhuTrach], [k].[MoTa], [k].[Phong], [k].[SucChua], [k].[Tang], [k].[TenKe], [k].[TrangThai], [k].[ViTri], [c].[MaCuonSach], [c].[Barcode], [c].[MaSach], [c].[NgayNhap], [c].[TrangThai]
+FROM [Sach] AS [s]
+LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+LEFT JOIN [KeSach] AS [k] ON [s].[MaKe] = [k].[MaKe]
+LEFT JOIN [CuonSach] AS [c] ON [s].[MaSach] = [c].[MaSach]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+ORDER BY [s].[MaSach], [t].[MaTheLoai], [k].[MaKe]
+2026-07-16 18:53:54.903 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:53:54.915 +07:00 [INF] Executed ViewResult - view Index executed in 12.1617ms.
+2026-07-16 18:53:54.918 +07:00 [INF] Executed action SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web) in 218.7694ms
+2026-07-16 18:53:54.921 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.KhoController.Index (SmartLib.Web)'
+2026-07-16 18:53:54.924 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Kho - 200 null text/html; charset=utf-8 250.8467ms
+2026-07-16 18:53:54.935 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:54.938 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=V_Q78JGcgjOlnISaBFJ89w - 200 null null 8758.8742ms
+2026-07-16 18:53:54.942 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:54.952 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 9.1565ms
+2026-07-16 18:53:54.982 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:54.987 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:54.990 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:54.992 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:54.994 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:54.996 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:55.005 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:55.007 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 25.4263ms
+2026-07-16 18:53:55.019 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 26.7642ms
+2026-07-16 18:53:55.039 +07:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:55.069 +07:00 [INF] Executed DbCommand (22ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:55.075 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:55.078 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 65.0207ms
+2026-07-16 18:53:55.082 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:55.084 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 97.0942ms
+2026-07-16 18:53:55.341 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=3iqE9ZQgDD71ibkgjF8QzQ - null null
+2026-07-16 18:53:55.353 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:58.821 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Kho/KeSach - null null
+2026-07-16 18:53:58.843 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.KhoController.KeSach (SmartLib.Web)'
+2026-07-16 18:53:58.868 +07:00 [INF] Route matched with {action = "KeSach", controller = "Kho", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] KeSach(System.String, System.String) on controller SmartLib.Web.Controllers.KhoController (SmartLib.Web).
+2026-07-16 18:53:58.913 +07:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2026-07-16 18:53:59.038 +07:00 [INF] Executed DbCommand (72ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [k].[MaKe], [k].[MaNXBPhuTrach], [k].[MaTheLoaiPhuTrach], [k].[MoTa], [k].[Phong], [k].[SucChua], [k].[Tang], [k].[TenKe], [k].[TrangThai], [k].[ViTri], [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [s0].[MaSach], [s0].[AnhBia], [s0].[Barcode], [s0].[ISBN], [s0].[MaKe], [s0].[MaNXB], [s0].[MaTheLoai], [s0].[MoTa], [s0].[NamXuatBan], [s0].[NgayCapNhat], [s0].[NgayTao], [s0].[NgonNgu], [s0].[SoLuongKhaDung], [s0].[SoLuongKho], [s0].[SoTrang], [s0].[TenSach], [s0].[TrangThai], [s0].[MaCuonSach], [s0].[Barcode0], [s0].[MaSach0], [s0].[NgayNhap], [s0].[TrangThai0]
+FROM [KeSach] AS [k]
+LEFT JOIN [NhaXuatBan] AS [n] ON [k].[MaNXBPhuTrach] = [n].[MaNXB]
+LEFT JOIN [TheLoai] AS [t] ON [k].[MaTheLoaiPhuTrach] = [t].[MaTheLoai]
+LEFT JOIN (
+    SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [c].[MaCuonSach], [c].[Barcode] AS [Barcode0], [c].[MaSach] AS [MaSach0], [c].[NgayNhap], [c].[TrangThai] AS [TrangThai0]
+    FROM [Sach] AS [s]
+    LEFT JOIN [CuonSach] AS [c] ON [s].[MaSach] = [c].[MaSach]
+) AS [s0] ON [k].[MaKe] = [s0].[MaKe]
+ORDER BY [k].[MaKe], [n].[MaNXB], [t].[MaTheLoai], [s0].[MaSach]
+2026-07-16 18:53:59.192 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [NhaXuatBan] AS [n]
+ORDER BY [n].[TenNXB]
+2026-07-16 18:53:59.221 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai]
+FROM [TheLoai] AS [t]
+ORDER BY [t].[TenTheLoai]
+2026-07-16 18:53:59.242 +07:00 [INF] Executing ViewResult, running view KeSach.
+2026-07-16 18:53:59.387 +07:00 [INF] Executed ViewResult - view KeSach executed in 146.2558ms.
+2026-07-16 18:53:59.390 +07:00 [INF] Executed action SmartLib.Web.Controllers.KhoController.KeSach (SmartLib.Web) in 517.7636ms
+2026-07-16 18:53:59.393 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.KhoController.KeSach (SmartLib.Web)'
+2026-07-16 18:53:59.396 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Kho/KeSach - 200 null text/html; charset=utf-8 574.6978ms
+2026-07-16 18:53:59.401 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:53:59.404 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=3iqE9ZQgDD71ibkgjF8QzQ - 200 null null 4063.0664ms
+2026-07-16 18:53:59.405 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:53:59.405 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:53:59.413 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 8.0063ms
+2026-07-16 18:53:59.424 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.4238ms
+2026-07-16 18:53:59.453 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:53:59.455 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:53:59.459 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:59.466 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:59.469 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:53:59.474 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:53:59.476 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 22.2446ms
+2026-07-16 18:53:59.483 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:53:59.500 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:53:59.502 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=onZ8wZj2EdIHcnICrLwL-w - null null
+2026-07-16 18:53:59.506 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:53:59.510 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:53:59.512 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 31.9257ms
+2026-07-16 18:53:59.517 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:53:59.519 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 63.689ms
+2026-07-16 18:54:06.489 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/TheThuVien - null null
+2026-07-16 18:54:06.506 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.TheThuVienController.Index (SmartLib.Web)'
+2026-07-16 18:54:06.534 +07:00 [INF] Route matched with {action = "Index", controller = "TheThuVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.TheThuVienController (SmartLib.Web).
+2026-07-16 18:54:06.587 +07:00 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AnhThe], [t].[MaDocGia], [t].[MaThe], [t].[NgayCap], [t].[NgayHetHan], [t].[TrangThai], [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [TheThuVien] AS [t]
+LEFT JOIN [DocGia] AS [d] ON [t].[MaDocGia] = [d].[MaDocGia]
+ORDER BY [t].[NgayCap] DESC
+2026-07-16 18:54:06.629 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:54:06.665 +07:00 [INF] Executed ViewResult - view Index executed in 36.7754ms.
+2026-07-16 18:54:06.668 +07:00 [INF] Executed action SmartLib.Web.Controllers.TheThuVienController.Index (SmartLib.Web) in 128.9609ms
+2026-07-16 18:54:06.670 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.TheThuVienController.Index (SmartLib.Web)'
+2026-07-16 18:54:06.674 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/TheThuVien - 200 null text/html; charset=utf-8 185.0031ms
+2026-07-16 18:54:06.681 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:54:06.685 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/cards/0a398710-94a4-4d67-a81c-55593213dc90.png - null null
+2026-07-16 18:54:06.687 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:54:06.687 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:54:06.687 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=onZ8wZj2EdIHcnICrLwL-w - 200 null null 7184.984ms
+2026-07-16 18:54:06.701 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 13.8134ms
+2026-07-16 18:54:06.707 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.0541ms
+2026-07-16 18:54:06.719 +07:00 [INF] Sending file. Request path: '/uploads/cards/0a398710-94a4-4d67-a81c-55593213dc90.png'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\cards\0a398710-94a4-4d67-a81c-55593213dc90.png'
+2026-07-16 18:54:06.726 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/cards/0a398710-94a4-4d67-a81c-55593213dc90.png - 200 153686 image/png 40.9866ms
+2026-07-16 18:54:06.726 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:54:06.731 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:54:06.741 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:06.747 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:06.749 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:06.751 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:54:06.753 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 27.4247ms
+2026-07-16 18:54:06.763 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:54:06.772 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:54:06.774 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=CNJTH-PiASbddW2LYYT0UA - null null
+2026-07-16 18:54:06.776 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:54:06.781 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:54:06.782 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 25.7842ms
+2026-07-16 18:54:06.791 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:06.796 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 64.6006ms
+2026-07-16 18:54:17.170 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/PendingAccounts - null null
+2026-07-16 18:54:17.178 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.PendingAccounts (SmartLib.Web)'
+2026-07-16 18:54:17.200 +07:00 [INF] Route matched with {action = "PendingAccounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] PendingAccounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:54:17.234 +07:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[MaDocGia], [d].[AnhDaiDien], [d].[DaDuyet], [d].[DiaChi], [d].[Email], [d].[HoTen], [d].[Khoa], [d].[Lop], [d].[MaTheTV], [d].[NgayHetHan], [d].[NgaySinh], [d].[NgayTaoThe], [d].[SoDienThoai], [d].[TrangThaiThe]
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+ORDER BY [d].[NgayTaoThe] DESC
+2026-07-16 18:54:17.240 +07:00 [INF] Executing ViewResult, running view PendingAccounts.
+2026-07-16 18:54:17.275 +07:00 [INF] Executed ViewResult - view PendingAccounts executed in 37.4613ms.
+2026-07-16 18:54:17.279 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.PendingAccounts (SmartLib.Web) in 73.9952ms
+2026-07-16 18:54:17.282 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.PendingAccounts (SmartLib.Web)'
+2026-07-16 18:54:17.285 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/PendingAccounts - 200 null text/html; charset=utf-8 114.8141ms
+2026-07-16 18:54:17.294 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:54:17.297 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:54:17.297 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:54:17.299 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=CNJTH-PiASbddW2LYYT0UA - 200 null null 10524.7122ms
+2026-07-16 18:54:17.308 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 10.8655ms
+2026-07-16 18:54:17.319 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 21.1526ms
+2026-07-16 18:54:17.333 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:54:17.335 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:54:17.338 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:17.343 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:17.345 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:17.348 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:54:17.349 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 15.5569ms
+2026-07-16 18:54:17.355 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:54:17.364 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:54:17.368 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:54:17.368 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=8DcpvDEuXzrphn-iTIrsug - null null
+2026-07-16 18:54:17.371 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 18.77ms
+2026-07-16 18:54:17.377 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:54:17.379 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:17.385 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 49.9888ms
+2026-07-16 18:54:18.981 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/PhanQuyen - null null
+2026-07-16 18:54:18.990 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.PhanQuyenController.Index (SmartLib.Web)'
+2026-07-16 18:54:19.017 +07:00 [INF] Route matched with {action = "Index", controller = "PhanQuyen", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String) on controller SmartLib.Web.Controllers.PhanQuyenController (SmartLib.Web).
+2026-07-16 18:54:19.070 +07:00 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [n].[MaNV], [n].[AnhDaiDien], [n].[DiaChi], [n].[Email], [n].[EmailVerified], [n].[GoogleId], [n].[HoTen], [n].[LaAdmin], [n].[MaChucVu], [n].[MaDocGia], [n].[MatKhau], [n].[NgayCapNhat], [n].[NgayTao], [n].[OtpCode], [n].[OtpExpiry], [n].[PendingEmail], [n].[SoDienThoai], [n].[TrangThai], [c].[MaChucVu], [c].[TenChucVu]
+FROM [NhanVien] AS [n]
+LEFT JOIN [ChucVu] AS [c] ON [n].[MaChucVu] = [c].[MaChucVu]
+WHERE [n].[MaChucVu] <> N'STU' OR [n].[MaChucVu] IS NULL
+ORDER BY [n].[HoTen]
+2026-07-16 18:54:19.120 +07:00 [INF] Executed DbCommand (6ms) [Parameters=[@__maNV_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [n].[MaNV], [n].[AnhDaiDien], [n].[DiaChi], [n].[Email], [n].[EmailVerified], [n].[GoogleId], [n].[HoTen], [n].[LaAdmin], [n].[MaChucVu], [n].[MaDocGia], [n].[MatKhau], [n].[NgayCapNhat], [n].[NgayTao], [n].[OtpCode], [n].[OtpExpiry], [n].[PendingEmail], [n].[SoDienThoai], [n].[TrangThai]
+FROM [NhanVien] AS [n]
+WHERE [n].[MaNV] = @__maNV_0
+2026-07-16 18:54:19.175 +07:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [n].[MaNhom], [n].[Icon], [n].[TenNhom], [n].[ThuTu], [c].[MaChucNang], [c].[Controller], [c].[Icon], [c].[MaNhom], [c].[TenChucNang], [c].[ThuTu]
+FROM [NhomChucNang] AS [n]
+LEFT JOIN [ChucNang] AS [c] ON [n].[MaNhom] = [c].[MaNhom]
+ORDER BY [n].[ThuTu], [n].[MaNhom]
+2026-07-16 18:54:19.211 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[@__maNV_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[MaPQ], [p].[DuocSua], [p].[DuocThem], [p].[DuocXem], [p].[DuocXoa], [p].[MaChucNang], [p].[MaNV]
+FROM [PhanQuyenNhanVien] AS [p]
+WHERE [p].[MaNV] = @__maNV_0
+2026-07-16 18:54:19.226 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:54:19.291 +07:00 [INF] Executed ViewResult - view Index executed in 65.7592ms.
+2026-07-16 18:54:19.297 +07:00 [INF] Executed action SmartLib.Web.Controllers.PhanQuyenController.Index (SmartLib.Web) in 274.5191ms
+2026-07-16 18:54:19.304 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.PhanQuyenController.Index (SmartLib.Web)'
+2026-07-16 18:54:19.313 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:54:19.313 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/PhanQuyen - 200 null text/html; charset=utf-8 332.4582ms
+2026-07-16 18:54:19.318 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=8DcpvDEuXzrphn-iTIrsug - 200 null null 1949.3888ms
+2026-07-16 18:54:19.319 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:54:19.319 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:54:19.341 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 22.0302ms
+2026-07-16 18:54:19.342 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 23.7231ms
+2026-07-16 18:54:19.359 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:54:19.359 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:54:19.363 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:19.367 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:19.368 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:19.370 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:54:19.372 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 13.0988ms
+2026-07-16 18:54:19.377 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:54:19.386 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:54:19.392 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:54:19.395 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 20.4071ms
+2026-07-16 18:54:19.398 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:19.400 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 40.2246ms
+2026-07-16 18:54:19.487 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=wg4WFAyjEdaxL0yoGka1ew - null null
+2026-07-16 18:54:19.492 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:54:20.873 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Audit - null null
+2026-07-16 18:54:20.880 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.AuditController.Index (SmartLib.Web)'
+2026-07-16 18:54:20.906 +07:00 [INF] Route matched with {action = "Index", controller = "Audit", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String, System.Nullable`1[System.DateTime], System.Nullable`1[System.DateTime]) on controller SmartLib.Web.Controllers.AuditController (SmartLib.Web).
+2026-07-16 18:54:20.980 +07:00 [INF] Executed DbCommand (21ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [n1].[MaLog], [n1].[HanhDong], [n1].[MaNV], [n1].[MoTa], [n1].[ThoiGian], [n0].[MaNV], [n0].[AnhDaiDien], [n0].[DiaChi], [n0].[Email], [n0].[EmailVerified], [n0].[GoogleId], [n0].[HoTen], [n0].[LaAdmin], [n0].[MaChucVu], [n0].[MaDocGia], [n0].[MatKhau], [n0].[NgayCapNhat], [n0].[NgayTao], [n0].[OtpCode], [n0].[OtpExpiry], [n0].[PendingEmail], [n0].[SoDienThoai], [n0].[TrangThai]
+FROM (
+    SELECT TOP(@__p_0) [n].[MaLog], [n].[HanhDong], [n].[MaNV], [n].[MoTa], [n].[ThoiGian]
+    FROM [NhatKyHoatDong] AS [n]
+    ORDER BY [n].[ThoiGian] DESC
+) AS [n1]
+LEFT JOIN [NhanVien] AS [n0] ON [n1].[MaNV] = [n0].[MaNV]
+ORDER BY [n1].[ThoiGian] DESC
+2026-07-16 18:54:21.000 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-16 18:54:21.073 +07:00 [INF] Executed ViewResult - view Index executed in 75.0213ms.
+2026-07-16 18:54:21.079 +07:00 [INF] Executed action SmartLib.Web.Controllers.AuditController.Index (SmartLib.Web) in 168.9905ms
+2026-07-16 18:54:21.082 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.AuditController.Index (SmartLib.Web)'
+2026-07-16 18:54:21.084 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Audit - 200 null text/html; charset=utf-8 210.7633ms
+2026-07-16 18:54:21.096 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:54:21.104 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=wg4WFAyjEdaxL0yoGka1ew - 200 null null 1617.3242ms
+2026-07-16 18:54:21.106 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-16 18:54:21.106 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-16 18:54:21.115 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 8.4503ms
+2026-07-16 18:54:21.127 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.8498ms
+2026-07-16 18:54:21.166 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-16 18:54:21.168 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-16 18:54:21.172 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:21.181 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:21.181 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-16 18:54:21.187 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-16 18:54:21.188 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 21.6509ms
+2026-07-16 18:54:21.222 +07:00 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-16 18:54:21.259 +07:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-16 18:54:21.279 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType9`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-16 18:54:21.285 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 94.1729ms
+2026-07-16 18:54:21.290 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-16 18:54:21.297 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 129.576ms
+2026-07-16 18:54:21.619 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=wLhaMRXqOaaLbfGVS-2oCA - null null
+2026-07-16 18:54:21.629 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-16 18:54:24.186 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-16 18:54:24.189 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=wLhaMRXqOaaLbfGVS-2oCA - 200 null null 2569.9011ms

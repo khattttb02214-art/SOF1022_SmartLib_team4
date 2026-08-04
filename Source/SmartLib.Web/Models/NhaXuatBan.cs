@@ -21,5 +21,8 @@ public class NhaXuatBan
     [StringLength(100)]
     public string? Email { get; set; }
 
+    /// <summary>Còn hoạt động hay đã ngừng hợp tác (thay cho xóa hẳn, giữ nguyên dữ liệu sách liên kết)</summary>
+    public bool TrangThai { get; set; } = true;
+
     public virtual ICollection<Sach> Saches { get; set; } = new List<Sach>();
 }

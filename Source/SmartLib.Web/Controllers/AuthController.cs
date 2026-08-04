@@ -80,6 +80,79 @@ public class AuthController : Controller
             : RedirectToAction("Index", "Student");
     }
 
+    // ── QUÊN MẬT KHẨU ────────────────────────────────────────────────────
+    // Bước 1: nhập email → gửi OTP. Áp dụng cho MỌI tài khoản (ADMIN/LIB/STU,
+    // kể cả tài khoản tạo qua Google) miễn có email hợp lệ trong hệ thống.
+    public IActionResult ForgotPassword() => View();
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(string email)
+    {
+        // Không tiết lộ email có tồn tại hay không (tránh dò quét email) —
+        // luôn hiện cùng 1 thông báo chung chung dù tìm thấy tài khoản hay không.
+        const string thongBaoChung = "Nếu email này tồn tại trong hệ thống, một mã xác nhận đã được gửi tới hộp thư của bạn.";
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            ViewBag.Error = "Vui lòng nhập email";
+            return View();
+        }
+
+        var user = await _context.NhanViens.FirstOrDefaultAsync(x => x.Email == email);
+        if (user != null)
+        {
+            string otp = GenerateOtp();
+            user.OtpResetMatKhau = otp;
+            user.OtpResetMatKhauHetHan = DateTime.Now.AddMinutes(10);
+            await _context.SaveChangesAsync();
+            await _emailService.SendOtpAsync(user.Email!, user.HoTen, otp, "reset_password");
+        }
+
+        TempData["success"] = thongBaoChung;
+        return RedirectToAction(nameof(ResetPassword), new { email });
+    }
+
+    // Bước 2: nhập mã OTP + mật khẩu mới. Xác thực OTP và cập nhật mật khẩu cùng lúc.
+    public IActionResult ResetPassword(string email) => View(model: email);
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(string email, string otp, string matKhauMoi, string xacNhanMatKhau)
+    {
+        if (string.IsNullOrWhiteSpace(otp) || string.IsNullOrWhiteSpace(matKhauMoi))
+        {
+            ViewBag.Error = "Vui lòng nhập đầy đủ mã xác nhận và mật khẩu mới";
+            return View(model: email);
+        }
+        if (matKhauMoi.Length < 6)
+        {
+            ViewBag.Error = "Mật khẩu phải ít nhất 6 ký tự";
+            return View(model: email);
+        }
+        if (matKhauMoi != xacNhanMatKhau)
+        {
+            ViewBag.Error = "Mật khẩu xác nhận không khớp";
+            return View(model: email);
+        }
+
+        var user = await _context.NhanViens.FirstOrDefaultAsync(x => x.Email == email);
+        if (user == null || user.OtpResetMatKhau != otp || user.OtpResetMatKhauHetHan == null || user.OtpResetMatKhauHetHan < DateTime.Now)
+        {
+            ViewBag.Error = "Mã xác nhận không đúng hoặc đã hết hạn. Vui lòng yêu cầu gửi lại mã.";
+            return View(model: email);
+        }
+
+        user.MatKhau = BCrypt.Net.BCrypt.HashPassword(matKhauMoi);
+        user.MatKhauTuDat = true;
+        user.OtpResetMatKhau = null;
+        user.OtpResetMatKhauHetHan = null;
+        await _context.SaveChangesAsync();
+
+        TempData["success"] = "Đặt lại mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.";
+        return RedirectToAction(nameof(Login));
+    }
+
     // ── REGISTER ───────────────────────────────────────────
     public IActionResult Register() => View();
 
@@ -141,6 +214,7 @@ public class AuthController : Controller
             Email = Email,
             SoDienThoai = SoDienThoai,
             MatKhau = BCrypt.Net.BCrypt.HashPassword(MatKhau),
+            MatKhauTuDat = true, // đăng ký thường → mật khẩu là do chính họ đặt
             MaChucVu = "STU",
             TrangThai = true,
             MaDocGia = newMaDG,
@@ -526,6 +600,7 @@ public class AuthController : Controller
             Email = email,
             SoDienThoai = SoDienThoai,
             MatKhau = randomPw,
+            MatKhauTuDat = false, // tài khoản Google — chưa từng tự đặt mật khẩu thật
             MaChucVu = "STU",
             TrangThai = true,
             MaDocGia = newMaDG,
@@ -644,6 +719,7 @@ public class AuthController : Controller
             Email = NewEmail,
             SoDienThoai = soDT,
             MatKhau = randomPw,
+            MatKhauTuDat = false, // tài khoản Google — chưa từng tự đặt mật khẩu thật
             MaChucVu = "STU",
             TrangThai = true,
             MaDocGia = newMaDG,

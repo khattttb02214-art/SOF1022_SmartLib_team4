@@ -1,0 +1,129 @@
+@using SmartLib.Web.Interfaces
+@model KetQuaTimKiemAI
+@{
+    ViewData["Title"] = "Tìm sách bằng AI";
+}
+
+@section Styles {
+<style>
+/* Tái sử dụng đúng style "book-card" đã dùng ở trang Yêu thích/Tìm kiếm để đồng bộ giao diện,
+   bổ sung thêm .book-meta cho 2 dòng thông tin mới (Tác giả, Nhà xuất bản). */
+.book-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:18px; }
+.book-card  { background:var(--c-white); border-radius:16px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.07);
+              transition:transform .2s, box-shadow .2s; display:flex; flex-direction:column; }
+.book-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.13); }
+.book-cover-link { display:block; height:200px; overflow:hidden; flex-shrink:0; }
+.book-cover  { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.book-card:hover .book-cover { transform:scale(1.04); }
+.book-cover-placeholder { width:100%; height:100%; background:linear-gradient(135deg,#e8edf8,#c9d7f0);
+                           display:flex; align-items:center; justify-content:center; color:#7998cc; }
+.book-info  { padding:12px; flex:1; display:flex; flex-direction:column; gap:5px; }
+.book-genre { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#6b7280; }
+.book-title { font-size:13px; font-weight:700; color:var(--c-text); line-height:1.4; margin:0;
+              display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.book-title-link { text-decoration:none; }
+.book-meta  { font-size:11.5px; color:#6b7280; display:flex; align-items:center; gap:5px;
+              white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.book-avail { font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px; margin-top:2px; }
+.avail-yes  { color:#15803d; }
+.avail-no   { color:#dc2626; }
+.empty-state { text-align:center; padding:60px 20px; color:#9ca3af; }
+.empty-state i { display:block; margin-bottom:14px; }
+
+/* Ô nhập AI Search - điểm nhấn màu tím để phân biệt với tìm kiếm truyền thống */
+.ai-search-card { border:1.5px solid var(--c-purple-pale); }
+.ai-search-card .btn-ai { background:linear-gradient(135deg, var(--c-purple), #6d28d9); color:#fff; border:none; }
+.ai-search-card .btn-ai:hover { filter:brightness(1.06); color:#fff; }
+</style>
+}
+
+<div class="page-header-card">
+    <h4><i class="fa fa-wand-magic-sparkles me-2" style="color:var(--c-purple)"></i>Tìm sách bằng AI</h4>
+</div>
+
+<div class="card shadow-sm mb-4 ai-search-card">
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="d-flex gap-2 flex-wrap">
+            <input type="text" name="q" value="@Model.CauHoiGoc"
+                   placeholder="VD: Tôi muốn học C#, có sách về trí tuệ nhân tạo không?..."
+                   class="form-control" style="max-width:460px" />
+            <button type="submit" class="btn btn-ai"><i class="fa fa-wand-magic-sparkles me-1"></i>Tìm bằng AI</button>
+            <a asp-controller="Home" asp-action="Search" asp-route-q="@Model.CauHoiGoc"
+               class="btn btn-outline-secondary">
+                <i class="fa fa-magnifying-glass me-1"></i>Dùng tìm kiếm thường
+            </a>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.CauHoiGoc) && Model.TuKhoaDaTim.Any())
+{
+    <p class="text-muted mb-2">
+        <i class="fa fa-lightbulb me-1" style="color:var(--c-gold)"></i>
+        AI hiểu bạn đang tìm sách liên quan tới: <strong>@string.Join(", ", Model.TuKhoaDaTim)</strong>
+    </p>
+}
+
+@if (Model.LaGoiYGanGiong && Model.DanhSachSach.Any())
+{
+    <div class="alert alert-info d-flex align-items-center gap-2">
+        <i class="fa fa-circle-info"></i>
+        <div>Không tìm thấy sách khớp chính xác với "<strong>@Model.CauHoiGoc</strong>". Đây là những sách có tên GẦN GIỐNG nhất mà AI tìm thấy — biết đâu bạn gõ nhầm chính tả?</div>
+    </div>
+}
+
+@if (string.IsNullOrWhiteSpace(Model.CauHoiGoc))
+{
+    <div class="empty-state">
+        <i class="fa fa-wand-magic-sparkles fa-3x mb-3"></i>
+        <p>Nhập 1 câu hỏi tự nhiên, VD: "Tôi muốn học SQL" — AI sẽ tự hiểu và tìm sách phù hợp giúp bạn.</p>
+    </div>
+}
+else if (!Model.DanhSachSach.Any())
+{
+    <div class="empty-state">
+        <i class="fa fa-magnifying-glass fa-3x mb-3"></i>
+        <p>Không tìm thấy sách phù hợp, kể cả gợi ý gần giống. Bạn thử đổi từ khóa khác nhé.</p>
+    </div>
+}
+else
+{
+    <p class="text-muted mb-3">Tìm thấy <strong>@Model.DanhSachSach.Count</strong> sách</p>
+    <div class="book-grid">
+        @foreach (var s in Model.DanhSachSach)
+        {
+            var tenTacGia = (s.SachTacGias != null && s.SachTacGias.Any(st => st.TacGia != null))
+                ? string.Join(", ", s.SachTacGias.Where(st => st.TacGia != null).Select(st => st.TacGia!.TenTacGia))
+                : "Đang cập nhật";
+            var tenNXB = s.NhaXuatBan?.TenNXB ?? "Đang cập nhật";
+
+            <div class="book-card">
+                <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="book-cover-link">
+                    @if (!string.IsNullOrEmpty(s.AnhBia))
+                    {
+                        <img src="/uploads/books/@s.AnhBia" class="book-cover" alt="@s.TenSach" />
+                    }
+                    else
+                    {
+                        <div class="book-cover-placeholder"><i class="fa fa-book fa-3x"></i></div>
+                    }
+                </a>
+                <div class="book-info">
+                    <div class="book-genre">@(s.TheLoai?.TenTheLoai ?? "Chưa phân loại")</div>
+                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="book-title-link">
+                        <h6 class="book-title">@s.TenSach</h6>
+                    </a>
+                    <div class="book-meta" title="@tenTacGia"><i class="fa fa-user-pen"></i>@tenTacGia</div>
+                    <div class="book-meta" title="@tenNXB"><i class="fa fa-building"></i>@tenNXB</div>
+                    <div class="book-avail @(s.SoLuongKhaDung > 0 ? "avail-yes" : "avail-no")">
+                        <i class="fa @(s.SoLuongKhaDung > 0 ? "fa-circle-check" : "fa-circle-xmark")"></i>
+                        @(s.SoLuongKhaDung > 0 ? $"Còn {s.SoLuongKhaDung} cuốn" : "Hết sách")
+                    </div>
+                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@s.MaSach" class="btn btn-sm btn-outline-primary mt-2">
+                        <i class="fa fa-eye me-1"></i>Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}

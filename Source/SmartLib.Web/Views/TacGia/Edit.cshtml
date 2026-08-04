@@ -1,14 +1,35 @@
 @model SmartLib.Web.ViewModels.TacGiaViewModel
 @{ ViewData["Title"] = "Sửa tác giả"; }
 <div class="page-header-card"><h4><i class="fa fa-pen me-2"></i>Sửa tác giả</h4></div>
-<form asp-action="Edit" asp-route-id="@Model.MaTacGia" method="post">
+<form asp-action="Edit" asp-route-id="@Model.MaTacGia" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     <div class="row g-4">
         <div class="col-lg-7"><div class="form-card"><div class="row g-3">
             <div class="col-md-4"><label class="form-label">Mã tác giả</label><input asp-for="MaTacGia" class="form-control bg-light" readonly /></div>
             <div class="col-md-8"><label class="form-label req">Tên tác giả</label><input asp-for="TenTacGia" class="form-control" required /></div>
-            <div class="col-md-6"><label class="form-label">Quốc tịch</label><input asp-for="QuocTich" class="form-control" /></div>
+            <div class="col-md-4"><label class="form-label">Quốc tịch</label><input asp-for="QuocTich" class="form-control" /></div>
+            <div class="col-md-4"><label class="form-label">Bút danh</label><input asp-for="ButDanh" class="form-control" placeholder="Nếu có" /></div>
+            <div class="col-md-2">
+                <label class="form-label">Năm sinh</label>
+                <input asp-for="NamSinh" class="form-control" type="number" min="1" max="2100" />
+                <span asp-validation-for="NamSinh" class="text-danger small"></span>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Năm mất</label>
+                <input asp-for="NamMat" class="form-control" type="number" min="1" max="2100" placeholder="Còn sống" />
+                <span asp-validation-for="NamMat" class="text-danger small"></span>
+            </div>
             <div class="col-12"><label class="form-label">Tiểu sử</label><textarea asp-for="TieuSu" class="form-control" rows="5"></textarea></div>
+            <div class="col-12">
+                <label class="form-label">Ảnh đại diện</label>
+                @if (!string.IsNullOrEmpty(Model.AnhDaiDienHienTai))
+                {
+                    <div class="mb-2"><img src="~/uploads/authors/@Model.AnhDaiDienHienTai" style="width:80px;height:80px;object-fit:cover;border-radius:10px" /></div>
+                }
+                <input asp-for="AnhDaiDien" class="form-control" type="file" accept="image/*" />
+                <input type="hidden" asp-for="AnhDaiDienHienTai" />
+                <div class="form-text text-muted">Chọn ảnh mới để thay thế, để trống nếu giữ nguyên</div>
+            </div>
         </div></div></div>
         <div class="col-lg-5"><div class="form-card d-grid gap-2">
             <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-save me-2"></i>Lưu</button>

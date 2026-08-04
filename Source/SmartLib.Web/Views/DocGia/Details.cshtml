@@ -1,0 +1,249 @@
+@model SmartLib.Web.Models.DocGia
+@{ ViewData["Title"] = Model.HoTen; }
+
+<div class="page-header-card d-flex justify-content-between align-items-center">
+	<h4 class="mb-0"><i class="fa fa-user-circle me-2"></i>Chi tiết độc giả</h4>
+	<div class="d-flex gap-2">
+		<a asp-action="Edit" asp-route-id="@Model.MaDocGia" class="btn btn-outline-primary btn-sm"><i class="fa fa-pen me-1"></i>Sửa</a>
+		<a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i>Quay lại</a>
+	</div>
+</div>
+
+<div class="row g-4">
+	<!-- Left: Avatar & Basic Info -->
+	<div class="col-md-4">
+		<div class="info-detail-card text-center">
+			<!-- Avatar -->
+			<div class="detail-avatar mb-3">
+				@if (!string.IsNullOrEmpty(Model.AnhDaiDien))
+				{
+					<img src="/uploads/readers/@Model.AnhDaiDien" width="120" height="120" class="rounded-circle" style="object-fit:cover;border:3px solid #e8edf8" />
+				}
+				else
+				{
+					<div style="width:120px;height:120px;border-radius:50%;background:var(--bs-primary-bg-subtle);display:grid;place-items:center;margin:0 auto">
+						<i class="fa fa-user text-primary fa-3x"></i>
+					</div>
+				}
+			</div>
+
+			<!-- Name & ID -->
+			<h5 class="fw-bold">@Model.HoTen</h5>
+			<p class="text-muted small font-monospace mb-3">Mã: @Model.MaDocGia</p>
+
+			<!-- Status Badge -->
+			<div class="mb-3">
+				@if (!Model.DaDuyet)
+				{
+					<span class="badge bg-warning-subtle text-warning"><i class="fa fa-clock me-1"></i>Chờ duyệt</span>
+				}
+				else if (Model.TrangThaiThe)
+				{
+					<span class="badge bg-success-subtle text-success"><i class="fa fa-check me-1"></i>Hoạt động</span>
+				}
+				else
+				{
+					<span class="badge bg-secondary-subtle text-secondary"><i class="fa fa-ban me-1"></i>Khóa thẻ</span>
+				}
+			</div>
+		</div>
+
+		<!-- Library Card Info -->
+		<div class="card shadow-sm mt-3">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-id-card me-2"></i>Thẻ thư viện
+			</div>
+			<div class="card-body">
+				@if (!string.IsNullOrEmpty(Model.MaTheTV))
+				{
+					<p class="mb-2">
+						<small class="text-muted">Mã thẻ:</small><br>
+						<span class="badge bg-primary-subtle text-primary font-monospace fs-6">@Model.MaTheTV</span>
+					</p>
+				}
+				else
+				{
+					<p class="text-muted small"><i class="fa fa-exclamation-circle me-1"></i>Chưa có thẻ thư viện</p>
+				}
+
+				@if (Model.NgayTaoThe.HasValue)
+				{
+					<p class="mb-2">
+						<small class="text-muted">Ngày cấp:</small><br>
+						<span class="fw-semibold">@Model.NgayTaoThe.Value.ToString("dd/MM/yyyy")</span>
+					</p>
+				}
+
+				@if (Model.NgayHetHan.HasValue)
+				{
+					<p class="mb-0">
+						<small class="text-muted">Ngày hết hạn:</small><br>
+						<span class="fw-semibold">@Model.NgayHetHan.Value.ToString("dd/MM/yyyy")</span>
+					</p>
+				}
+			</div>
+		</div>
+	</div>
+
+	<!-- Right: Detailed Information -->
+	<div class="col-md-8">
+		<!-- Personal Information -->
+		<div class="card shadow-sm mb-3">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-info-circle me-2"></i>Thông tin cá nhân
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label text-muted small">Họ tên</label>
+						<div class="fw-semibold">@Model.HoTen</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label text-muted small">Ngày sinh</label>
+						<div class="fw-semibold">
+							@if (Model.NgaySinh.HasValue)
+							{
+								<span>@Model.NgaySinh.Value.ToString("dd/MM/yyyy")</span>
+							}
+							else
+							{
+								<span class="text-muted">-</span>
+							}
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label text-muted small">Email</label>
+						<div>
+							@if (!string.IsNullOrEmpty(Model.Email))
+							{
+								<a href="mailto:@Model.Email" class="text-decoration-none fw-semibold">
+									<i class="fa fa-envelope me-1"></i>@Model.Email
+								</a>
+							}
+							else
+							{
+								<span class="text-muted">-</span>
+							}
+						</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label text-muted small">Số điện thoại</label>
+						<div>
+							@if (!string.IsNullOrEmpty(Model.SoDienThoai))
+							{
+								<a href="tel:@Model.SoDienThoai" class="text-decoration-none fw-semibold">
+									<i class="fa fa-phone me-1"></i>@Model.SoDienThoai
+								</a>
+							}
+							else
+							{
+								<span class="text-muted">-</span>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Education Information -->
+		<div class="card shadow-sm mb-3">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-graduation-cap me-2"></i>Thông tin học tập
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label text-muted small">Lớp</label>
+						<div class="fw-semibold">
+							@if (!string.IsNullOrEmpty(Model.Lop))
+							{
+								<span>@Model.Lop</span>
+							}
+							else
+							{
+								<span class="text-muted">-</span>
+							}
+						</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label text-muted small">Khoa/Viện</label>
+						<div class="fw-semibold">
+							@if (!string.IsNullOrEmpty(Model.Khoa))
+							{
+								<span>@Model.Khoa</span>
+							}
+							else
+							{
+								<span class="text-muted">-</span>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Contact Information -->
+		<div class="card shadow-sm">
+			<div class="card-header fw-semibold bg-light">
+				<i class="fa fa-map-marker me-2"></i>Địa chỉ liên hệ
+			</div>
+			<div class="card-body">
+				@if (!string.IsNullOrEmpty(Model.DiaChi))
+				{
+					<p class="mb-0">@Model.DiaChi</p>
+				}
+				else
+				{
+					<p class="text-muted mb-0">Chưa cập nhật địa chỉ</p>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.info-detail-card {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		border-radius: 12px;
+		padding: 30px 20px;
+		color: white;
+		box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+	}
+
+	.info-detail-card h5,
+	.info-detail-card p {
+		color: white;
+	}
+
+	.info-detail-card .badge {
+		display: inline-block;
+		padding: 6px 12px;
+	}
+
+	.detail-avatar {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.detail-avatar img,
+	.detail-avatar div {
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+
+	.card-header {
+		border-bottom: 2px solid #f0f0f0;
+	}
+
+	.card-header i {
+		color: var(--bs-primary);
+	}
+
+	.form-label {
+		font-weight: 600;
+		margin-bottom: 8px;
+	}
+</style>

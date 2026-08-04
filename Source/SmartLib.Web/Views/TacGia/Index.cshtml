@@ -1,5 +1,7 @@
 @model List<SmartLib.Web.Models.TacGia>
-@{ ViewData["Title"] = "Tác giả"; }
+@{
+    ViewData["Title"] = "Tác giả";
+}
 <div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-2">
     <h4 class="mb-0"><i class="fa fa-pen-nib me-2"></i>Quản lý tác giả</h4>
     <div class="d-flex gap-2 flex-wrap">
@@ -8,59 +10,113 @@
         <a asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus me-1"></i>Thêm tác giả</a>
     </div>
 </div>
-<div class="card shadow-sm mb-3 border-0"><div class="card-body py-2">
-    <form method="get" class="d-flex gap-2">
-        <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:300px" placeholder="Tìm tên tác giả..." />
-        <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
-    </form>
-</div></div>
-<div class="card shadow-sm border-0"><div class="card-body p-0">
-    <table class="table table-hover align-middle mb-0" id="tgTable">
-        <thead class="table-light">
-            <tr><th class="ps-3">Tên tác giả</th><th>Quốc tịch</th><th>Tiểu sử</th><th class="text-center">Thao tác</th></tr>
-        </thead>
-        <tbody>
-            @foreach (var t in Model)
-            {
-                <tr>
-                    <td class="ps-3">
-                        <div class="fw-semibold">@t.TenTacGia</div>
-                        <small class="text-muted font-monospace">@t.MaTacGia</small>
-                    </td>
-                    <td>@(t.QuocTich ?? "—")</td>
-                    <td><small class="text-muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">@(t.TieuSu ?? "—")</small></td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center gap-1">
-                            <a asp-action="Detail" asp-route-id="@t.MaTacGia" class="btn btn-xs btn-outline-info" title="Chi tiết"><i class="fa fa-eye"></i></a>
-                            <a asp-action="Edit" asp-route-id="@t.MaTacGia" class="btn btn-xs btn-outline-primary" title="Sửa"><i class="fa fa-pen"></i></a>
-                            <button onclick="confirmDelete('/TacGia/Delete/@t.MaTacGia')" class="btn btn-xs btn-outline-danger" title="Xóa"><i class="fa fa-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div></div>
+<div class="card shadow-sm mb-3 border-0">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" style="max-width:300px" placeholder="Tìm tên tác giả..." />
+            <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+        </form>
+    </div>
+</div>
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0" id="tgTable">
+            <thead class="table-light">
+                <tr><th class="ps-3"></th><th>Tên tác giả</th><th>Năm sinh - mất</th><th>Quốc tịch</th><th>Tiểu sử</th><th class="text-center">Trạng thái</th><th class="text-center">Thao tác</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+                        <td class="ps-3" style="width:44px">
+                            @if (!string.IsNullOrEmpty(t.AnhDaiDien))
+                            {
+                                <img src="~/uploads/authors/@t.AnhDaiDien" style="width:36px;height:36px;object-fit:cover;border-radius:50%" />
+                            }
+                            else
+                            {
+                                <div style="width:36px;height:36px;border-radius:50%;background:var(--c-blue-soft,#e8edfb);display:flex;align-items:center;justify-content:center"><i class="fa fa-pen-nib text-primary small"></i></div>
+                            }
+                        </td>
+                        <td>
+                            <div class="fw-semibold">@t.TenTacGia</div>
+                            <small class="text-muted font-monospace">@t.MaTacGia</small>
+                            @if (!string.IsNullOrEmpty(t.ButDanh))
+                            {
+                                <div><small class="text-muted fst-italic">Bút danh: @t.ButDanh</small></div>
+                            }
+                        </td>
+                        <td>
+                            @if (t.NamSinh.HasValue)
+                            {
+                                <span>@t.NamSinh – @(t.NamMat.HasValue ? t.NamMat.ToString() : "nay")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+                        <td>@(t.QuocTich ?? "—")</td>
+                        <td><small class="text-muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">@(t.TieuSu ?? "—")</small></td>
+                        <td class="text-center">
+                            @if (t.TrangThai)
+                            {
+                                <span class="badge bg-success-soft"><i class="fa fa-check me-1"></i>Hoạt động</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-secondary"><i class="fa fa-ban me-1"></i>Ngừng HĐ</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a asp-action="Detail" asp-route-id="@t.MaTacGia" class="btn btn-xs btn-outline-info" title="Chi tiết"><i class="fa fa-eye"></i></a>
+                                <a asp-action="Edit" asp-route-id="@t.MaTacGia" class="btn btn-xs btn-outline-primary" title="Sửa"><i class="fa fa-pen"></i></a>
+                                <button onclick="confirmToggle('/TacGia/ToggleStatus/@t.MaTacGia', @(t.TrangThai ? "true" : "false"), '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(t.TenTacGia))')" class="btn btn-xs @(t.TrangThai ? "btn-outline-secondary" : "btn-outline-success")" title="@(t.TrangThai ? "Ngừng hoạt động" : "Kích hoạt lại")"><i class="fa @(t.TrangThai ? "fa-ban" : "fa-rotate-left")"></i></button>
+                                <button onclick="confirmDelete('/TacGia/Delete/@t.MaTacGia')" class="btn btn-xs btn-outline-danger" title="Xóa hẳn"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="modal fade" id="importModal" tabindex="-1">
-    <div class="modal-dialog"><div class="modal-content">
-        <div class="modal-header"><h5 class="modal-title"><i class="fa fa-file-import me-2 text-info"></i>Import tác giả từ Excel</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-        <form asp-action="ImportExcel" method="post" enctype="multipart/form-data">@Html.AntiForgeryToken()
-            <div class="modal-body">
-                <div class="alert alert-info small"><i class="fa fa-circle-info me-1"></i>Cột: <strong>Tên tác giả, Quốc tịch, Tiểu sử</strong>. <a asp-action="DownloadTemplate" class="alert-link">Tải file mẫu</a></div>
-                <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" class="btn btn-info text-white"><i class="fa fa-upload me-1"></i>Import</button>
-            </div>
-        </form>
-    </div></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title"><i class="fa fa-file-import me-2 text-info"></i>Import tác giả từ Excel</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="alert alert-info small"><i class="fa fa-circle-info me-1"></i>Cột: <strong>Tên tác giả, Quốc tịch, Tiểu sử</strong>. <a asp-action="DownloadTemplate" class="alert-link">Tải file mẫu</a></div>
+                    <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-info text-white"><i class="fa fa-upload me-1"></i>Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-<script>
-$("#tgTable").DataTable({pageLength:25,language:{search:"Tìm:",info:"_START_–_END_ / _TOTAL_",paginate:{next:"›",previous:"‹"}}});
-function confirmDelete(url){Swal.fire({title:'Xóa tác giả này?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
-</script>
+    <script>
+        $("#tgTable").DataTable({pageLength:25,language:{search:"Tìm:",info:"_START_–_END_ / _TOTAL_",paginate:{next:"›",previous:"‹"}}});
+        function confirmDelete(url){Swal.fire({title:'Xóa tác giả này?',icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonText:'Hủy',confirmButtonText:'Xóa'}).then(r=>{if(r.isConfirmed)window.location.href=url;});}
+        function confirmToggle(url, dangHoatDong, ten){
+            const active = dangHoatDong === true || dangHoatDong === 'true';
+            const hanhDong = active ? 'ngừng hoạt động' : 'kích hoạt lại';
+            Swal.fire({
+                title: active ? 'Ngừng hoạt động tác giả này?' : 'Kích hoạt lại tác giả này?',
+                html: `Bạn muốn ${hanhDong} <strong>${ten}</strong>?<br><small class="text-muted">Dữ liệu sách liên kết vẫn được giữ nguyên.</small>`,
+                icon: 'question', showCancelButton: true,
+                confirmButtonColor: active ? '#6c757d' : '#198754',
+                cancelButtonText: 'Hủy', confirmButtonText: active ? 'Ngừng hoạt động' : 'Kích hoạt lại'
+            }).then(r=>{if(r.isConfirmed) window.location.href = url;});
+        }
+    </script>
 }

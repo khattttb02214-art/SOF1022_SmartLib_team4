@@ -68,4 +68,99 @@ public class StaffController : Controller
 
         return View(model);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> EditProfile()
+    {
+        var maNV = User.FindFirst("MaNV")?.Value;
+
+        if (string.IsNullOrEmpty(maNV))
+            return RedirectToAction("Login", "Auth");
+
+        var nhanVien = await _context.NhanViens
+            .Include(x => x.ChucVu)
+            .FirstOrDefaultAsync(x => x.MaNV == maNV);
+
+        if (nhanVien == null)
+            return NotFound();
+
+        return View(nhanVien);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditProfile(
+        string HoTen,
+        string? SoDienThoai,
+        string? DiaChi,
+        string? NewEmail,
+        IFormFile? AnhDaiDienFile)
+    {
+        var maNV = User.FindFirst("MaNV")?.Value;
+
+        if (string.IsNullOrEmpty(maNV))
+            return RedirectToAction("Login", "Auth");
+
+        var nhanVien = await _context.NhanViens
+            .FirstOrDefaultAsync(x => x.MaNV == maNV);
+
+        if (nhanVien == null)
+            return NotFound();
+
+        // Cập nhật thông tin
+        nhanVien.HoTen = HoTen;
+        nhanVien.SoDienThoai = SoDienThoai;
+        nhanVien.DiaChi = DiaChi;
+        nhanVien.NgayCapNhat = DateTime.Now;
+
+        // Tạm thời đổi email trực tiếp
+        // Sau này thay bằng OTP
+        if (!string.IsNullOrWhiteSpace(NewEmail))
+        {
+            bool tonTai = await _context.NhanViens
+                .AnyAsync(x => x.Email == NewEmail && x.MaNV != maNV);
+
+            if (tonTai)
+            {
+                ViewBag.Error = "Email đã tồn tại.";
+                nhanVien.ChucVu = await _context.ChucVus
+                    .FirstOrDefaultAsync(x => x.MaChucVu == nhanVien.MaChucVu);
+                return View(nhanVien);
+            }
+
+            nhanVien.Email = NewEmail;
+        }
+
+        // Upload ảnh đại diện
+        if (AnhDaiDienFile != null && AnhDaiDienFile.Length > 0)
+        {
+            string folder = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "uploads",
+                "staff");
+
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            string fileName = Guid.NewGuid().ToString()
+                            + Path.GetExtension(AnhDaiDienFile.FileName);
+
+            string filePath = Path.Combine(folder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await AnhDaiDienFile.CopyToAsync(stream);
+            }
+
+            nhanVien.AnhDaiDien = "/uploads/staff/" + fileName;
+        }
+
+        await _context.SaveChangesAsync();
+
+        TempData["success"] = "Cập nhật thông tin thành công.";
+
+        return RedirectToAction(nameof(EditProfile));
+    }
 }
+    

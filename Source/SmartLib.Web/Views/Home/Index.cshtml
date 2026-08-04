@@ -34,6 +34,11 @@
                            value="@ViewBag.Query"
                            autocomplete="off" class="sl-search__input" />
                     <button type="submit" class="sl-search__btn">Tìm kiếm</button>
+                    <button type="submit" formaction="/AISearch" formmethod="get"
+                            class="sl-search__btn sl-search__btn--ai"
+                            title="Tìm bằng AI - hiểu câu hỏi bằng ngôn ngữ tự nhiên">
+                        <i class="fa fa-wand-magic-sparkles"></i> Tìm bằng AI
+                    </button>
                 </form>
                 <div class="sl-search__drop" id="slSearchDrop"></div>
             </div>

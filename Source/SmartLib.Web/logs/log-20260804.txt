@@ -1,0 +1,553 @@
+2026-08-04 08:18:08.150 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:18:08.195 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:18:08.288 +07:00 [INF] No migrations were found in assembly 'SmartLib.Web'. A migration needs to be added before the database can be updated.
+2026-08-04 08:18:13.811 +07:00 [INF] Executed DbCommand (432ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2026-08-04 08:18:13.824 +07:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2026-08-04 08:18:14.376 +07:00 [INF] Executed DbCommand (549ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2026-08-04 08:18:16.206 +07:00 [INF] Executed DbCommand (1,022ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2026-08-04 08:18:17.941 +07:00 [INF] Executed DbCommand (608ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2026-08-04 08:18:18.310 +07:00 [INF] Executed DbCommand (368ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2026-08-04 08:18:18.771 +07:00 [INF] Executed DbCommand (454ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2026-08-04 08:18:18.784 +07:00 [INF] No migrations were applied. The database is already up to date.
+2026-08-04 08:18:19.806 +07:00 [INF] Executed DbCommand (533ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2026-08-04 08:22:54.174 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:22:54.214 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:22:56.892 +07:00 [INF] Executed DbCommand (615ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2026-08-04 08:22:57.299 +07:00 [INF] Executed DbCommand (392ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2026-08-04 08:22:57.864 +07:00 [INF] Executed DbCommand (550ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2026-08-04 08:25:13.040 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:25:13.089 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:25:33.336 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:25:33.381 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:25:37.532 +07:00 [INF] Executed DbCommand (1,095ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2026-08-04 08:25:37.576 +07:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2026-08-04 08:25:38.273 +07:00 [INF] Executed DbCommand (691ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2026-08-04 08:25:39.311 +07:00 [INF] Executed DbCommand (406ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2026-08-04 08:25:40.544 +07:00 [INF] Executed DbCommand (388ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2026-08-04 08:25:41.016 +07:00 [INF] Executed DbCommand (470ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2026-08-04 08:25:41.336 +07:00 [INF] Executed DbCommand (308ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2026-08-04 08:25:41.373 +07:00 [INF] Applying migration '20260804012518_InitialCreate'.
+2026-08-04 08:25:42.149 +07:00 [INF] Executed DbCommand (370ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ChucVu] (
+    [MaChucVu] nvarchar(10) NOT NULL,
+    [TenChucVu] nvarchar(50) NOT NULL,
+    CONSTRAINT [PK_ChucVu] PRIMARY KEY ([MaChucVu])
+);
+2026-08-04 08:25:42.546 +07:00 [INF] Executed DbCommand (396ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [DocGia] (
+    [MaDocGia] nvarchar(10) NOT NULL,
+    [HoTen] nvarchar(100) NOT NULL,
+    [Lop] nvarchar(50) NULL,
+    [Khoa] nvarchar(100) NULL,
+    [Email] nvarchar(100) NULL,
+    [SoDienThoai] nvarchar(15) NULL,
+    [DiaChi] nvarchar(max) NULL,
+    [NgaySinh] datetime2 NULL,
+    [NgayTaoThe] datetime2 NULL,
+    [NgayHetHan] datetime2 NULL,
+    [TrangThaiThe] bit NOT NULL,
+    [AnhDaiDien] nvarchar(max) NULL,
+    [MaTheTV] nvarchar(20) NULL,
+    [DaDuyet] bit NOT NULL,
+    CONSTRAINT [PK_DocGia] PRIMARY KEY ([MaDocGia])
+);
+2026-08-04 08:25:42.841 +07:00 [INF] Executed DbCommand (294ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [GoogleOtpTemp] (
+    [Id] int NOT NULL IDENTITY,
+    [Email] nvarchar(200) NOT NULL,
+    [GoogleId] nvarchar(100) NOT NULL,
+    [HoTen] nvarchar(200) NOT NULL,
+    [OtpCode] nvarchar(6) NOT NULL,
+    [OtpExpiry] datetime2 NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_GoogleOtpTemp] PRIMARY KEY ([Id])
+);
+2026-08-04 08:25:43.139 +07:00 [INF] Executed DbCommand (297ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [NhaXuatBan] (
+    [MaNXB] nvarchar(10) NOT NULL,
+    [TenNXB] nvarchar(100) NOT NULL,
+    [DiaChi] nvarchar(255) NULL,
+    [SoDienThoai] nvarchar(15) NULL,
+    [Email] nvarchar(100) NULL,
+    [TrangThai] bit NOT NULL,
+    CONSTRAINT [PK_NhaXuatBan] PRIMARY KEY ([MaNXB])
+);
+2026-08-04 08:25:43.434 +07:00 [INF] Executed DbCommand (294ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [NhomChucNang] (
+    [MaNhom] int NOT NULL IDENTITY,
+    [TenNhom] nvarchar(150) NOT NULL,
+    [Icon] nvarchar(50) NULL,
+    [ThuTu] int NOT NULL,
+    CONSTRAINT [PK_NhomChucNang] PRIMARY KEY ([MaNhom])
+);
+2026-08-04 08:25:43.731 +07:00 [INF] Executed DbCommand (296ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [TacGia] (
+    [MaTacGia] nvarchar(10) NOT NULL,
+    [TenTacGia] nvarchar(100) NOT NULL,
+    [TieuSu] nvarchar(max) NULL,
+    [QuocTich] nvarchar(100) NULL,
+    [ButDanh] nvarchar(100) NULL,
+    [NamSinh] int NULL,
+    [NamMat] int NULL,
+    [AnhDaiDien] nvarchar(255) NULL,
+    [TrangThai] bit NOT NULL,
+    CONSTRAINT [PK_TacGia] PRIMARY KEY ([MaTacGia])
+);
+2026-08-04 08:25:44.024 +07:00 [INF] Executed DbCommand (293ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [TheLoai] (
+    [MaTheLoai] nvarchar(10) NOT NULL,
+    [TenTheLoai] nvarchar(100) NOT NULL,
+    [MoTa] nvarchar(500) NULL,
+    CONSTRAINT [PK_TheLoai] PRIMARY KEY ([MaTheLoai])
+);
+2026-08-04 08:25:44.348 +07:00 [INF] Executed DbCommand (323ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [NhanVien] (
+    [MaNV] nvarchar(10) NOT NULL,
+    [HoTen] nvarchar(100) NOT NULL,
+    [Email] nvarchar(100) NULL,
+    [SoDienThoai] nvarchar(15) NULL,
+    [DiaChi] nvarchar(255) NULL,
+    [MatKhau] nvarchar(255) NOT NULL,
+    [AnhDaiDien] nvarchar(255) NULL,
+    [MaChucVu] nvarchar(10) NULL,
+    [TrangThai] bit NOT NULL,
+    [NgayTao] datetime2 NOT NULL,
+    [NgayCapNhat] datetime2 NULL,
+    [LaAdmin] bit NOT NULL,
+    [MaDocGia] nvarchar(10) NULL,
+    [OtpCode] nvarchar(max) NULL,
+    [OtpExpiry] datetime2 NULL,
+    [EmailVerified] bit NOT NULL,
+    [PendingEmail] nvarchar(max) NULL,
+    [GoogleId] nvarchar(100) NULL,
+    [MatKhauTuDat] bit NOT NULL,
+    [OtpResetMatKhau] nvarchar(6) NULL,
+    [OtpResetMatKhauHetHan] datetime2 NULL,
+    CONSTRAINT [PK_NhanVien] PRIMARY KEY ([MaNV]),
+    CONSTRAINT [FK_NhanVien_ChucVu_MaChucVu] FOREIGN KEY ([MaChucVu]) REFERENCES [ChucVu] ([MaChucVu])
+);
+2026-08-04 08:25:45.095 +07:00 [INF] Executed DbCommand (746ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [TheThuVien] (
+    [Id] int NOT NULL IDENTITY,
+    [MaThe] nvarchar(20) NOT NULL,
+    [MaDocGia] nvarchar(10) NULL,
+    [AnhThe] nvarchar(max) NULL,
+    [NgayCap] datetime2 NOT NULL,
+    [NgayHetHan] datetime2 NOT NULL,
+    [TrangThai] bit NOT NULL,
+    CONSTRAINT [PK_TheThuVien] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_TheThuVien_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]) ON DELETE SET NULL
+);
+2026-08-04 08:25:45.479 +07:00 [INF] Executed DbCommand (383ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [WishlistFolder] (
+    [Id] int NOT NULL IDENTITY,
+    [TenDanhMuc] nvarchar(100) NOT NULL,
+    [MaDocGia] nvarchar(10) NULL,
+    [NgayTao] datetime2 NOT NULL,
+    CONSTRAINT [PK_WishlistFolder] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_WishlistFolder_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia])
+);
+2026-08-04 08:25:45.833 +07:00 [INF] Executed DbCommand (353ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [WishlistPreference] (
+    [Id] int NOT NULL IDENTITY,
+    [MaDocGia] nvarchar(10) NOT NULL,
+    [LoaiSoThich] nvarchar(20) NOT NULL,
+    [MaRef] nvarchar(10) NOT NULL,
+    [NgayTao] datetime2 NOT NULL,
+    CONSTRAINT [PK_WishlistPreference] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_WishlistPreference_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]) ON DELETE CASCADE
+);
+2026-08-04 08:25:46.252 +07:00 [INF] Executed DbCommand (418ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ChucNang] (
+    [MaChucNang] int NOT NULL IDENTITY,
+    [MaNhom] int NOT NULL,
+    [TenChucNang] nvarchar(150) NOT NULL,
+    [Controller] nvarchar(50) NULL,
+    [Icon] nvarchar(50) NULL,
+    [ThuTu] int NOT NULL,
+    CONSTRAINT [PK_ChucNang] PRIMARY KEY ([MaChucNang]),
+    CONSTRAINT [FK_ChucNang_NhomChucNang_MaNhom] FOREIGN KEY ([MaNhom]) REFERENCES [NhomChucNang] ([MaNhom]) ON DELETE NO ACTION
+);
+2026-08-04 08:25:46.934 +07:00 [INF] Executed DbCommand (682ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [KeSach] (
+    [MaKe] nvarchar(10) NOT NULL,
+    [TenKe] nvarchar(100) NOT NULL,
+    [ViTri] nvarchar(200) NULL,
+    [Tang] int NULL,
+    [Phong] nvarchar(50) NULL,
+    [MoTa] nvarchar(200) NULL,
+    [SucChua] int NULL,
+    [MaNXBPhuTrach] nvarchar(10) NULL,
+    [MaTheLoaiPhuTrach] nvarchar(10) NULL,
+    [TrangThai] bit NOT NULL,
+    CONSTRAINT [PK_KeSach] PRIMARY KEY ([MaKe]),
+    CONSTRAINT [FK_KeSach_NhaXuatBan_MaNXBPhuTrach] FOREIGN KEY ([MaNXBPhuTrach]) REFERENCES [NhaXuatBan] ([MaNXB]) ON DELETE SET NULL,
+    CONSTRAINT [FK_KeSach_TheLoai_MaTheLoaiPhuTrach] FOREIGN KEY ([MaTheLoaiPhuTrach]) REFERENCES [TheLoai] ([MaTheLoai]) ON DELETE SET NULL
+);
+2026-08-04 08:25:47.432 +07:00 [INF] Executed DbCommand (498ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [MuonTra] (
+    [MaPhieu] nvarchar(10) NOT NULL,
+    [MaDocGia] nvarchar(10) NULL,
+    [MaNV] nvarchar(10) NULL,
+    [NgayMuon] datetime2 NOT NULL,
+    [NgayHenTra] datetime2 NOT NULL,
+    [NgayTraThucTe] datetime2 NULL,
+    [TienPhat] decimal(18,2) NOT NULL,
+    [TrangThai] nvarchar(50) NOT NULL,
+    [GhiChu] nvarchar(255) NULL,
+    [DaGiaHan] bit NOT NULL,
+    CONSTRAINT [PK_MuonTra] PRIMARY KEY ([MaPhieu]),
+    CONSTRAINT [FK_MuonTra_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_MuonTra_NhanVien_MaNV] FOREIGN KEY ([MaNV]) REFERENCES [NhanVien] ([MaNV]) ON DELETE NO ACTION
+);
+2026-08-04 08:25:47.963 +07:00 [INF] Executed DbCommand (531ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [NhatKyHoatDong] (
+    [MaLog] int NOT NULL IDENTITY,
+    [MaNV] nvarchar(10) NULL,
+    [HanhDong] nvarchar(255) NULL,
+    [MoTa] nvarchar(max) NULL,
+    [ThoiGian] datetime2 NOT NULL,
+    CONSTRAINT [PK_NhatKyHoatDong] PRIMARY KEY ([MaLog]),
+    CONSTRAINT [FK_NhatKyHoatDong_NhanVien_MaNV] FOREIGN KEY ([MaNV]) REFERENCES [NhanVien] ([MaNV]) ON DELETE SET NULL
+);
+2026-08-04 08:25:48.489 +07:00 [INF] Executed DbCommand (525ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Reservation] (
+    [MaReservation] int NOT NULL IDENTITY,
+    [MaDocGia] nvarchar(10) NULL,
+    [NgayDat] datetime2 NOT NULL,
+    [TrangThai] nvarchar(50) NULL,
+    [MaNV] nvarchar(10) NULL,
+    [GhiChu] nvarchar(255) NULL,
+    [DaMuon] bit NOT NULL,
+    [MaPhieuMuon] nvarchar(20) NULL,
+    CONSTRAINT [PK_Reservation] PRIMARY KEY ([MaReservation]),
+    CONSTRAINT [FK_Reservation_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]),
+    CONSTRAINT [FK_Reservation_NhanVien_MaNV] FOREIGN KEY ([MaNV]) REFERENCES [NhanVien] ([MaNV])
+);
+2026-08-04 08:25:48.929 +07:00 [INF] Executed DbCommand (439ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [PhanQuyenNhanVien] (
+    [MaPQ] int NOT NULL IDENTITY,
+    [MaNV] nvarchar(10) NOT NULL,
+    [MaChucNang] int NOT NULL,
+    [DuocXem] bit NOT NULL,
+    [DuocThem] bit NOT NULL,
+    [DuocSua] bit NOT NULL,
+    [DuocXoa] bit NOT NULL,
+    CONSTRAINT [PK_PhanQuyenNhanVien] PRIMARY KEY ([MaPQ]),
+    CONSTRAINT [FK_PhanQuyenNhanVien_ChucNang_MaChucNang] FOREIGN KEY ([MaChucNang]) REFERENCES [ChucNang] ([MaChucNang]) ON DELETE CASCADE,
+    CONSTRAINT [FK_PhanQuyenNhanVien_NhanVien_MaNV] FOREIGN KEY ([MaNV]) REFERENCES [NhanVien] ([MaNV]) ON DELETE CASCADE
+);
+2026-08-04 08:25:49.250 +07:00 [INF] Executed DbCommand (321ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Sach] (
+    [MaSach] nvarchar(10) NOT NULL,
+    [ISBN] nvarchar(20) NULL,
+    [Barcode] nvarchar(100) NULL,
+    [TenSach] nvarchar(200) NOT NULL,
+    [MaTheLoai] nvarchar(10) NULL,
+    [MaNXB] nvarchar(10) NULL,
+    [NamXuatBan] int NULL,
+    [NgonNgu] nvarchar(50) NULL,
+    [SoTrang] int NULL,
+    [MoTa] nvarchar(max) NULL,
+    [MaKe] nvarchar(10) NULL,
+    [SoLuongKho] int NOT NULL,
+    [SoLuongKhaDung] int NOT NULL,
+    [AnhBia] nvarchar(max) NULL,
+    [TrangThai] bit NOT NULL,
+    [NgayTao] datetime2 NOT NULL,
+    [NgayCapNhat] datetime2 NULL,
+    CONSTRAINT [PK_Sach] PRIMARY KEY ([MaSach]),
+    CONSTRAINT [FK_Sach_KeSach_MaKe] FOREIGN KEY ([MaKe]) REFERENCES [KeSach] ([MaKe]),
+    CONSTRAINT [FK_Sach_NhaXuatBan_MaNXB] FOREIGN KEY ([MaNXB]) REFERENCES [NhaXuatBan] ([MaNXB]),
+    CONSTRAINT [FK_Sach_TheLoai_MaTheLoai] FOREIGN KEY ([MaTheLoai]) REFERENCES [TheLoai] ([MaTheLoai])
+);
+2026-08-04 08:25:49.627 +07:00 [INF] Executed DbCommand (377ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ChiTietDatTruoc] (
+    [MaChiTiet] int NOT NULL IDENTITY,
+    [MaReservation] int NOT NULL,
+    [MaSach] nvarchar(10) NULL,
+    [SoLuong] int NOT NULL,
+    [GhiChu] nvarchar(255) NULL,
+    CONSTRAINT [PK_ChiTietDatTruoc] PRIMARY KEY ([MaChiTiet]),
+    CONSTRAINT [FK_ChiTietDatTruoc_Reservation_MaReservation] FOREIGN KEY ([MaReservation]) REFERENCES [Reservation] ([MaReservation]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ChiTietDatTruoc_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach])
+);
+2026-08-04 08:25:50.047 +07:00 [INF] Executed DbCommand (419ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [CuonSach] (
+    [MaCuonSach] nvarchar(20) NOT NULL,
+    [MaSach] nvarchar(10) NULL,
+    [Barcode] nvarchar(max) NULL,
+    [TrangThai] nvarchar(max) NULL,
+    [NgayNhap] datetime2 NOT NULL,
+    CONSTRAINT [PK_CuonSach] PRIMARY KEY ([MaCuonSach]),
+    CONSTRAINT [FK_CuonSach_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach])
+);
+2026-08-04 08:25:50.547 +07:00 [INF] Executed DbCommand (500ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [DanhGiaSach] (
+    [MaDanhGia] int NOT NULL IDENTITY,
+    [MaDocGia] nvarchar(10) NULL,
+    [MaSach] nvarchar(10) NULL,
+    [SoSao] int NOT NULL,
+    [NoiDung] nvarchar(1000) NULL,
+    [NgayDanhGia] datetime2 NOT NULL,
+    [TrangThai] nvarchar(50) NULL,
+    CONSTRAINT [PK_DanhGiaSach] PRIMARY KEY ([MaDanhGia]),
+    CONSTRAINT [FK_DanhGiaSach_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]),
+    CONSTRAINT [FK_DanhGiaSach_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach])
+);
+2026-08-04 08:25:50.846 +07:00 [INF] Executed DbCommand (298ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Ebook] (
+    [MaEbook] int NOT NULL IDENTITY,
+    [MaSach] nvarchar(10) NULL,
+    [TenFile] nvarchar(255) NULL,
+    [DuongDanFile] nvarchar(255) NULL,
+    [DinhDangFile] nvarchar(20) NULL,
+    [KichThuoc] bigint NULL,
+    [NgayTaiLen] datetime2 NULL,
+    CONSTRAINT [PK_Ebook] PRIMARY KEY ([MaEbook]),
+    CONSTRAINT [FK_Ebook_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach]) ON DELETE NO ACTION
+);
+2026-08-04 08:25:51.152 +07:00 [INF] Executed DbCommand (305ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Sach_TacGia] (
+    [MaSach] nvarchar(10) NOT NULL,
+    [MaTacGia] nvarchar(10) NOT NULL,
+    CONSTRAINT [PK_Sach_TacGia] PRIMARY KEY ([MaSach], [MaTacGia]),
+    CONSTRAINT [FK_Sach_TacGia_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Sach_TacGia_TacGia_MaTacGia] FOREIGN KEY ([MaTacGia]) REFERENCES [TacGia] ([MaTacGia]) ON DELETE CASCADE
+);
+2026-08-04 08:25:51.453 +07:00 [INF] Executed DbCommand (301ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ThongBao] (
+    [MaThongBao] int NOT NULL IDENTITY,
+    [MaDocGia] nvarchar(10) NULL,
+    [MaNV] nvarchar(10) NULL,
+    [TieuDe] nvarchar(200) NULL,
+    [NoiDung] nvarchar(500) NULL,
+    [LoaiThongBao] nvarchar(20) NULL,
+    [MaSach] nvarchar(10) NULL,
+    [DaDoc] bit NOT NULL,
+    [NgayTao] datetime2 NOT NULL,
+    CONSTRAINT [PK_ThongBao] PRIMARY KEY ([MaThongBao]),
+    CONSTRAINT [FK_ThongBao_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]) ON DELETE SET NULL,
+    CONSTRAINT [FK_ThongBao_NhanVien_MaNV] FOREIGN KEY ([MaNV]) REFERENCES [NhanVien] ([MaNV]),
+    CONSTRAINT [FK_ThongBao_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach]) ON DELETE SET NULL
+);
+2026-08-04 08:25:51.757 +07:00 [INF] Executed DbCommand (304ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Wishlist] (
+    [Id] int NOT NULL IDENTITY,
+    [MaDocGia] nvarchar(10) NULL,
+    [MaSach] nvarchar(10) NULL,
+    [NgayThem] datetime2 NOT NULL,
+    [FolderId] int NULL,
+    CONSTRAINT [PK_Wishlist] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Wishlist_DocGia_MaDocGia] FOREIGN KEY ([MaDocGia]) REFERENCES [DocGia] ([MaDocGia]),
+    CONSTRAINT [FK_Wishlist_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach]),
+    CONSTRAINT [FK_Wishlist_WishlistFolder_FolderId] FOREIGN KEY ([FolderId]) REFERENCES [WishlistFolder] ([Id]) ON DELETE SET NULL
+);
+2026-08-04 08:25:52.066 +07:00 [INF] Executed DbCommand (308ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ChiTietMuonTra] (
+    [Id] int NOT NULL IDENTITY,
+    [MaPhieu] nvarchar(10) NULL,
+    [MaSach] nvarchar(10) NULL,
+    [MaCuonSach] nvarchar(20) NULL,
+    [SoLuong] int NOT NULL,
+    [TienPhat] decimal(18,2) NOT NULL,
+    [GhiChu] nvarchar(255) NULL,
+    CONSTRAINT [PK_ChiTietMuonTra] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ChiTietMuonTra_CuonSach_MaCuonSach] FOREIGN KEY ([MaCuonSach]) REFERENCES [CuonSach] ([MaCuonSach]),
+    CONSTRAINT [FK_ChiTietMuonTra_MuonTra_MaPhieu] FOREIGN KEY ([MaPhieu]) REFERENCES [MuonTra] ([MaPhieu]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ChiTietMuonTra_Sach_MaSach] FOREIGN KEY ([MaSach]) REFERENCES [Sach] ([MaSach])
+);
+2026-08-04 08:25:52.372 +07:00 [INF] Executed DbCommand (306ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ChiTietDatTruoc_MaReservation] ON [ChiTietDatTruoc] ([MaReservation]);
+2026-08-04 08:25:52.833 +07:00 [INF] Executed DbCommand (461ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ChiTietDatTruoc_MaSach] ON [ChiTietDatTruoc] ([MaSach]);
+2026-08-04 08:25:53.261 +07:00 [INF] Executed DbCommand (428ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ChiTietMuonTra_MaCuonSach] ON [ChiTietMuonTra] ([MaCuonSach]);
+2026-08-04 08:25:53.717 +07:00 [INF] Executed DbCommand (455ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ChiTietMuonTra_MaPhieu] ON [ChiTietMuonTra] ([MaPhieu]);
+2026-08-04 08:25:54.228 +07:00 [INF] Executed DbCommand (511ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ChiTietMuonTra_MaSach] ON [ChiTietMuonTra] ([MaSach]);
+2026-08-04 08:25:54.584 +07:00 [INF] Executed DbCommand (355ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ChucNang_MaNhom] ON [ChucNang] ([MaNhom]);
+2026-08-04 08:25:54.873 +07:00 [INF] Executed DbCommand (289ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_CuonSach_MaSach] ON [CuonSach] ([MaSach]);
+2026-08-04 08:25:55.192 +07:00 [INF] Executed DbCommand (319ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_DanhGiaSach_MaDocGia] ON [DanhGiaSach] ([MaDocGia]);
+2026-08-04 08:25:55.680 +07:00 [INF] Executed DbCommand (488ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_DanhGiaSach_MaSach] ON [DanhGiaSach] ([MaSach]);
+2026-08-04 08:25:56.174 +07:00 [INF] Executed DbCommand (493ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Ebook_MaSach] ON [Ebook] ([MaSach]);
+2026-08-04 08:25:56.584 +07:00 [INF] Executed DbCommand (410ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_KeSach_MaNXBPhuTrach] ON [KeSach] ([MaNXBPhuTrach]);
+2026-08-04 08:25:57.157 +07:00 [INF] Executed DbCommand (572ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_KeSach_MaTheLoaiPhuTrach] ON [KeSach] ([MaTheLoaiPhuTrach]);
+2026-08-04 08:25:57.452 +07:00 [INF] Executed DbCommand (295ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_MuonTra_MaDocGia] ON [MuonTra] ([MaDocGia]);
+2026-08-04 08:25:57.915 +07:00 [INF] Executed DbCommand (462ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_MuonTra_MaNV] ON [MuonTra] ([MaNV]);
+2026-08-04 08:25:58.424 +07:00 [INF] Executed DbCommand (508ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_NhanVien_MaChucVu] ON [NhanVien] ([MaChucVu]);
+2026-08-04 08:25:58.786 +07:00 [INF] Executed DbCommand (362ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_NhatKyHoatDong_MaNV] ON [NhatKyHoatDong] ([MaNV]);
+2026-08-04 08:25:59.184 +07:00 [INF] Executed DbCommand (397ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_PhanQuyenNhanVien_MaChucNang] ON [PhanQuyenNhanVien] ([MaChucNang]);
+2026-08-04 08:25:59.539 +07:00 [INF] Executed DbCommand (355ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_PhanQuyenNhanVien_MaNV_MaChucNang] ON [PhanQuyenNhanVien] ([MaNV], [MaChucNang]);
+2026-08-04 08:25:59.903 +07:00 [INF] Executed DbCommand (364ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Reservation_MaDocGia] ON [Reservation] ([MaDocGia]);
+2026-08-04 08:26:00.380 +07:00 [INF] Executed DbCommand (477ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Reservation_MaNV] ON [Reservation] ([MaNV]);
+2026-08-04 08:26:00.811 +07:00 [INF] Executed DbCommand (430ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Sach_MaKe] ON [Sach] ([MaKe]);
+2026-08-04 08:26:01.111 +07:00 [INF] Executed DbCommand (299ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Sach_MaNXB] ON [Sach] ([MaNXB]);
+2026-08-04 08:26:01.625 +07:00 [INF] Executed DbCommand (514ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Sach_MaTheLoai] ON [Sach] ([MaTheLoai]);
+2026-08-04 08:26:01.916 +07:00 [INF] Executed DbCommand (290ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Sach_TacGia_MaTacGia] ON [Sach_TacGia] ([MaTacGia]);
+2026-08-04 08:26:02.414 +07:00 [INF] Executed DbCommand (498ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_TheThuVien_MaDocGia] ON [TheThuVien] ([MaDocGia]);
+2026-08-04 08:26:02.705 +07:00 [INF] Executed DbCommand (290ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ThongBao_MaDocGia] ON [ThongBao] ([MaDocGia]);
+2026-08-04 08:26:02.994 +07:00 [INF] Executed DbCommand (288ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ThongBao_MaNV] ON [ThongBao] ([MaNV]);
+2026-08-04 08:26:03.286 +07:00 [INF] Executed DbCommand (291ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ThongBao_MaSach] ON [ThongBao] ([MaSach]);
+2026-08-04 08:26:03.586 +07:00 [INF] Executed DbCommand (299ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Wishlist_FolderId] ON [Wishlist] ([FolderId]);
+2026-08-04 08:26:03.877 +07:00 [INF] Executed DbCommand (291ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Wishlist_MaDocGia] ON [Wishlist] ([MaDocGia]);
+2026-08-04 08:26:04.166 +07:00 [INF] Executed DbCommand (289ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Wishlist_MaSach] ON [Wishlist] ([MaSach]);
+2026-08-04 08:26:04.460 +07:00 [INF] Executed DbCommand (293ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_WishlistFolder_MaDocGia] ON [WishlistFolder] ([MaDocGia]);
+2026-08-04 08:26:04.752 +07:00 [INF] Executed DbCommand (291ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_WishlistPreference_MaDocGia] ON [WishlistPreference] ([MaDocGia]);
+2026-08-04 08:26:05.287 +07:00 [INF] Executed DbCommand (535ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260804012518_InitialCreate', N'9.0.8');
+2026-08-04 08:26:06.103 +07:00 [INF] Executed DbCommand (407ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2026-08-04 08:28:47.631 +07:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-08-04 08:28:48.619 +07:00 [INF] Now listening on: https://localhost:7186
+2026-08-04 08:28:48.628 +07:00 [INF] Now listening on: http://localhost:5149
+2026-08-04 08:28:48.803 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-08-04 08:28:48.807 +07:00 [INF] Hosting environment: Development
+2026-08-04 08:28:48.812 +07:00 [INF] Content root path: D:\file thư viện soff 1022\SmartLib.Web
+2026-08-04 08:28:50.857 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/ - null null
+2026-08-04 08:28:51.840 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-08-04 08:28:52.645 +07:00 [INF] Route matched with {action = "Index", controller = "Home", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller SmartLib.Web.Controllers.HomeController (SmartLib.Web).
+2026-08-04 08:28:55.916 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:28:55.924 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-08-04 08:29:01.305 +07:00 [INF] Executed DbCommand (659ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+2026-08-04 08:29:01.789 +07:00 [INF] Executed DbCommand (309ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [TheLoai] AS [t]
+2026-08-04 08:29:03.153 +07:00 [INF] Executed DbCommand (1,277ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[SoLuongKhaDung] > 0 AND [s].[TrangThai] = CAST(1 AS bit)
+2026-08-04 08:29:04.083 +07:00 [INF] Executed DbCommand (529ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[TenSach], CASE
+    WHEN [t].[MaTheLoai] IS NOT NULL THEN [t].[TenTheLoai]
+    ELSE N'Chưa phân loại'
+END AS [TenTheLoai], [s0].[AnhBia], [s0].[SoLuongKhaDung]
+FROM (
+    SELECT TOP(@__p_0) [s].[MaSach], [s].[AnhBia], [s].[MaTheLoai], [s].[NgayTao], [s].[SoLuongKhaDung], [s].[TenSach]
+    FROM [Sach] AS [s]
+    WHERE [s].[TrangThai] = CAST(1 AS bit)
+    ORDER BY [s].[NgayTao] DESC
+) AS [s0]
+LEFT JOIN [TheLoai] AS [t] ON [s0].[MaTheLoai] = [t].[MaTheLoai]
+ORDER BY [s0].[NgayTao] DESC
+2026-08-04 08:29:04.433 +07:00 [INF] Executed DbCommand (297ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[TenTheLoai], (
+    SELECT COUNT(*)
+    FROM [Sach] AS [s]
+    WHERE [s].[MaTheLoai] = [t].[MaTheLoai]) AS [SoLuongSach]
+FROM [TheLoai] AS [t]
+2026-08-04 08:29:04.517 +07:00 [INF] Executing ViewResult, running view Index.
+2026-08-04 08:29:05.578 +07:00 [INF] Executed ViewResult - view Index executed in 1064.3633ms.
+2026-08-04 08:29:05.599 +07:00 [INF] Executed action SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web) in 12942.0668ms
+2026-08-04 08:29:05.608 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-08-04 08:29:05.632 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/css/site.css?v=uJyLqWwNiaJAYv903x2ONBwifO7JCeI-dRxQF_jVye0 - null null
+2026-08-04 08:29:05.632 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/css/ai-chat.css?v=FZkXRDbBEsA069ctTy0P17a1PDYnB1HkjKJGa19dIb8 - null null
+2026-08-04 08:29:05.633 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js - null null
+2026-08-04 08:29:05.634 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/lib/jquery-validation/dist/jquery.validate.min.js - null null
+2026-08-04 08:29:05.647 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/assets/js/home.js - null null
+2026-08-04 08:29:05.647 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-08-04 08:29:05.647 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - null null
+2026-08-04 08:29:05.649 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/js/ai-chat.js?v=9rcj86TlUXdzecq32Uoy9aHzA74P8aY7QrBAzCwhgbE - null null
+2026-08-04 08:29:05.657 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-08-04 08:29:05.665 +07:00 [INF] The file /css/site.css was not modified
+2026-08-04 08:29:05.669 +07:00 [INF] The file /css/ai-chat.css was not modified
+2026-08-04 08:29:05.691 +07:00 [INF] The file /lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js was not modified
+2026-08-04 08:29:05.700 +07:00 [INF] The file /lib/jquery-validation/dist/jquery.validate.min.js was not modified
+2026-08-04 08:29:05.712 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/ - 200 null text/html; charset=utf-8 14862.1552ms
+2026-08-04 08:29:05.731 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/assets/js/home.js - 404 0 null 83.5589ms
+2026-08-04 08:29:05.734 +07:00 [INF] The file /js/site.js was not modified
+2026-08-04 08:29:05.734 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 87.259ms
+2026-08-04 08:29:05.752 +07:00 [INF] The file /js/ai-chat.js was not modified
+2026-08-04 08:29:05.781 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/css/site.css?v=uJyLqWwNiaJAYv903x2ONBwifO7JCeI-dRxQF_jVye0 - 304 null text/css 149.2253ms
+2026-08-04 08:29:05.785 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/css/ai-chat.css?v=FZkXRDbBEsA069ctTy0P17a1PDYnB1HkjKJGa19dIb8 - 304 null text/css 152.462ms
+2026-08-04 08:29:05.788 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js - 304 null text/javascript 154.8271ms
+2026-08-04 08:29:05.793 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/lib/jquery-validation/dist/jquery.validate.min.js - 304 null text/javascript 158.6244ms
+2026-08-04 08:29:05.830 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7186/assets/js/home.js, Response status code: 404
+2026-08-04 08:29:05.832 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - 304 null text/javascript 184.0779ms
+2026-08-04 08:29:05.850 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/js/ai-chat.js?v=9rcj86TlUXdzecq32Uoy9aHzA74P8aY7QrBAzCwhgbE - 304 null text/javascript 201.2048ms
+2026-08-04 08:29:05.960 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 303.1112ms
+2026-08-04 08:29:06.019 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-08-04 08:29:06.049 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-08-04 08:29:06.089 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-08-04 08:29:06.097 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 77.5968ms
+2026-08-04 08:29:06.251 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=PBQEa7LXQP4bD4gybfHPqQ - null null
+2026-08-04 08:29:06.266 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-08-04 08:29:10.891 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-08-04 08:29:10.897 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=PBQEa7LXQP4bD4gybfHPqQ - 200 null null 4645.3786ms

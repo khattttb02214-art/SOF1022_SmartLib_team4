@@ -1,0 +1,1268 @@
+2026-07-21 14:46:38.650 +07:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-07-21 14:46:39.179 +07:00 [INF] Now listening on: https://localhost:7186
+2026-07-21 14:46:39.185 +07:00 [INF] Now listening on: http://localhost:5149
+2026-07-21 14:46:39.280 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-07-21 14:46:39.284 +07:00 [INF] Hosting environment: Development
+2026-07-21 14:46:39.288 +07:00 [INF] Content root path: D:\file thư viện soff 1022\SmartLib.Web
+2026-07-21 14:46:40.997 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/ - null null
+2026-07-21 14:46:42.098 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-07-21 14:46:44.544 +07:00 [INF] Route matched with {action = "Index", controller = "Home", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller SmartLib.Web.Controllers.HomeController (SmartLib.Web).
+2026-07-21 14:46:46.766 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'ChiTietMuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-07-21 14:46:46.771 +07:00 [WRN] No store type was specified for the decimal property 'TienPhat' on entity type 'MuonTra'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-07-21 14:46:50.343 +07:00 [INF] Executed DbCommand (379ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[TrangThai] = CAST(1 AS bit)
+2026-07-21 14:46:50.488 +07:00 [INF] Executed DbCommand (60ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [TheLoai] AS [t]
+2026-07-21 14:46:50.534 +07:00 [INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+WHERE [s].[SoLuongKhaDung] > 0 AND [s].[TrangThai] = CAST(1 AS bit)
+2026-07-21 14:46:51.061 +07:00 [INF] Executed DbCommand (319ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[TenSach], CASE
+    WHEN [t].[MaTheLoai] IS NOT NULL THEN [t].[TenTheLoai]
+    ELSE N'Chưa phân loại'
+END AS [TenTheLoai], [s0].[AnhBia], [s0].[SoLuongKhaDung]
+FROM (
+    SELECT TOP(@__p_0) [s].[MaSach], [s].[AnhBia], [s].[MaTheLoai], [s].[NgayTao], [s].[SoLuongKhaDung], [s].[TenSach]
+    FROM [Sach] AS [s]
+    WHERE [s].[TrangThai] = CAST(1 AS bit)
+    ORDER BY [s].[NgayTao] DESC
+) AS [s0]
+LEFT JOIN [TheLoai] AS [t] ON [s0].[MaTheLoai] = [t].[MaTheLoai]
+ORDER BY [s0].[NgayTao] DESC
+2026-07-21 14:46:51.153 +07:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[TenTheLoai], (
+    SELECT COUNT(*)
+    FROM [Sach] AS [s]
+    WHERE [s].[MaTheLoai] = [t].[MaTheLoai]) AS [SoLuongSach]
+FROM [TheLoai] AS [t]
+2026-07-21 14:46:51.200 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-21 14:46:51.984 +07:00 [INF] Executed ViewResult - view Index executed in 784.2515ms.
+2026-07-21 14:46:51.998 +07:00 [INF] Executed action SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web) in 7446.5969ms
+2026-07-21 14:46:52.001 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/css/site.css?v=Km5GxfgPc1iaC_CX1jjGdnlyB7xtAkcNBZzrC3_mLJU - null null
+2026-07-21 14:46:52.004 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg - null null
+2026-07-21 14:46:52.004 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.HomeController.Index (SmartLib.Web)'
+2026-07-21 14:46:52.015 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg - null null
+2026-07-21 14:46:52.050 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/lib/jquery-validation/dist/jquery.validate.min.js - null null
+2026-07-21 14:46:52.050 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/assets/js/home.js - null null
+2026-07-21 14:46:52.050 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js - null null
+2026-07-21 14:46:52.054 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - null null
+2026-07-21 14:46:52.057 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-21 14:46:52.080 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-21 14:46:52.131 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/assets/js/home.js - 404 0 null 79.4827ms
+2026-07-21 14:46:52.142 +07:00 [INF] Sending file. Request path: '/css/site.css'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\css\site.css'
+2026-07-21 14:46:52.180 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7186/assets/js/home.js, Response status code: 404
+2026-07-21 14:46:52.157 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/ - 200 null text/html; charset=utf-8 11205.5484ms
+2026-07-21 14:46:52.186 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/css/site.css?v=Km5GxfgPc1iaC_CX1jjGdnlyB7xtAkcNBZzrC3_mLJU - 200 41873 text/css 185.5867ms
+2026-07-21 14:46:52.151 +07:00 [INF] Sending file. Request path: '/js/site.js'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\js\site.js'
+2026-07-21 14:46:52.167 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 109.8765ms
+2026-07-21 14:46:52.143 +07:00 [INF] Sending file. Request path: '/uploads/books/84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg'
+2026-07-21 14:46:52.143 +07:00 [INF] Sending file. Request path: '/uploads/books/d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg'
+2026-07-21 14:46:52.253 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/js/site.js?v=DCEcSoHuQSEFcx-v4U8JD5g3_xPJp0-KzZD_fWTbRvY - 200 8847 text/javascript 198.4271ms
+2026-07-21 14:46:52.268 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/84af22cf-ef00-4012-9a5c-ec00dc4a1ea5.jpg - 200 20925 image/jpeg 254.0061ms
+2026-07-21 14:46:52.271 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/d0ebdaa2-6f57-4ed8-81fc-50bdf241374e.jpg - 200 24938 image/jpeg 267.3921ms
+2026-07-21 14:46:52.272 +07:00 [INF] Sending file. Request path: '/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\lib\jquery-validation-unobtrusive\dist\jquery.validate.unobtrusive.min.js'
+2026-07-21 14:46:52.300 +07:00 [INF] Sending file. Request path: '/lib/jquery-validation/dist/jquery.validate.min.js'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\lib\jquery-validation\dist\jquery.validate.min.js'
+2026-07-21 14:46:52.307 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js - 200 5824 text/javascript 256.944ms
+2026-07-21 14:46:52.310 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/lib/jquery-validation/dist/jquery.validate.min.js - 200 25308 text/javascript 261.2944ms
+2026-07-21 14:46:52.386 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 325.0003ms
+2026-07-21 14:46:52.498 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-21 14:46:52.518 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-21 14:46:52.538 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-21 14:46:52.543 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 45.5187ms
+2026-07-21 14:46:52.549 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=3bLMEcTAP7jrqy6qKtbHRA - null null
+2026-07-21 14:46:52.558 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-21 14:46:54.253 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Auth/Login - null null
+2026-07-21 14:46:54.274 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-21 14:46:54.299 +07:00 [INF] Route matched with {action = "Login", controller = "Auth", area = ""}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Login() on controller SmartLib.Web.Controllers.AuthController (SmartLib.Web).
+2026-07-21 14:46:54.337 +07:00 [INF] Executing ViewResult, running view Login.
+2026-07-21 14:46:54.492 +07:00 [INF] Executed ViewResult - view Login executed in 161.8648ms.
+2026-07-21 14:46:54.498 +07:00 [INF] Executed action SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web) in 193.2286ms
+2026-07-21 14:46:54.503 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-21 14:46:54.507 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Auth/Login - 200 null text/html; charset=utf-8 253.888ms
+2026-07-21 14:46:54.536 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-21 14:46:54.536 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-21 14:46:54.547 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 11.9635ms
+2026-07-21 14:46:54.580 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 44.4132ms
+2026-07-21 14:46:54.590 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-21 14:46:54.596 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=3bLMEcTAP7jrqy6qKtbHRA - 200 null null 2046.7871ms
+2026-07-21 14:46:54.671 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-21 14:46:54.690 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-21 14:46:54.697 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-21 14:46:54.702 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 31.869ms
+2026-07-21 14:46:54.721 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=AfmmfRiQl_-6cZUnE7FVAw - null null
+2026-07-21 14:46:54.736 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-21 14:47:29.230 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/Auth/Login - application/x-www-form-urlencoded 222
+2026-07-21 14:47:29.259 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-21 14:47:29.312 +07:00 [INF] Route matched with {action = "Login", controller = "Auth", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(SmartLib.Web.ViewModels.LoginViewModel) on controller SmartLib.Web.Controllers.AuthController (SmartLib.Web).
+2026-07-21 14:47:29.627 +07:00 [INF] Executed DbCommand (62ms) [Parameters=[@__model_Email_0='?' (Size = 100)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [n].[MaNV], [n].[AnhDaiDien], [n].[DiaChi], [n].[Email], [n].[EmailVerified], [n].[GoogleId], [n].[HoTen], [n].[LaAdmin], [n].[MaChucVu], [n].[MaDocGia], [n].[MatKhau], [n].[MatKhauTuDat], [n].[NgayCapNhat], [n].[NgayTao], [n].[OtpCode], [n].[OtpExpiry], [n].[OtpResetMatKhau], [n].[OtpResetMatKhauHetHan], [n].[PendingEmail], [n].[SoDienThoai], [n].[TrangThai], [c].[MaChucVu], [c].[TenChucVu]
+FROM [NhanVien] AS [n]
+LEFT JOIN [ChucVu] AS [c] ON [n].[MaChucVu] = [c].[MaChucVu]
+WHERE [n].[Email] = @__model_Email_0
+2026-07-21 14:47:30.181 +07:00 [INF] AuthenticationScheme: Cookies signed in.
+2026-07-21 14:47:30.511 +07:00 [INF] Executed DbCommand (34ms) [Parameters=[@p0='?' (Size = 255), @p1='?' (Size = 10), @p2='?' (Size = 4000), @p3='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [NhatKyHoatDong] ([HanhDong], [MaNV], [MoTa], [ThoiGian])
+OUTPUT INSERTED.[MaLog]
+VALUES (@p0, @p1, @p2, @p3);
+2026-07-21 14:47:30.547 +07:00 [INF] Executing RedirectResult, redirecting to /Staff.
+2026-07-21 14:47:30.549 +07:00 [INF] Executed action SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web) in 1233.0921ms
+2026-07-21 14:47:30.551 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.AuthController.Login (SmartLib.Web)'
+2026-07-21 14:47:30.552 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/Auth/Login - 302 null null 1322.4851ms
+2026-07-21 14:47:30.560 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Staff - null null
+2026-07-21 14:47:30.575 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.StaffController.Index (SmartLib.Web)'
+2026-07-21 14:47:30.588 +07:00 [INF] Route matched with {action = "Index", controller = "Staff", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller SmartLib.Web.Controllers.StaffController (SmartLib.Web).
+2026-07-21 14:47:30.695 +07:00 [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [Sach] AS [s]
+2026-07-21 14:47:30.724 +07:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+2026-07-21 14:47:30.748 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [NhanVien] AS [n]
+2026-07-21 14:47:30.786 +07:00 [INF] Executed DbCommand (19ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn'
+2026-07-21 14:47:30.822 +07:00 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-21 14:47:30.896 +07:00 [INF] Executed DbCommand (18ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [s0].[MaSach], [s0].[TenSach], CASE
+    WHEN [t].[MaTheLoai] IS NOT NULL THEN [t].[TenTheLoai]
+    ELSE N'Chưa phân loại'
+END AS [TenTheLoai], [s0].[AnhBia], [s0].[SoLuongKhaDung]
+FROM (
+    SELECT TOP(@__p_0) [s].[MaSach], [s].[AnhBia], [s].[MaTheLoai], [s].[NgayTao], [s].[SoLuongKhaDung], [s].[TenSach]
+    FROM [Sach] AS [s]
+    WHERE [s].[TrangThai] = CAST(1 AS bit)
+    ORDER BY [s].[NgayTao] DESC
+) AS [s0]
+LEFT JOIN [TheLoai] AS [t] ON [s0].[MaTheLoai] = [t].[MaTheLoai]
+ORDER BY [s0].[NgayTao] DESC
+2026-07-21 14:47:30.924 +07:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[TenTheLoai], (
+    SELECT COUNT(*)
+    FROM [Sach] AS [s]
+    WHERE [s].[MaTheLoai] = [t].[MaTheLoai]) AS [SoLuongSach]
+FROM [TheLoai] AS [t]
+2026-07-21 14:47:30.976 +07:00 [INF] Executed DbCommand (20ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [m0].[MaPhieu], CASE
+    WHEN [d].[MaDocGia] IS NOT NULL THEN [d].[HoTen]
+    ELSE N'—'
+END AS [TenDocGia], [m0].[NgayMuon], [m0].[NgayHenTra], [m0].[TrangThai]
+FROM (
+    SELECT TOP(@__p_0) [m].[MaPhieu], [m].[MaDocGia], [m].[NgayHenTra], [m].[NgayMuon], [m].[TrangThai]
+    FROM [MuonTra] AS [m]
+    ORDER BY [m].[NgayMuon] DESC
+) AS [m0]
+LEFT JOIN [DocGia] AS [d] ON [m0].[MaDocGia] = [d].[MaDocGia]
+ORDER BY [m0].[NgayMuon] DESC
+2026-07-21 14:47:30.985 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-21 14:47:31.054 +07:00 [INF] Executed ViewResult - view Index executed in 70.5313ms.
+2026-07-21 14:47:31.057 +07:00 [INF] Executed action SmartLib.Web.Controllers.StaffController.Index (SmartLib.Web) in 465.366ms
+2026-07-21 14:47:31.060 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.StaffController.Index (SmartLib.Web)'
+2026-07-21 14:47:31.063 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Staff - 200 null text/html; charset=utf-8 502.6845ms
+2026-07-21 14:47:31.078 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-21 14:47:31.078 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-21 14:47:31.081 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-21 14:47:31.086 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 7.9949ms
+2026-07-21 14:47:31.093 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=AfmmfRiQl_-6cZUnE7FVAw - 200 null null 36372.541ms
+2026-07-21 14:47:31.100 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 21.8921ms
+2026-07-21 14:47:31.105 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-21 14:47:31.111 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-21 14:47:31.112 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-21 14:47:31.118 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-21 14:47:31.118 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:47:31.121 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 16.1709ms
+2026-07-21 14:47:31.132 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-21 14:47:31.164 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-21 14:47:31.180 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-21 14:47:31.190 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType10`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-21 14:47:31.199 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=N3nn20utBzD642fJv_zpnA - null null
+2026-07-21 14:47:31.206 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-21 14:47:31.214 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 78.3139ms
+2026-07-21 14:47:31.217 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:47:31.219 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 108.5515ms
+2026-07-21 14:47:33.442 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Books - null null
+2026-07-21 14:47:33.455 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web)'
+2026-07-21 14:47:33.476 +07:00 [INF] Route matched with {action = "Index", controller = "Books", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String) on controller SmartLib.Web.Controllers.BooksController (SmartLib.Web).
+2026-07-21 14:47:33.515 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai]
+FROM [TheLoai] AS [t]
+2026-07-21 14:47:33.610 +07:00 [INF] Executed DbCommand (32ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [Sach] AS [s]
+LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+LEFT JOIN [NhaXuatBan] AS [n] ON [s].[MaNXB] = [n].[MaNXB]
+ORDER BY [s].[NgayTao] DESC
+2026-07-21 14:47:33.804 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-21 14:47:33.882 +07:00 [INF] Executed ViewResult - view Index executed in 79.2907ms.
+2026-07-21 14:47:33.886 +07:00 [INF] Executed action SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web) in 405.691ms
+2026-07-21 14:47:33.889 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-21 14:47:33.891 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web)'
+2026-07-21 14:47:33.895 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=N3nn20utBzD642fJv_zpnA - 200 null null 2695.9073ms
+2026-07-21 14:47:33.897 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Books - 200 null text/html; charset=utf-8 454.5668ms
+2026-07-21 14:47:33.906 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg - null null
+2026-07-21 14:47:33.913 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg - null null
+2026-07-21 14:47:33.910 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg - null null
+2026-07-21 14:47:33.910 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg - null null
+2026-07-21 14:47:33.992 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg - null null
+2026-07-21 14:47:33.960 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/f5869f56-72e5-424e-a4ee-75849c2d9709.jpg - null null
+2026-07-21 14:47:34.008 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg - null null
+2026-07-21 14:47:34.051 +07:00 [INF] Sending file. Request path: '/uploads/books/86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg'
+2026-07-21 14:47:34.052 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/aad28e05-860b-40ca-9958-14d61da84212.jpg - null null
+2026-07-21 14:47:34.083 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/86e9c82a-f4fb-4c09-b585-6cdab0194dad.jpg - 200 11542 image/jpeg 172.7825ms
+2026-07-21 14:47:34.073 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/607f7914-baa6-4b53-ac12-374a0e1583e8.jpg - null null
+2026-07-21 14:47:33.910 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/25357d41-b856-443a-892b-2a6e2b3485a0.jpg - null null
+2026-07-21 14:47:33.902 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-21 14:47:33.914 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg - null null
+2026-07-21 14:47:33.919 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg - null null
+2026-07-21 14:47:33.923 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/517d8d64-d16a-4281-9932-dc7776bebfde.jpg - null null
+2026-07-21 14:47:33.960 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/b7aedacc-9b62-4864-be75-2237fb244850.jpg - null null
+2026-07-21 14:47:33.963 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg - null null
+2026-07-21 14:47:33.963 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/a332bc37-192b-4467-8981-76cd9be3a5d9.jpg - null null
+2026-07-21 14:47:33.966 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/0514533f-6a90-4795-b654-46642d70f1d6.jpg - null null
+2026-07-21 14:47:33.970 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg - null null
+2026-07-21 14:47:33.972 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg - null null
+2026-07-21 14:47:33.975 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5023937a-5841-4f58-9798-f479725fd025.jpeg - null null
+2026-07-21 14:47:33.980 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg - null null
+2026-07-21 14:47:33.988 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg - null null
+2026-07-21 14:47:33.997 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg - null null
+2026-07-21 14:47:34.001 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg - null null
+2026-07-21 14:47:34.004 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg - null null
+2026-07-21 14:47:34.050 +07:00 [INF] Sending file. Request path: '/uploads/books/afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg'
+2026-07-21 14:47:34.051 +07:00 [INF] Sending file. Request path: '/uploads/books/a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg'
+2026-07-21 14:47:34.053 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5991f687-7b32-4d07-a9d9-7bd3257da660.jpg - null null
+2026-07-21 14:47:34.056 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/2a4a671c-481f-4b0b-808e-cd2f14830291.jpg - null null
+2026-07-21 14:47:34.062 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/5f1cd73e-ae54-40fd-b895-bda241704917.jpg - null null
+2026-07-21 14:47:34.065 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/77532596-9254-47fb-acd8-2b67b88566ba.jpg - null null
+2026-07-21 14:47:34.070 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/b07adaee-679d-4c23-b353-46530076cd67.jpg - null null
+2026-07-21 14:47:34.074 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg - null null
+2026-07-21 14:47:34.083 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/uploads/books/0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg - null null
+2026-07-21 14:47:34.086 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-21 14:47:34.094 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-21 14:47:34.103 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-21 14:47:34.113 +07:00 [INF] Sending file. Request path: '/uploads/books/75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg'
+2026-07-21 14:47:34.124 +07:00 [INF] Sending file. Request path: '/uploads/books/f5869f56-72e5-424e-a4ee-75849c2d9709.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\f5869f56-72e5-424e-a4ee-75849c2d9709.jpg'
+2026-07-21 14:47:34.413 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/75ff4997-05c4-48a5-bdd8-0f6e6eea62ff.jpg - 200 18702 image/jpeg 424.9305ms
+2026-07-21 14:47:34.191 +07:00 [INF] Sending file. Request path: '/uploads/books/aad28e05-860b-40ca-9958-14d61da84212.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\aad28e05-860b-40ca-9958-14d61da84212.jpg'
+2026-07-21 14:47:34.152 +07:00 [INF] Sending file. Request path: '/uploads/books/a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg'
+2026-07-21 14:47:34.124 +07:00 [INF] Sending file. Request path: '/uploads/books/e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg'
+2026-07-21 14:47:34.181 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 280.1263ms
+2026-07-21 14:47:34.194 +07:00 [INF] Sending file. Request path: '/uploads/books/25357d41-b856-443a-892b-2a6e2b3485a0.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\25357d41-b856-443a-892b-2a6e2b3485a0.jpg'
+2026-07-21 14:47:34.274 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/afa43cec-9328-48dd-83c9-07eb72a8bcd3.jpg - 200 10179 image/jpeg 367.1476ms
+2026-07-21 14:47:34.281 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/a24a2293-d7d3-4daa-8bc6-4b1ec9d039e8.jpg - 200 9364 image/jpeg 366.9506ms
+2026-07-21 14:47:34.389 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-21 14:47:34.404 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:47:34.427 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/f5869f56-72e5-424e-a4ee-75849c2d9709.jpg - 200 10617 image/jpeg 467.5087ms
+2026-07-21 14:47:34.447 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/aad28e05-860b-40ca-9958-14d61da84212.jpg - 200 16677 image/jpeg 395.2791ms
+2026-07-21 14:47:34.452 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/a7ac5e2e-308e-497f-8c3c-e54bfca93b76.jpg - 200 19101 image/jpeg 444.3782ms
+2026-07-21 14:47:34.453 +07:00 [INF] Sending file. Request path: '/uploads/books/48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg'
+2026-07-21 14:47:34.458 +07:00 [INF] Sending file. Request path: '/uploads/books/517d8d64-d16a-4281-9932-dc7776bebfde.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\517d8d64-d16a-4281-9932-dc7776bebfde.jpg'
+2026-07-21 14:47:34.458 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/e6bd034a-1ae4-44e5-a7f8-9bb892dc38a4.jpg - 200 10514 image/jpeg 547.9445ms
+2026-07-21 14:47:34.479 +07:00 [INF] Sending file. Request path: '/uploads/books/17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg'
+2026-07-21 14:47:34.483 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/25357d41-b856-443a-892b-2a6e2b3485a0.jpg - 200 16261 image/jpeg 572.7002ms
+2026-07-21 14:47:34.498 +07:00 [INF] Sending file. Request path: '/uploads/books/b7aedacc-9b62-4864-be75-2237fb244850.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\b7aedacc-9b62-4864-be75-2237fb244850.jpg'
+2026-07-21 14:47:34.514 +07:00 [INF] Sending file. Request path: '/uploads/books/beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg'
+2026-07-21 14:47:34.519 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-21 14:47:34.521 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-21 14:47:34.542 +07:00 [INF] Sending file. Request path: '/uploads/books/6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg'
+2026-07-21 14:47:34.547 +07:00 [INF] Sending file. Request path: '/uploads/books/b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg'
+2026-07-21 14:47:34.562 +07:00 [INF] Sending file. Request path: '/uploads/books/5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg'
+2026-07-21 14:47:34.564 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/48d2f1d5-eb5b-48dc-957b-706ffe757975.jpg - 200 13307 image/jpeg 649.9224ms
+2026-07-21 14:47:34.568 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/517d8d64-d16a-4281-9932-dc7776bebfde.jpg - 200 11235 image/jpeg 645.1116ms
+2026-07-21 14:47:34.579 +07:00 [INF] Sending file. Request path: '/uploads/books/eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg'
+2026-07-21 14:47:34.580 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/17c144fc-abc5-40df-ac9b-3b3e6a05597e.jpg - 200 11205 image/jpeg 661.3842ms
+2026-07-21 14:47:34.589 +07:00 [INF] Sending file. Request path: '/uploads/books/5991f687-7b32-4d07-a9d9-7bd3257da660.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5991f687-7b32-4d07-a9d9-7bd3257da660.jpg'
+2026-07-21 14:47:34.595 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/b7aedacc-9b62-4864-be75-2237fb244850.jpg - 200 15506 image/jpeg 635.424ms
+2026-07-21 14:47:34.601 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/beba957d-7e14-4cb9-bb73-fc8cb103946b.jpg - 200 15874 image/jpeg 637.5653ms
+2026-07-21 14:47:34.603 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 517.1485ms
+2026-07-21 14:47:34.610 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/6cce808e-b3af-494b-bfc4-eeaad5a7f337.jpg - 200 16447 image/jpeg 622.5686ms
+2026-07-21 14:47:34.611 +07:00 [INF] Sending file. Request path: '/uploads/books/2a4a671c-481f-4b0b-808e-cd2f14830291.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\2a4a671c-481f-4b0b-808e-cd2f14830291.jpg'
+2026-07-21 14:47:34.617 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/b3641cfd-5e13-4978-8143-e98c1b0c0ec7.jpg - 200 16375 image/jpeg 620.4087ms
+2026-07-21 14:47:34.626 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5c0b4ee6-5207-403a-a18a-ae8b4045a7ae.jpg - 200 17043 image/jpeg 624.5132ms
+2026-07-21 14:47:34.641 +07:00 [INF] Sending file. Request path: '/uploads/books/77532596-9254-47fb-acd8-2b67b88566ba.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\77532596-9254-47fb-acd8-2b67b88566ba.jpg'
+2026-07-21 14:47:34.652 +07:00 [INF] Sending file. Request path: '/uploads/books/5f1cd73e-ae54-40fd-b895-bda241704917.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5f1cd73e-ae54-40fd-b895-bda241704917.jpg'
+2026-07-21 14:47:34.655 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/eabe76bf-c41c-4f19-8b7b-0f167e2e93b1.jpg - 200 18745 image/jpeg 651.0822ms
+2026-07-21 14:47:34.671 +07:00 [INF] Executed DbCommand (62ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-21 14:47:34.677 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5991f687-7b32-4d07-a9d9-7bd3257da660.jpg - 200 17936 image/jpeg 623.3847ms
+2026-07-21 14:47:34.694 +07:00 [INF] Sending file. Request path: '/uploads/books/b07adaee-679d-4c23-b353-46530076cd67.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\b07adaee-679d-4c23-b353-46530076cd67.jpg'
+2026-07-21 14:47:34.702 +07:00 [INF] Sending file. Request path: '/uploads/books/4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg'
+2026-07-21 14:47:34.715 +07:00 [INF] Sending file. Request path: '/uploads/books/0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg'
+2026-07-21 14:47:34.723 +07:00 [INF] Sending file. Request path: '/uploads/books/607f7914-baa6-4b53-ac12-374a0e1583e8.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\607f7914-baa6-4b53-ac12-374a0e1583e8.jpg'
+2026-07-21 14:47:34.727 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/2a4a671c-481f-4b0b-808e-cd2f14830291.jpg - 200 16264 image/jpeg 670.8939ms
+2026-07-21 14:47:34.742 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=zzrWFJhv0Y_bM4ZbIkI_TQ - null null
+2026-07-21 14:47:34.754 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/77532596-9254-47fb-acd8-2b67b88566ba.jpg - 200 14956 image/jpeg 688.8774ms
+2026-07-21 14:47:34.757 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5f1cd73e-ae54-40fd-b895-bda241704917.jpg - 200 18464 image/jpeg 694.8714ms
+2026-07-21 14:47:34.761 +07:00 [INF] Sending file. Request path: '/uploads/books/d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg'
+2026-07-21 14:47:34.768 +07:00 [INF] Sending file. Request path: '/uploads/books/a332bc37-192b-4467-8981-76cd9be3a5d9.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\a332bc37-192b-4467-8981-76cd9be3a5d9.jpg'
+2026-07-21 14:47:34.777 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-21 14:47:34.785 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/b07adaee-679d-4c23-b353-46530076cd67.jpg - 200 13884 image/jpeg 714.8064ms
+2026-07-21 14:47:34.789 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/4bf2dcdb-55ad-477f-835f-fc0a0f6d937d.jpg - 200 18867 image/jpeg 715.2889ms
+2026-07-21 14:47:34.793 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/0d0a8e9c-6760-4e6e-9dc6-470169333d5f.jpg - 200 15166 image/jpeg 709.4336ms
+2026-07-21 14:47:34.793 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 689.8177ms
+2026-07-21 14:47:34.796 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/607f7914-baa6-4b53-ac12-374a0e1583e8.jpg - 200 22804 image/jpeg 722.9036ms
+2026-07-21 14:47:34.810 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-21 14:47:34.811 +07:00 [INF] Sending file. Request path: '/uploads/books/5023937a-5841-4f58-9798-f479725fd025.jpeg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\5023937a-5841-4f58-9798-f479725fd025.jpeg'
+2026-07-21 14:47:34.820 +07:00 [INF] Sending file. Request path: '/uploads/books/053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg'
+2026-07-21 14:47:34.828 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/d37e9ff7-8deb-4da0-bbee-d43a92a13fbd.jpeg - 200 55362 image/jpeg 848.3596ms
+2026-07-21 14:47:34.831 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/a332bc37-192b-4467-8981-76cd9be3a5d9.jpg - 200 71358 image/jpeg 867.5981ms
+2026-07-21 14:47:34.835 +07:00 [INF] Sending file. Request path: '/uploads/books/4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg'
+2026-07-21 14:47:34.837 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType10`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-21 14:47:34.850 +07:00 [INF] Sending file. Request path: '/uploads/books/0514533f-6a90-4795-b654-46642d70f1d6.jpg'. Physical path: 'D:\file thư viện soff 1022\SmartLib.Web\wwwroot\uploads\books\0514533f-6a90-4795-b654-46642d70f1d6.jpg'
+2026-07-21 14:47:34.884 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/5023937a-5841-4f58-9798-f479725fd025.jpeg - 200 238337 image/jpeg 909.5288ms
+2026-07-21 14:47:34.887 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/053ac75d-fa90-4933-b0a5-0f23d59516bf.jpeg - 200 265381 image/jpeg 915.0806ms
+2026-07-21 14:47:34.905 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/4e78667b-8532-45ab-a50a-625a6d7edc5f.jpg - 200 387722 image/jpeg 935.4932ms
+2026-07-21 14:47:34.910 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 302.9164ms
+2026-07-21 14:47:34.912 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/uploads/books/0514533f-6a90-4795-b654-46642d70f1d6.jpg - 200 481661 image/jpeg 945.5687ms
+2026-07-21 14:47:34.944 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:47:34.955 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 861.2578ms
+2026-07-21 14:47:35.360 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Books/Create - null null
+2026-07-21 14:47:35.367 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.BooksController.Create (SmartLib.Web)'
+2026-07-21 14:47:35.389 +07:00 [INF] Route matched with {action = "Create", controller = "Books", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create() on controller SmartLib.Web.Controllers.BooksController (SmartLib.Web).
+2026-07-21 14:47:35.428 +07:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai]
+FROM [TheLoai] AS [t]
+ORDER BY [t].[TenTheLoai]
+2026-07-21 14:47:35.472 +07:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [NhaXuatBan] AS [n]
+ORDER BY [n].[TenNXB]
+2026-07-21 14:47:35.520 +07:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [k].[MaKe], [k].[MaNXBPhuTrach], [k].[MaTheLoaiPhuTrach], [k].[MoTa], [k].[Phong], [k].[SucChua], [k].[Tang], [k].[TenKe], [k].[TrangThai], [k].[ViTri]
+FROM [KeSach] AS [k]
+ORDER BY [k].[TenKe]
+2026-07-21 14:47:35.599 +07:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTacGia], [t].[AnhDaiDien], [t].[ButDanh], [t].[NamMat], [t].[NamSinh], [t].[QuocTich], [t].[TenTacGia], [t].[TieuSu], [t].[TrangThai]
+FROM [TacGia] AS [t]
+ORDER BY [t].[TenTacGia]
+2026-07-21 14:47:35.703 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[MaSach]
+FROM [Sach] AS [s]
+ORDER BY [s].[MaSach] DESC
+2026-07-21 14:47:35.770 +07:00 [INF] Executed DbCommand (21ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.784 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.791 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.796 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.803 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.809 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.815 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.820 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.825 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.832 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.839 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.844 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.851 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.858 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.864 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.870 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.876 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.884 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.892 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.902 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.908 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.915 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.920 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.928 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.936 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.947 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.959 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.969 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.977 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.985 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.990 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:35.994 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.002 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.006 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.013 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.019 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.024 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.030 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.035 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.039 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.044 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.051 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.057 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.064 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.070 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.077 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.083 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.090 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.097 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.104 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.111 +07:00 [INF] Executing ViewResult, running view Create.
+2026-07-21 14:47:36.254 +07:00 [INF] Executed ViewResult - view Create executed in 144.4826ms.
+2026-07-21 14:47:36.256 +07:00 [INF] Executed action SmartLib.Web.Controllers.BooksController.Create (SmartLib.Web) in 862.6118ms
+2026-07-21 14:47:36.261 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.BooksController.Create (SmartLib.Web)'
+2026-07-21 14:47:36.263 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Books/Create - 200 null text/html; charset=utf-8 903.4648ms
+2026-07-21 14:47:36.274 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-21 14:47:36.276 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-21 14:47:36.279 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 5.2576ms
+2026-07-21 14:47:36.279 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-21 14:47:36.280 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Books/Create - null null
+2026-07-21 14:47:36.280 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=zzrWFJhv0Y_bM4ZbIkI_TQ - 200 null null 1539.3148ms
+2026-07-21 14:47:36.296 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.BooksController.Create (SmartLib.Web)'
+2026-07-21 14:47:36.297 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.0657ms
+2026-07-21 14:47:36.301 +07:00 [INF] Route matched with {action = "Create", controller = "Books", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create() on controller SmartLib.Web.Controllers.BooksController (SmartLib.Web).
+2026-07-21 14:47:36.310 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai]
+FROM [TheLoai] AS [t]
+ORDER BY [t].[TenTheLoai]
+2026-07-21 14:47:36.315 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [NhaXuatBan] AS [n]
+ORDER BY [n].[TenNXB]
+2026-07-21 14:47:36.320 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [k].[MaKe], [k].[MaNXBPhuTrach], [k].[MaTheLoaiPhuTrach], [k].[MoTa], [k].[Phong], [k].[SucChua], [k].[Tang], [k].[TenKe], [k].[TrangThai], [k].[ViTri]
+FROM [KeSach] AS [k]
+ORDER BY [k].[TenKe]
+2026-07-21 14:47:36.332 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTacGia], [t].[AnhDaiDien], [t].[ButDanh], [t].[NamMat], [t].[NamSinh], [t].[QuocTich], [t].[TenTacGia], [t].[TieuSu], [t].[TrangThai]
+FROM [TacGia] AS [t]
+ORDER BY [t].[TenTacGia]
+2026-07-21 14:47:36.344 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[MaSach]
+FROM [Sach] AS [s]
+ORDER BY [s].[MaSach] DESC
+2026-07-21 14:47:36.352 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.356 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.365 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.376 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.385 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.393 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.393 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-21 14:47:36.395 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-21 14:47:36.398 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.402 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-21 14:47:36.411 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:47:36.415 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-21 14:47:36.415 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.418 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-21 14:47:36.419 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 25.0914ms
+2026-07-21 14:47:36.430 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.459 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.466 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.471 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-21 14:47:36.473 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=duVMu-SK0vbkpqmuM16NfQ - null null
+2026-07-21 14:47:36.473 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.477 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-21 14:47:36.481 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-21 14:47:36.492 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.493 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType10`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-21 14:47:36.505 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 76.7609ms
+2026-07-21 14:47:36.506 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.513 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:47:36.520 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 125.1942ms
+2026-07-21 14:47:36.520 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.542 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.553 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.567 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.584 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.600 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.614 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.632 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.659 +07:00 [INF] Executed DbCommand (6ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.677 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.698 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.713 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.729 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.745 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.760 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.774 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.789 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.800 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.810 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.821 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.835 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.855 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.864 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.869 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.878 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.894 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.902 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.906 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.911 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.918 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.937 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.947 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.952 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.956 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.961 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.967 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__ma_0='?' (Size = 10)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Sach] AS [s]
+        WHERE [s].[MaSach] = @__ma_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-07-21 14:47:36.970 +07:00 [INF] Executing ViewResult, running view Create.
+2026-07-21 14:47:36.977 +07:00 [INF] Executed ViewResult - view Create executed in 6.2448ms.
+2026-07-21 14:47:36.980 +07:00 [INF] Executed action SmartLib.Web.Controllers.BooksController.Create (SmartLib.Web) in 672.8574ms
+2026-07-21 14:47:36.982 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.BooksController.Create (SmartLib.Web)'
+2026-07-21 14:47:36.984 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Books/Create - 200 null text/html; charset=utf-8 703.9718ms
+2026-07-21 14:48:20.843 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/Books - null null
+2026-07-21 14:48:20.874 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web)'
+2026-07-21 14:48:20.879 +07:00 [INF] Route matched with {action = "Index", controller = "Books", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(System.String, System.String) on controller SmartLib.Web.Controllers.BooksController (SmartLib.Web).
+2026-07-21 14:48:20.916 +07:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai]
+FROM [TheLoai] AS [t]
+2026-07-21 14:48:20.953 +07:00 [INF] Executed DbCommand (30ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [s].[MaSach], [s].[AnhBia], [s].[Barcode], [s].[ISBN], [s].[MaKe], [s].[MaNXB], [s].[MaTheLoai], [s].[MoTa], [s].[NamXuatBan], [s].[NgayCapNhat], [s].[NgayTao], [s].[NgonNgu], [s].[SoLuongKhaDung], [s].[SoLuongKho], [s].[SoTrang], [s].[TenSach], [s].[TrangThai], [t].[MaTheLoai], [t].[MoTa], [t].[TenTheLoai], [n].[MaNXB], [n].[DiaChi], [n].[Email], [n].[SoDienThoai], [n].[TenNXB], [n].[TrangThai]
+FROM [Sach] AS [s]
+LEFT JOIN [TheLoai] AS [t] ON [s].[MaTheLoai] = [t].[MaTheLoai]
+LEFT JOIN [NhaXuatBan] AS [n] ON [s].[MaNXB] = [n].[MaNXB]
+ORDER BY [s].[NgayTao] DESC
+2026-07-21 14:48:20.976 +07:00 [INF] Executing ViewResult, running view Index.
+2026-07-21 14:48:20.994 +07:00 [INF] Executed ViewResult - view Index executed in 18.3564ms.
+2026-07-21 14:48:20.996 +07:00 [INF] Executed action SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web) in 112.3752ms
+2026-07-21 14:48:20.999 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.BooksController.Index (SmartLib.Web)'
+2026-07-21 14:48:21.003 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/Books - 200 null text/html; charset=utf-8 159.8314ms
+2026-07-21 14:48:21.012 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-21 14:48:21.015 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=duVMu-SK0vbkpqmuM16NfQ - 200 null null 44542.3317ms
+2026-07-21 14:48:21.021 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - null null
+2026-07-21 14:48:21.028 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_framework/aspnetcore-browser-refresh.js - 200 14929 application/javascript; charset=utf-8 7.0688ms
+2026-07-21 14:48:21.061 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/_vs/browserLink - null null
+2026-07-21 14:48:21.066 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - null 0
+2026-07-21 14:48:21.069 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - null null
+2026-07-21 14:48:21.077 +07:00 [INF] Executing endpoint '/notificationHub/negotiate'
+2026-07-21 14:48:21.093 +07:00 [INF] Executing endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:48:21.095 +07:00 [INF] Executed endpoint '/notificationHub/negotiate'
+2026-07-21 14:48:21.095 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/_vs/browserLink - 200 null text/javascript; charset=UTF-8 34.154ms
+2026-07-21 14:48:21.098 +07:00 [INF] Route matched with {action = "GetNotificationCounts", controller = "NhanVien", area = ""}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetNotificationCounts() on controller SmartLib.Web.Controllers.NhanVienController (SmartLib.Web).
+2026-07-21 14:48:21.101 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7186/notificationHub/negotiate?negotiateVersion=1 - 200 316 application/json 34.6071ms
+2026-07-21 14:48:21.137 +07:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [DocGia] AS [d]
+WHERE [d].[DaDuyet] = CAST(0 AS bit)
+2026-07-21 14:48:21.159 +07:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [MuonTra] AS [m]
+WHERE [m].[TrangThai] = N'Đang Mượn' AND [m].[NgayHenTra] < GETDATE()
+2026-07-21 14:48:21.166 +07:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType10`2[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-21 14:48:21.171 +07:00 [INF] Executed action SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web) in 59.7724ms
+2026-07-21 14:48:21.175 +07:00 [INF] Executed endpoint 'SmartLib.Web.Controllers.NhanVienController.GetNotificationCounts (SmartLib.Web)'
+2026-07-21 14:48:21.177 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7186/NhanVien/GetNotificationCounts - 200 null application/json; charset=utf-8 108.3302ms
+2026-07-21 14:48:21.269 +07:00 [INF] Request starting HTTP/2 CONNECT https://localhost:7186/notificationHub?id=cm66f77lnEEEKQPFg7AWNw - null null
+2026-07-21 14:48:21.277 +07:00 [INF] Executing endpoint '/notificationHub'
+2026-07-21 14:48:22.510 +07:00 [INF] Executed endpoint '/notificationHub'
+2026-07-21 14:48:22.513 +07:00 [INF] Request finished HTTP/2 CONNECT https://localhost:7186/notificationHub?id=cm66f77lnEEEKQPFg7AWNw - 200 null null 1244.3046ms

@@ -37,6 +37,11 @@ public class EmailService
             subject = "📧 Xác nhận đổi địa chỉ email SmartLib";
             body = BuildChangeEmailBody(toName, otp);
         }
+        else if (purpose == "reset_password")
+        {
+            subject = "🔑 Mã xác nhận đặt lại mật khẩu SmartLib";
+            body = BuildResetPasswordEmail(toName, otp);
+        }
         else
         {
             subject = "🔐 Mã OTP xác nhận thay đổi thông tin SmartLib";
@@ -209,6 +214,51 @@ public class EmailService
                     </div>
                     <div style="background:#fef9c3;border:1.5px solid #fde047;border-radius:12px;padding:14px 16px;">
                       <p style="color:#713f12;font-size:13px;margin:0;">⚠️ Email cũ của bạn vẫn hoạt động cho đến khi xác nhận hoàn tất.</p>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="background:#f9f8ff;border-top:1.5px solid #e0e7ff;padding:20px 36px;text-align:center;">
+                    <p style="color:#9ca3af;font-size:12px;margin:0;">© 2026 SmartLib · Hệ thống thư viện thông minh</p>
+                  </td>
+                </tr>
+              </table>
+            </td></tr>
+          </table>
+        </body>
+        </html>
+        """;
+
+    // ── TEMPLATE: Quên mật khẩu / Đặt-đổi mật khẩu ───────────────────────
+    private static string BuildResetPasswordEmail(string name, string otp) => $"""
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head><meta charset="UTF-8"></head>
+        <body style="margin:0;padding:0;background:#f4f3ff;font-family:'Segoe UI',Arial,sans-serif;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f3ff;padding:40px 16px;">
+            <tr><td align="center">
+              <table width="500" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 40px rgba(79,70,229,.15);max-width:100%;">
+                <tr>
+                  <td style="background:linear-gradient(135deg,#7c2d12 0%,#c2410c 50%,#ea580c 100%);padding:36px 32px;text-align:center;">
+                    <div style="font-size:36px;margin-bottom:12px;">🔑</div>
+                    <h1 style="color:#fff;font-size:22px;font-weight:800;margin:0 0 4px;">Đặt lại mật khẩu</h1>
+                    <p style="color:rgba(254,215,170,.9);font-size:13px;margin:0;">SmartLib · Bảo mật tài khoản</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:40px 36px;">
+                    <p style="color:#4b5563;font-size:15px;line-height:1.6;margin:0 0 24px;">
+                      Xin chào <strong style="color:#c2410c;">{name}</strong>,<br>
+                      Chúng tôi nhận được yêu cầu <strong>đặt lại/đổi mật khẩu</strong> cho tài khoản SmartLib của bạn.
+                      Nhập mã OTP dưới đây để tiếp tục:
+                    </p>
+                    <div style="background:linear-gradient(135deg,#ffedd5 0%,#fed7aa 100%);border:2px solid #fdba74;border-radius:16px;padding:28px;text-align:center;margin-bottom:24px;">
+                      <p style="color:#c2410c;font-size:12px;font-weight:700;letter-spacing:2px;margin:0 0 12px;text-transform:uppercase;">Mã OTP</p>
+                      <div style="font-size:42px;font-weight:900;font-family:'Courier New',monospace;color:#9a3412;letter-spacing:10px;line-height:1;">{otp}</div>
+                      <p style="color:#c2410c;font-size:12px;margin:12px 0 0;">⏱ Hiệu lực trong <strong>10 phút</strong></p>
+                    </div>
+                    <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:12px;padding:14px 16px;">
+                      <p style="color:#991b1b;font-size:13px;margin:0;">🚨 Nếu bạn không thực hiện thao tác này, tài khoản của bạn có thể đang bị người khác truy cập. Hãy liên hệ thủ thư ngay!</p>
                     </div>
                   </td>
                 </tr>

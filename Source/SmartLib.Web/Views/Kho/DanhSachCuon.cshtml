@@ -48,13 +48,14 @@
 <!-- Nhập thêm cuốn  -->
 <div class="form-card mb-4">
     <h6 class="form-card-title"><i class="fa fa-plus me-2"></i>Nhập thêm cuốn</h6>
-    <form asp-action="NhapThem" method="post" class="d-flex gap-2 align-items-end">
+    <form asp-action="NhapThem" method="post" class="d-flex gap-2 align-items-end needs-validation" novalidate>
         @Html.AntiForgeryToken()
         <input type="hidden" name="maSach" value="@Model.MaSach" />
         <div>
             <label class="form-label small mb-1">Số cuốn nhập thêm</label>
             <input type="number" name="soLuong" class="form-control" style="width:130px"
                    min="1" max="100" value="1" required />
+            <div class="invalid-feedback">Nhập từ 1 đến 100 cuốn.</div>
         </div>
         <button type="submit" class="btn btn-success">
             <i class="fa fa-plus me-1"></i>Nhập kho

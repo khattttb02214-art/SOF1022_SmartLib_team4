@@ -12,13 +12,16 @@ public class Reservation
     [StringLength(10)]
     public string? MaDocGia { get; set; }
 
-    [StringLength(10)]
-    public string? MaSach { get; set; }
-
     public DateTime NgayDat { get; set; } = DateTime.Now;
 
     [StringLength(50)]
-    public string? TrangThai { get; set; }
+    public string? TrangThai { get; set; } = "Đang Chờ";
+
+    [StringLength(10)]
+    public string? MaNV { get; set; }
+
+    [StringLength(255)]
+    public string? GhiChu { get; set; }
 
     /// <summary>Sau khi "Đã Duyệt": true = đã lập phiếu mượn, false = chưa mượn</summary>
     public bool DaMuon { get; set; } = false;
@@ -30,6 +33,8 @@ public class Reservation
     [ForeignKey("MaDocGia")]
     public virtual DocGia? DocGia { get; set; }
 
-    [ForeignKey("MaSach")]
-    public virtual Sach? Sach { get; set; }
+    [ForeignKey("MaNV")]
+    public virtual NhanVien? NhanVien { get; set; }
+
+    public virtual ICollection<ChiTietDatTruoc> ChiTietDatTruocs { get; set; } = new List<ChiTietDatTruoc>();
 }

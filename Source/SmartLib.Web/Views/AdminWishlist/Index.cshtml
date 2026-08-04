@@ -1,0 +1,667 @@
+@model SmartLib.Web.ViewModels.AdminWishlistViewModel
+@{ ViewData["Title"] = "Quản lý Wishlist"; }
+
+@section Styles {
+<style>
+/* ── KPI cards ── */
+.aw-kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:22px; }
+.aw-kpi-card { background:white; border-radius:16px; padding:16px 18px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 10px rgba(0,0,0,0.06); }
+.aw-kpi-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.aw-kpi-num { font-size:22px; font-weight:800; color:#1f2937; line-height:1.1; }
+.aw-kpi-label { font-size:12px; color:#6b7280; font-weight:600; margin-top:2px; }
+
+/* ── Tabs cấp trang ── */
+.aw-tabs { display:flex; gap:4px; background:#f0f2f5; border-radius:14px; padding:4px; margin-bottom:20px; flex-wrap:wrap; }
+.aw-tab  { flex:1; min-width:150px; padding:9px 14px; text-align:center; border-radius:10px; border:none; background:transparent;
+           font-weight:600; font-size:13px; color:#6b7280; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+.aw-tab.active { background:white; color:#2a5298; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.aw-badge-count { background:#2a5298; color:white; border-radius:30px; padding:1px 8px; font-size:11px; font-weight:700; }
+
+/* ── Panel chung ── */
+.aw-panel { background:white; border-radius:16px; padding:18px; box-shadow:0 2px 10px rgba(0,0,0,0.06); }
+.aw-panel-header { font-size:14px; font-weight:700; color:#1f2937; display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+
+/* ── Top sách yêu thích ── */
+.aw-book-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:16px; }
+.aw-book-card { border:1px solid #f0f1f3; border-radius:14px; overflow:hidden; transition:box-shadow .2s; }
+.aw-book-card:hover { box-shadow:0 6px 18px rgba(0,0,0,0.1); }
+.aw-book-cover-wrap { position:relative; height:150px; }
+.aw-book-cover { width:100%; height:100%; object-fit:cover; }
+.aw-book-cover-placeholder { width:100%; height:100%; background:linear-gradient(135deg,#e8edf8,#c9d7f0); display:flex; align-items:center; justify-content:center; color:#7998cc; }
+.aw-book-count-badge { position:absolute; top:8px; left:8px; background:rgba(220,38,38,.92); color:white; font-size:11px; font-weight:700;
+                        padding:2px 9px; border-radius:20px; display:flex; align-items:center; gap:4px; }
+.aw-book-warn-badge { position:absolute; top:8px; right:8px; background:rgba(217,119,6,.94); color:white; font-size:9.5px; font-weight:700;
+                       padding:2px 8px; border-radius:20px; }
+.aw-book-info { padding:10px; }
+.aw-book-genre { font-size:10.5px; font-weight:700; text-transform:uppercase; color:#6b7280; letter-spacing:.4px; }
+.aw-book-title-link { text-decoration:none; }
+.aw-book-title { font-size:12.5px; font-weight:700; color:#1f2937; line-height:1.35; margin:2px 0 4px;
+                  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:34px; }
+.aw-book-stock { margin-bottom:6px; }
+
+/* ── Sở thích phổ biến ── */
+.aw-pref-list { display:flex; flex-direction:column; gap:8px; }
+.aw-pref-row { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#f8fafc; border-radius:10px; font-size:13px; }
+.aw-pref-count { background:#e5e7eb; color:#374151; font-weight:700; font-size:11.5px; border-radius:20px; padding:1px 9px; }
+
+/* ── Modal Gợi ý sách ── */
+.aw-search-result-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; cursor:pointer; transition:background .15s; }
+.aw-search-result-item:hover { background:#f3f4f6; }
+.aw-search-cover { width:34px; height:46px; object-fit:cover; border-radius:5px; flex-shrink:0; background:#e5e7eb; }
+.aw-recipient-row { display:flex; align-items:flex-start; gap:10px; padding:7px 10px; border-radius:9px; }
+.aw-recipient-row:hover { background:#f8fafc; }
+.aw-recipient-reason { font-size:11px; color:#9ca3af; margin-top:1px; }
+
+.empty-state { text-align:center; padding:50px 20px; color:#9ca3af; }
+.empty-state i { display:block; margin-bottom:12px; }
+</style>
+}
+
+<!-- Header -->
+<div class="page-header-card d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h4 class="mb-0"><i class="fa fa-heart me-2 text-danger"></i>Quản lý Wishlist sinh viên</h4>
+    <button class="btn btn-primary btn-sm" onclick="openGoiYModal()">
+        <i class="fa fa-wand-magic-sparkles me-1"></i>Gợi ý sách
+    </button>
+</div>
+
+<!-- KPI -->
+<div class="aw-kpi-row">
+    <div class="aw-kpi-card">
+        <div class="aw-kpi-icon" style="background:#fee2e2;color:#dc2626"><i class="fa fa-heart"></i></div>
+        <div><div class="aw-kpi-num">@Model.TongLuotYeuThich</div><div class="aw-kpi-label">Lượt yêu thích</div></div>
+    </div>
+    <div class="aw-kpi-card">
+        <div class="aw-kpi-icon" style="background:#dbeafe;color:#2563eb"><i class="fa fa-book-open"></i></div>
+        <div><div class="aw-kpi-num">@Model.TongSachDuocQuanTam</div><div class="aw-kpi-label">Sách được quan tâm</div></div>
+    </div>
+    <div class="aw-kpi-card">
+        <div class="aw-kpi-icon" style="background:#dcfce7;color:#16a34a"><i class="fa fa-user-graduate"></i></div>
+        <div><div class="aw-kpi-num">@Model.TongSinhVienThamGia</div><div class="aw-kpi-label">Sinh viên tham gia</div></div>
+    </div>
+    <div class="aw-kpi-card">
+        <div class="aw-kpi-icon" style="background:#fdf2f8;color:#db2777"><i class="fa fa-paper-plane"></i></div>
+        <div><div class="aw-kpi-num">@Model.TongGoiYDaGui</div><div class="aw-kpi-label">Gợi ý đã gửi</div></div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="aw-tabs">
+    <button class="aw-tab active" onclick="awShowTab('aw-tab-tongquan',this)">
+        <i class="fa fa-chart-simple"></i> Tổng quan
+    </button>
+    <button class="aw-tab" onclick="awShowTab('aw-tab-sinhvien',this)">
+        <i class="fa fa-users"></i> Theo sinh viên <span class="aw-badge-count">@Model.DanhSachSinhVien.Count</span>
+    </button>
+    <button class="aw-tab" onclick="awShowTab('aw-tab-lichsu',this)">
+        <i class="fa fa-clock-rotate-left"></i> Lịch sử gợi ý <span class="aw-badge-count">@Model.LichSuGoiY.Count</span>
+    </button>
+</div>
+
+<!-- ═══════════════════ TAB 1: TỔNG QUAN ═══════════════════ -->
+<div id="aw-tab-tongquan">
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="aw-panel">
+                <div class="aw-panel-header"><i class="fa fa-fire text-danger"></i> Top sách được yêu thích nhiều nhất</div>
+                @if (!Model.TopSachYeuThich.Any())
+                {
+                    <div class="empty-state py-4">
+                        <i class="fa fa-heart-crack fa-2x"></i>
+                        <p class="small mb-0">Chưa có dữ liệu wishlist từ sinh viên</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="aw-book-grid">
+                        @foreach (var item in Model.TopSachYeuThich)
+                        {
+                            <div class="aw-book-card">
+                                <div class="aw-book-cover-wrap">
+                                    @if (!string.IsNullOrEmpty(item.Sach.AnhBia))
+                                    {
+                                        <img src="/uploads/books/@item.Sach.AnhBia" class="aw-book-cover" alt="@item.Sach.TenSach" />
+                                    }
+                                    else
+                                    {
+                                        <div class="aw-book-cover-placeholder"><i class="fa fa-book fa-2x"></i></div>
+                                    }
+                                    <span class="aw-book-count-badge"><i class="fa fa-heart"></i> @item.SoLuotYeuThich</span>
+                                    @if (item.CanNhapThem)
+                                    {
+                                        <span class="aw-book-warn-badge" title="Hết hàng nhưng đang được nhiều sinh viên chờ">
+                                            <i class="fa fa-triangle-exclamation"></i> Hết hàng
+                                        </span>
+                                    }
+                                </div>
+                                <div class="aw-book-info">
+                                    <div class="aw-book-genre">@(item.Sach.TheLoai?.TenTheLoai ?? "—")</div>
+                                    <a asp-controller="Books" asp-action="Detail" asp-route-id="@item.Sach.MaSach" class="aw-book-title-link">
+                                        <div class="aw-book-title">@item.Sach.TenSach</div>
+                                    </a>
+                                    <div class="aw-book-stock small text-muted">Kho: @item.Sach.SoLuongKhaDung/@item.Sach.SoLuongKho</div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary w-100 mt-1"
+                                            onclick="openGoiYModal('@item.Sach.MaSach')">
+                                        <i class="fa fa-paper-plane me-1"></i>Gợi ý sách này
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column gap-3">
+            <div class="aw-panel">
+                <div class="aw-panel-header"><i class="fa fa-tags text-primary"></i> Thể loại được theo dõi nhiều nhất</div>
+                @if (!Model.TopTheLoai.Any())
+                {
+                    <p class="text-muted small mb-0">Chưa có dữ liệu</p>
+                }
+                else
+                {
+                    <div class="aw-pref-list">
+                        @foreach (var t in Model.TopTheLoai)
+                        {
+                            <div class="aw-pref-row"><span>@t.Ten</span><span class="aw-pref-count">@t.SoLuotTheoDoi</span></div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="aw-panel">
+                <div class="aw-panel-header"><i class="fa fa-pen-nib text-success"></i> Tác giả được theo dõi nhiều nhất</div>
+                @if (!Model.TopTacGia.Any())
+                {
+                    <p class="text-muted small mb-0">Chưa có dữ liệu</p>
+                }
+                else
+                {
+                    <div class="aw-pref-list">
+                        @foreach (var t in Model.TopTacGia)
+                        {
+                            <div class="aw-pref-row"><span>@t.Ten</span><span class="aw-pref-count">@t.SoLuotTheoDoi</span></div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="aw-panel">
+                <div class="aw-panel-header"><i class="fa fa-building text-warning"></i> NXB được theo dõi nhiều nhất</div>
+                @if (!Model.TopNXB.Any())
+                {
+                    <p class="text-muted small mb-0">Chưa có dữ liệu</p>
+                }
+                else
+                {
+                    <div class="aw-pref-list">
+                        @foreach (var t in Model.TopNXB)
+                        {
+                            <div class="aw-pref-row"><span>@t.Ten</span><span class="aw-pref-count">@t.SoLuotTheoDoi</span></div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════ TAB 2: THEO SINH VIÊN ═══════════════════ -->
+<div id="aw-tab-sinhvien" style="display:none">
+    <div class="card shadow-sm mb-3">
+        <div class="card-body py-2">
+            <form method="get" class="d-flex gap-2 flex-wrap">
+                <input type="text" name="searchSinhVien" value="@Model.SearchSinhVien" class="form-control"
+                       style="max-width:280px" placeholder="Tên hoặc mã sinh viên..." />
+                <button class="btn btn-primary"><i class="fa fa-search me-1"></i>Tìm</button>
+                @if (!string.IsNullOrEmpty(Model.SearchSinhVien))
+                {
+                    <a asp-action="Index" class="btn btn-outline-secondary">Xóa lọc</a>
+                }
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            @if (!Model.DanhSachSinhVien.Any())
+            {
+                <div class="empty-state">
+                    <i class="fa fa-users fa-3x"></i>
+                    <p class="fw-semibold fs-6 mb-0">Không tìm thấy sinh viên nào</p>
+                    <p class="small text-muted">Chưa có hoạt động wishlist phù hợp với bộ lọc hiện tại</p>
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover mb-0" id="awSinhVienTable" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sinh viên</th>
+                            <th>Lớp</th>
+                            <th>Sách yêu thích</th>
+                            <th>Sở thích đã lưu</th>
+                            <th>Lần thêm gần nhất</th>
+                            <th style="width:110px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sv in Model.DanhSachSinhVien)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@sv.DocGia.HoTen</td>
+                                <td>@(sv.DocGia.Lop ?? "-")</td>
+                                <td><span class="badge bg-danger-subtle text-danger">@sv.SoSachYeuThich</span></td>
+                                <td><span class="badge bg-info-subtle text-info">@sv.SoSoThich</span></td>
+                                <td data-order="@(sv.LanCuoiThem?.Ticks ?? 0)">@(sv.LanCuoiThem.HasValue ? sv.LanCuoiThem.Value.ToString("dd/MM/yyyy") : "-")</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="xemChiTietSV('@sv.DocGia.MaDocGia')">
+                                        <i class="fa fa-eye me-1"></i>Xem
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════ TAB 3: LỊCH SỬ GỢI Ý ═══════════════════ -->
+<div id="aw-tab-lichsu" style="display:none">
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            @if (!Model.LichSuGoiY.Any())
+            {
+                <div class="empty-state">
+                    <i class="fa fa-paper-plane fa-3x"></i>
+                    <p class="fw-semibold fs-6 mb-0">Chưa gửi gợi ý nào</p>
+                    <p class="small text-muted">Bấm "Gợi ý sách" ở góc trên để gửi gợi ý đầu tiên</p>
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover mb-0" id="awLichSuTable" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Sách</th>
+                            <th>Sinh viên nhận</th>
+                            <th>Người gửi</th>
+                            <th>Trạng thái</th>
+                            <th style="width:70px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tb in Model.LichSuGoiY)
+                        {
+                            <tr>
+                                <td data-order="@tb.NgayTao.Ticks">@($"{tb.NgayTao:HH:mm dd/MM/yyyy}")</td>
+                                <td>
+                                    @if (tb.Sach != null)
+                                    {
+                                        <a asp-controller="Books" asp-action="Detail" asp-route-id="@tb.MaSach">@tb.Sach.TenSach</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">(sách đã bị xóa)</span>
+                                    }
+                                </td>
+                                <td>@(tb.DocGia?.HoTen ?? "(đã xóa)")</td>
+                                <td>@(tb.NhanVien?.HoTen ?? "-")</td>
+                                <td>
+                                    @if (tb.DaDoc)
+                                    {
+                                        <span class="badge bg-success">Đã đọc</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Chưa đọc</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="XoaGoiY" asp-route-id="@tb.MaThongBao" class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Thu hồi gợi ý này? Sinh viên sẽ không còn thấy thông báo này nữa.')" title="Thu hồi gợi ý">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════ MODAL: GỢI Ý SÁCH ═══════════════════ -->
+<div class="modal fade" id="goiYModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="fa fa-wand-magic-sparkles text-warning me-2"></i>Gợi ý sách cho sinh viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Bước 1: chọn sách -->
+                <div id="goiYStep1">
+                    <label class="form-label fw-semibold small">Bước 1: Chọn sách muốn gợi ý</label>
+                    <input type="text" id="goiYSearchInput" class="form-control mb-2" placeholder="Nhập tên sách, mã sách hoặc ISBN…" autocomplete="off" />
+                    <div id="goiYSearchResults" style="max-height:340px;overflow-y:auto"></div>
+                </div>
+
+                <!-- Bước 2: chọn người nhận -->
+                <div id="goiYStep2" style="display:none">
+                    <div class="d-flex align-items-center gap-2 mb-3 p-2 rounded" style="background:#f8fafc">
+                        <img id="goiYChonCover" class="aw-search-cover" src="" alt="" style="display:none" />
+                        <div id="goiYChonCoverPlaceholder" class="aw-search-cover d-flex align-items-center justify-content-center">
+                            <i class="fa fa-book text-muted"></i>
+                        </div>
+                        <div class="flex-fill">
+                            <div id="goiYChonTitle" class="fw-bold small"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-link" onclick="goiYQuayLaiBuoc1()">Đổi sách khác</button>
+                    </div>
+
+                    <label class="form-label fw-semibold small mb-1">Bước 2: Chọn người nhận gợi ý</label>
+                    <ul class="nav nav-tabs nav-tabs-sm mb-2">
+                        <li class="nav-item">
+                            <button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#goiYDaYeuThich">
+                                Đã yêu thích (<span id="goiYCountDaYeuThich">0</span>)
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#goiYPhuHop">
+                                Phù hợp sở thích (<span id="goiYCountPhuHop">0</span>)
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="goiYDaYeuThich">
+                            <div class="form-check mb-1 border-bottom pb-2">
+                                <input class="form-check-input" type="checkbox" id="goiYChonTatDaYeuThich">
+                                <label class="form-check-label small fw-semibold" for="goiYChonTatDaYeuThich">Chọn tất cả</label>
+                            </div>
+                            <div id="goiYListDaYeuThich" style="max-height:220px;overflow-y:auto"></div>
+                        </div>
+                        <div class="tab-pane fade" id="goiYPhuHop">
+                            <div class="form-check mb-1 border-bottom pb-2">
+                                <input class="form-check-input" type="checkbox" id="goiYChonTatPhuHop">
+                                <label class="form-check-label small fw-semibold" for="goiYChonTatPhuHop">Chọn tất cả</label>
+                            </div>
+                            <div id="goiYListPhuHop" style="max-height:220px;overflow-y:auto"></div>
+                        </div>
+                    </div>
+
+                    <label class="form-label fw-semibold small mt-3">Lời nhắn (tùy chọn)</label>
+                    <textarea id="goiYLoiNhan" class="form-control" rows="2" maxlength="500"
+                              placeholder="Để trống sẽ dùng lời nhắn mặc định của hệ thống…"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span id="goiYSoLuongChonText" class="text-muted small me-auto"></span>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="goiYBtnGui" onclick="guiGoiY()" disabled>
+                    <i class="fa fa-paper-plane me-1"></i>Gửi gợi ý
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════ MODAL: CHI TIẾT SINH VIÊN ═══════════════════ -->
+<div class="modal fade" id="chiTietSVModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="chiTietSVTitle">Chi tiết sinh viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="chiTietSVBody">
+                <div class="text-center text-muted py-4"><i class="fa fa-spinner fa-spin"></i> Đang tải...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="antiForgeryForm" class="d-none">@Html.AntiForgeryToken()</form>
+
+@section Scripts {
+<script>
+// ═══ Chuyển tab cấp trang (Tổng quan / Theo sinh viên / Lịch sử gợi ý) ═══
+function awShowTab(id, btn) {
+    document.querySelectorAll('[id^="aw-tab-"]').forEach(function (t) { t.style.display = 'none'; });
+    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('.aw-tab').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+}
+
+function getAntiForgeryToken() {
+    return document.querySelector('#antiForgeryForm [name=__RequestVerificationToken]')?.value;
+}
+
+function escapeHtml(str) {
+    return (str || '').replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+}
+
+// ═══════════════════ MODAL GỢI Ý SÁCH ═══════════════════
+let goiYChonMaSach = null;
+let goiYSelected = new Set(); // các mã độc giả đang được tick chọn (cả 2 tab)
+
+function openGoiYModal(maSach) {
+    goiYChonMaSach = null;
+    goiYSelected = new Set();
+    document.getElementById('goiYSearchInput').value = '';
+    document.getElementById('goiYSearchResults').innerHTML = '';
+    document.getElementById('goiYLoiNhan').value = '';
+    capNhatSoLuongChon();
+
+    new bootstrap.Modal(document.getElementById('goiYModal')).show();
+
+    if (maSach) {
+        chonSach(maSach);
+    } else {
+        document.getElementById('goiYStep1').style.display = 'block';
+        document.getElementById('goiYStep2').style.display = 'none';
+    }
+}
+
+function goiYQuayLaiBuoc1() {
+    document.getElementById('goiYStep1').style.display = 'block';
+    document.getElementById('goiYStep2').style.display = 'none';
+}
+
+let goiYSearchTimer = null;
+document.getElementById('goiYSearchInput')?.addEventListener('input', function () {
+    clearTimeout(goiYSearchTimer);
+    const q = this.value;
+    goiYSearchTimer = setTimeout(function () { timKiemSach(q); }, 350);
+});
+
+async function timKiemSach(q) {
+    const box = document.getElementById('goiYSearchResults');
+    box.innerHTML = '<div class="text-center text-muted py-3"><i class="fa fa-spinner fa-spin"></i></div>';
+    try {
+        const res = await fetch('@Url.Action("TimSach", "AdminWishlist")?q=' + encodeURIComponent(q || ''));
+        const data = await res.json();
+        if (!data.success) { box.innerHTML = '<div class="text-danger small p-2">' + escapeHtml(data.message || 'Có lỗi xảy ra') + '</div>'; return; }
+        if (!data.items.length) { box.innerHTML = '<div class="text-muted small text-center py-3">Không tìm thấy sách phù hợp</div>'; return; }
+        box.innerHTML = data.items.map(function (s) {
+            const coverHtml = s.anhBia
+                ? '<img src="/uploads/books/' + s.anhBia + '" class="aw-search-cover" />'
+                : '<div class="aw-search-cover d-flex align-items-center justify-content-center"><i class="fa fa-book text-muted"></i></div>';
+            const stockCls = s.soLuongKhaDung <= 0 ? 'text-danger' : 'text-muted';
+            return '<div class="aw-search-result-item" onclick="chonSach(\'' + s.maSach + '\')">' +
+                       coverHtml +
+                       '<div class="flex-fill">' +
+                           '<div class="fw-semibold small">' + escapeHtml(s.tenSach) + '</div>' +
+                           '<div class="text-muted" style="font-size:11px">' + escapeHtml(s.theLoai || '') +
+                                ' · <span class="' + stockCls + '">Kho ' + s.soLuongKhaDung + '/' + s.soLuongKho + '</span>' +
+                                ' · <i class="fa fa-heart text-danger"></i> ' + s.soLuotYeuThich +
+                           '</div>' +
+                       '</div>' +
+                   '</div>';
+        }).join('');
+    } catch (e) {
+        box.innerHTML = '<div class="text-danger small p-2">Không tải được danh sách sách</div>';
+    }
+}
+
+async function chonSach(maSach) {
+    goiYChonMaSach = maSach;
+    goiYSelected = new Set();
+    document.getElementById('goiYStep1').style.display = 'none';
+    document.getElementById('goiYStep2').style.display = 'block';
+    document.getElementById('goiYListDaYeuThich').innerHTML = '<div class="text-center text-muted py-3"><i class="fa fa-spinner fa-spin"></i></div>';
+    document.getElementById('goiYListPhuHop').innerHTML = '';
+    document.getElementById('goiYChonTatDaYeuThich').checked = false;
+    document.getElementById('goiYChonTatPhuHop').checked = false;
+
+    try {
+        const res = await fetch('@Url.Action("LayNguoiNhan", "AdminWishlist")?maSach=' + encodeURIComponent(maSach));
+        const data = await res.json();
+        if (!data.success) { toastr.error(data.message || 'Không tải được thông tin sách'); return; }
+
+        document.getElementById('goiYChonTitle').textContent = data.tenSach;
+        const coverEl = document.getElementById('goiYChonCover');
+        const placeholderEl = document.getElementById('goiYChonCoverPlaceholder');
+        if (data.anhBia) {
+            coverEl.src = '/uploads/books/' + data.anhBia; coverEl.style.display = ''; placeholderEl.style.display = 'none';
+        } else {
+            coverEl.style.display = 'none'; placeholderEl.style.display = '';
+        }
+
+        renderRecipientList('goiYListDaYeuThich', data.daYeuThich, false);
+        renderRecipientList('goiYListPhuHop', data.phuHopSoThich, true);
+        document.getElementById('goiYCountDaYeuThich').textContent = data.daYeuThich.length;
+        document.getElementById('goiYCountPhuHop').textContent = data.phuHopSoThich.length;
+    } catch (e) {
+        toastr.error('Không tải được danh sách người nhận');
+    }
+    capNhatSoLuongChon();
+}
+
+function renderRecipientList(containerId, items, coLyDo) {
+    const box = document.getElementById(containerId);
+    if (!items.length) { box.innerHTML = '<div class="text-muted small text-center py-3">Không có sinh viên nào ở nhóm này</div>'; return; }
+    box.innerHTML = items.map(function (sv) {
+        const lyDoHtml = coLyDo && sv.lyDo ? '<div class="aw-recipient-reason">' + escapeHtml(sv.lyDo) + '</div>' : '';
+        return '<div class="form-check aw-recipient-row">' +
+                   '<input class="form-check-input goiy-recipient-checkbox mt-1" type="checkbox" value="' + sv.maDocGia + '" ' +
+                        'id="goiYSV_' + sv.maDocGia + '" onchange="toggleRecipient(\'' + sv.maDocGia + '\', this.checked)">' +
+                   '<label class="form-check-label small flex-fill" for="goiYSV_' + sv.maDocGia + '">' +
+                        escapeHtml(sv.hoTen) + (sv.lop ? ' <span class="text-muted">(' + escapeHtml(sv.lop) + ')</span>' : '') +
+                        lyDoHtml +
+                   '</label>' +
+               '</div>';
+    }).join('');
+}
+
+function toggleRecipient(maDocGia, checked) {
+    if (checked) goiYSelected.add(maDocGia); else goiYSelected.delete(maDocGia);
+    capNhatSoLuongChon();
+}
+
+document.getElementById('goiYChonTatDaYeuThich')?.addEventListener('change', function () { chonTatCaTrongPane('goiYListDaYeuThich', this.checked); });
+document.getElementById('goiYChonTatPhuHop')?.addEventListener('change', function () { chonTatCaTrongPane('goiYListPhuHop', this.checked); });
+
+function chonTatCaTrongPane(containerId, checked) {
+    document.querySelectorAll('#' + containerId + ' .goiy-recipient-checkbox').forEach(function (cb) {
+        cb.checked = checked;
+        if (checked) goiYSelected.add(cb.value); else goiYSelected.delete(cb.value);
+    });
+    capNhatSoLuongChon();
+}
+
+function capNhatSoLuongChon() {
+    const n = goiYSelected.size;
+    document.getElementById('goiYSoLuongChonText').textContent = n > 0 ? ('Đã chọn ' + n + ' sinh viên') : '';
+    document.getElementById('goiYBtnGui').disabled = n === 0;
+}
+
+async function guiGoiY() {
+    if (!goiYChonMaSach || goiYSelected.size === 0) return;
+    const btn = document.getElementById('goiYBtnGui');
+    const btnHtmlGoc = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang gửi...';
+    try {
+        const res = await fetch('@Url.Action("TaoGoiY", "AdminWishlist")', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getAntiForgeryToken() },
+            body: JSON.stringify({
+                maSach: goiYChonMaSach,
+                maDocGias: Array.from(goiYSelected),
+                loiNhan: document.getElementById('goiYLoiNhan').value
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            toastr.success(data.message);
+            bootstrap.Modal.getInstance(document.getElementById('goiYModal'))?.hide();
+            setTimeout(function () { location.reload(); }, 900);
+        } else {
+            toastr.error(data.message || 'Gửi gợi ý thất bại');
+            btn.disabled = false; btn.innerHTML = btnHtmlGoc;
+        }
+    } catch (e) {
+        toastr.error('Có lỗi xảy ra, vui lòng thử lại');
+        btn.disabled = false; btn.innerHTML = btnHtmlGoc;
+    }
+}
+
+// ═══════════════════ MODAL CHI TIẾT SINH VIÊN ═══════════════════
+async function xemChiTietSV(maDocGia) {
+    const modal = new bootstrap.Modal(document.getElementById('chiTietSVModal'));
+    document.getElementById('chiTietSVBody').innerHTML = '<div class="text-center text-muted py-4"><i class="fa fa-spinner fa-spin"></i> Đang tải...</div>';
+    modal.show();
+    try {
+        const res = await fetch('@Url.Action("ChiTietDocGia", "AdminWishlist")?maDocGia=' + encodeURIComponent(maDocGia));
+        const data = await res.json();
+        if (!data.success) { document.getElementById('chiTietSVBody').innerHTML = '<p class="text-danger mb-0">' + escapeHtml(data.message || 'Lỗi') + '</p>'; return; }
+
+        document.getElementById('chiTietSVTitle').innerHTML = '<i class="fa fa-user-graduate me-2 text-primary"></i>' + escapeHtml(data.hoTen);
+
+        const prefHtml = data.soThich.length
+            ? data.soThich.map(function (p) { return '<span class="badge bg-light text-dark border me-1 mb-1">' + escapeHtml(p.ten) + '</span>'; }).join('')
+            : '<span class="text-muted small">Chưa lưu sở thích nào</span>';
+
+        const wishlistHtml = data.wishlist.length
+            ? data.wishlist.map(function (w) {
+                const coverHtml = w.anhBia
+                    ? '<img src="/uploads/books/' + w.anhBia + '" class="aw-search-cover" />'
+                    : '<div class="aw-search-cover d-flex align-items-center justify-content-center"><i class="fa fa-book text-muted"></i></div>';
+                return '<div class="d-flex align-items-center gap-2 mb-2">' + coverHtml +
+                           '<div class="flex-fill">' +
+                               '<div class="small fw-semibold">' + escapeHtml(w.tenSach) + '</div>' +
+                               '<div class="text-muted" style="font-size:11px">' + escapeHtml(w.theLoai || '') + ' · thêm ' + w.ngayThem + '</div>' +
+                           '</div>' +
+                           '<button type="button" class="btn btn-sm btn-outline-primary" title="Gợi ý sách này" ' +
+                                'onclick=\'bootstrap.Modal.getInstance(document.getElementById("chiTietSVModal")).hide(); openGoiYModal("' + w.maSach + '");\'>' +
+                                '<i class="fa fa-paper-plane"></i>' +
+                           '</button>' +
+                       '</div>';
+            }).join('')
+            : '<p class="text-muted small mb-0">Chưa yêu thích sách nào</p>';
+
+        document.getElementById('chiTietSVBody').innerHTML =
+            '<div class="mb-3"><div class="fw-semibold small mb-2"><i class="fa fa-sliders me-1"></i>Sở thích đang theo dõi</div>' + prefHtml + '</div>' +
+            '<div><div class="fw-semibold small mb-2"><i class="fa fa-heart me-1 text-danger"></i>Sách yêu thích (' + data.wishlist.length + ')</div>' + wishlistHtml + '</div>';
+    } catch (e) {
+        document.getElementById('chiTietSVBody').innerHTML = '<p class="text-danger mb-0">Không tải được dữ liệu</p>';
+    }
+}
+
+// ═══════════════════ DataTables cho 2 bảng ═══════════════════
+$(function () {
+    if ($('#awSinhVienTable').length) {
+        $('#awSinhVienTable').DataTable({ language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json' }, pageLength: 10, order: [] });
+    }
+    if ($('#awLichSuTable').length) {
+        $('#awLichSuTable').DataTable({ language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json' }, pageLength: 10, order: [] });
+    }
+});
+</script>
+}

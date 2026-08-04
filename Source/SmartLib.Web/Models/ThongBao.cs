@@ -12,6 +12,9 @@ public class ThongBao
     [StringLength(10)]
     public string? MaDocGia { get; set; }
 
+    [StringLength(10)]
+    public string? MaNV { get; set; }
+
     [StringLength(200)]
     public string? TieuDe { get; set; }
 
@@ -35,5 +38,7 @@ public class ThongBao
 
     [ForeignKey("MaSach")]
     public virtual Sach? Sach { get; set; }
-}
 
+    [ForeignKey("MaNV")]
+    public virtual NhanVien? NhanVien { get; set; }
+}
