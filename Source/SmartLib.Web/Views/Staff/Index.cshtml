@@ -1,3 +1,4 @@
+@model SmartLib.Web.ViewModels.HomeViewModel
 @{
 	ViewData["Title"] = "Dashboard Thủ Thư";
 }
@@ -6,19 +7,19 @@
 	<style>
 		/* ────── STAFF DASHBOARD TOKENS ────── */
 		:root {
-			--staff-blue:    #0369a1;
-			--staff-blue2:   #0284c7;
-			--staff-cyan:    #0891b2;
-			--staff-teal:    #0d9488;
-			--staff-orange:  #ea580c;
-			--staff-red:     #dc2626;
-			--staff-light:   #f0f9ff;
-			--staff-white:   #ffffff;
-			--staff-text:    #0c2340;
-			--staff-border:  #bae6fd;
-			--staff-radius:  14px;
+			--staff-blue: #0369a1;
+			--staff-blue2: #0284c7;
+			--staff-cyan: #0891b2;
+			--staff-teal: #0d9488;
+			--staff-orange: #ea580c;
+			--staff-red: #dc2626;
+			--staff-light: #f0f9ff;
+			--staff-white: #ffffff;
+			--staff-text: #0c2340;
+			--staff-border: #bae6fd;
+			--staff-radius: 14px;
 			--staff-radius2: 20px;
-			--staff-shadow:  0 4px 24px rgba(3,105,161,.12);
+			--staff-shadow: 0 4px 24px rgba(3,105,161,.12);
 			--staff-shadow2: 0 8px 40px rgba(3,105,161,.18);
 		}
 
@@ -39,23 +40,34 @@
 			overflow: hidden;
 			margin-bottom: -40px;
 		}
-		.staff-banner::before {
-			content: '';
-			position: absolute;
-			width: 400px; height: 400px;
-			background: radial-gradient(circle, rgba(2,196,199,.2) 0%, transparent 70%);
-			top: -100px; right: -80px;
-			border-radius: 50%;
+
+			.staff-banner::before {
+				content: '';
+				position: absolute;
+				width: 400px;
+				height: 400px;
+				background: radial-gradient(circle, rgba(2,196,199,.2) 0%, transparent 70%);
+				top: -100px;
+				right: -80px;
+				border-radius: 50%;
+			}
+
+			.staff-banner::after {
+				content: '';
+				position: absolute;
+				width: 250px;
+				height: 250px;
+				background: radial-gradient(circle, rgba(234,88,12,.15) 0%, transparent 70%);
+				bottom: 10px;
+				left: 15%;
+				border-radius: 50%;
+			}
+
+		.staff-banner__inner {
+			position: relative;
+			z-index: 2;
 		}
-		.staff-banner::after {
-			content: '';
-			position: absolute;
-			width: 250px; height: 250px;
-			background: radial-gradient(circle, rgba(234,88,12,.15) 0%, transparent 70%);
-			bottom: 10px; left: 15%;
-			border-radius: 50%;
-		}
-		.staff-banner__inner { position: relative; z-index: 2; }
+
 		.staff-banner__greeting {
 			font-size: 12px;
 			font-weight: 700;
@@ -64,12 +76,14 @@
 			text-transform: uppercase;
 			margin-bottom: 8px;
 		}
+
 		.staff-banner__title {
 			font-size: 32px;
 			font-weight: 900;
 			color: #ffffff;
 			margin: 0 0 20px;
 		}
+
 		.staff-banner__subtitle {
 			font-size: 14px;
 			color: rgba(206,235,245,.8);
@@ -83,6 +97,7 @@
 			flex-wrap: wrap;
 			align-items: center;
 		}
+
 		.staff-stat {
 			background: rgba(255,255,255,.13);
 			backdrop-filter: blur(10px);
@@ -95,24 +110,57 @@
 			min-width: 145px;
 			transition: all .25s;
 		}
-		.staff-stat:hover {
-			transform: translateY(-2px);
-			background: rgba(255,255,255,.18);
-			box-shadow: 0 8px 16px rgba(0,0,0,.2);
-		}
+
+			.staff-stat:hover {
+				transform: translateY(-2px);
+				background: rgba(255,255,255,.18);
+				box-shadow: 0 8px 16px rgba(0,0,0,.2);
+			}
+
 		.staff-stat__icon {
-			width: 44px; height: 44px;
+			width: 44px;
+			height: 44px;
 			border-radius: 11px;
-			display: flex; align-items: center; justify-content: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			font-size: 20px;
 			flex-shrink: 0;
 		}
-		.staff-stat__icon--cyan   { background: rgba(6,182,212,.3); color: #22d3ee; }
-		.staff-stat__icon--orange { background: rgba(234,88,12,.3); color: #fdba74; }
-		.staff-stat__icon--red    { background: rgba(220,38,38,.3); color: #fca5a5; }
-		.staff-stat__icon--teal   { background: rgba(13,148,136,.3); color: #7ee8c9; }
-		.staff-stat__num  { font-size: 24px; font-weight: 900; color: #ffffff; line-height: 1; }
-		.staff-stat__lbl  { font-size: 11px; color: rgba(206,235,245,.85); margin-top: 3px; font-weight: 600; }
+
+		.staff-stat__icon--cyan {
+			background: rgba(6,182,212,.3);
+			color: #22d3ee;
+		}
+
+		.staff-stat__icon--orange {
+			background: rgba(234,88,12,.3);
+			color: #fdba74;
+		}
+
+		.staff-stat__icon--red {
+			background: rgba(220,38,38,.3);
+			color: #fca5a5;
+		}
+
+		.staff-stat__icon--teal {
+			background: rgba(13,148,136,.3);
+			color: #7ee8c9;
+		}
+
+		.staff-stat__num {
+			font-size: 24px;
+			font-weight: 900;
+			color: #ffffff;
+			line-height: 1;
+		}
+
+		.staff-stat__lbl {
+			font-size: 11px;
+			color: rgba(206,235,245,.85);
+			margin-top: 3px;
+			font-weight: 600;
+		}
 
 		/* ────── CONTENT AREA ────── */
 		.staff-content {
@@ -128,6 +176,7 @@
 			gap: 16px;
 			margin-bottom: 32px;
 		}
+
 		.staff-action-card {
 			background: var(--staff-white);
 			border: 1.5px solid var(--staff-border);
@@ -142,24 +191,31 @@
 			align-items: center;
 			gap: 12px;
 		}
-		.staff-action-card:hover {
-			transform: translateY(-4px);
-			box-shadow: var(--staff-shadow2);
-			border-color: var(--staff-blue2);
-		}
+
+			.staff-action-card:hover {
+				transform: translateY(-4px);
+				box-shadow: var(--staff-shadow2);
+				border-color: var(--staff-blue2);
+			}
+
 		.staff-action-card__icon {
-			width: 50px; height: 50px;
+			width: 50px;
+			height: 50px;
 			border-radius: 12px;
-			display: flex; align-items: center; justify-content: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			font-size: 24px;
 			background: linear-gradient(135deg, #e0f2fe, #cffafe);
 			color: var(--staff-blue);
 		}
+
 		.staff-action-card__title {
 			font-size: 14px;
 			font-weight: 700;
 			color: var(--staff-text);
 		}
+
 		.staff-action-card__desc {
 			font-size: 11px;
 			color: #64748b;
@@ -173,6 +229,7 @@
 			margin-bottom: 20px;
 			margin-top: 32px;
 		}
+
 		.staff-sec-title {
 			font-size: 18px;
 			font-weight: 800;
@@ -182,10 +239,14 @@
 			gap: 10px;
 			margin: 0;
 		}
+
 		.staff-sec-title__icon {
-			width: 36px; height: 36px;
+			width: 36px;
+			height: 36px;
 			border-radius: 10px;
-			display: flex; align-items: center; justify-content: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			font-size: 16px;
 			background: linear-gradient(135deg, #e0f2fe, #cffafe);
 			color: var(--staff-blue);
@@ -200,6 +261,7 @@
 			box-shadow: var(--staff-shadow);
 			margin-bottom: 28px;
 		}
+
 		.staff-data-card__header {
 			background: linear-gradient(90deg, #e0f2fe 0%, #cffafe 100%);
 			padding: 16px 20px;
@@ -208,13 +270,19 @@
 			align-items: center;
 			gap: 12px;
 		}
+
 		.staff-data-card__header-icon {
-			width: 36px; height: 36px;
+			width: 36px;
+			height: 36px;
 			background: var(--staff-blue);
 			border-radius: 9px;
-			display: flex; align-items: center; justify-content: center;
-			color: #fff; font-size: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			font-size: 16px;
 		}
+
 		.staff-data-card__header-text {
 			font-size: 14px;
 			font-weight: 700;
@@ -226,26 +294,34 @@
 			width: 100%;
 			border-collapse: collapse;
 		}
-		.staff-table thead th {
-			padding: 14px 16px;
-			font-size: 11px;
-			font-weight: 800;
-			color: var(--staff-text);
-			text-transform: uppercase;
-			letter-spacing: .8px;
-			background: #f0f9ff;
-			border-bottom: 2px solid var(--staff-border);
-			text-align: left;
-		}
-		.staff-table tbody td {
-			padding: 13px 16px;
-			font-size: 13px;
-			color: #374151;
-			border-bottom: 1px solid #e5e7eb;
-			vertical-align: middle;
-		}
-		.staff-table tbody tr:last-child td { border-bottom: none; }
-		.staff-table tbody tr:hover td { background: #f8fbff; }
+
+			.staff-table thead th {
+				padding: 14px 16px;
+				font-size: 11px;
+				font-weight: 800;
+				color: var(--staff-text);
+				text-transform: uppercase;
+				letter-spacing: .8px;
+				background: #f0f9ff;
+				border-bottom: 2px solid var(--staff-border);
+				text-align: left;
+			}
+
+			.staff-table tbody td {
+				padding: 13px 16px;
+				font-size: 13px;
+				color: #374151;
+				border-bottom: 1px solid #e5e7eb;
+				vertical-align: middle;
+			}
+
+			.staff-table tbody tr:last-child td {
+				border-bottom: none;
+			}
+
+			.staff-table tbody tr:hover td {
+				background: #f8fbff;
+			}
 
 		/* ────── BADGE STYLES ────── */
 		.staff-badge {
@@ -258,10 +334,26 @@
 			font-weight: 700;
 			white-space: nowrap;
 		}
-		.staff-badge--blue   { background: #dbeafe; color: #0369a1; }
-		.staff-badge--green  { background: #dcfce7; color: #166534; }
-		.staff-badge--red    { background: #fee2e2; color: #991b1b; }
-		.staff-badge--orange { background: #fed7aa; color: #9a3412; }
+
+		.staff-badge--blue {
+			background: #dbeafe;
+			color: #0369a1;
+		}
+
+		.staff-badge--green {
+			background: #dcfce7;
+			color: #166534;
+		}
+
+		.staff-badge--red {
+			background: #fee2e2;
+			color: #991b1b;
+		}
+
+		.staff-badge--orange {
+			background: #fed7aa;
+			color: #9a3412;
+		}
 
 		/* ────── BUTTON STYLES ────── */
 		.staff-btn {
@@ -279,39 +371,75 @@
 			transition: all .15s;
 			text-decoration: none;
 		}
+
 		.staff-btn--primary {
 			background: linear-gradient(135deg, var(--staff-blue) 0%, var(--staff-cyan) 100%);
 			color: #fff;
 			box-shadow: 0 4px 12px rgba(3,105,161,.3);
 		}
-		.staff-btn--primary:hover {
-			transform: translateY(-1px);
-			box-shadow: 0 6px 16px rgba(3,105,161,.4);
-		}
+
+			.staff-btn--primary:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 6px 16px rgba(3,105,161,.4);
+			}
+
 		.staff-btn--outline {
 			border: 1.5px solid var(--staff-border);
 			background: transparent;
 			color: var(--staff-blue);
 		}
-		.staff-btn--outline:hover {
-			background: #f0f9ff;
-			border-color: var(--staff-blue2);
-		}
+
+			.staff-btn--outline:hover {
+				background: #f0f9ff;
+				border-color: var(--staff-blue2);
+			}
 
 		/* ────── RESPONSIVE ────── */
 		@@media (max-width: 768px) {
-			.staff-content { padding: 0 16px; }
-			.staff-banner { padding: 28px 20px 52px; }
-			.staff-banner__title { font-size: 24px; }
-			.staff-stats { gap: 10px; }
-			.staff-stat { min-width: 120px; padding: 10px 14px; }
-			.staff-actions-grid { grid-template-columns: repeat(2, 1fr); }
+			.staff-content {
+				padding: 0 16px;
+			}
+
+			.staff-banner {
+				padding: 28px 20px 52px;
+			}
+
+			.staff-banner__title {
+				font-size: 24px;
+			}
+
+			.staff-stats {
+				gap: 10px;
+			}
+
+			.staff-stat {
+				min-width: 120px;
+				padding: 10px 14px;
+			}
+
+			.staff-actions-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
 		}
+
 		@@media (max-width: 480px) {
-			.staff-banner__title { font-size: 20px; }
-			.staff-stats { gap: 8px; flex-direction: column; align-items: stretch; }
-			.staff-stat { min-width: unset; }
-			.staff-actions-grid { grid-template-columns: 1fr; }
+			.staff-banner__title {
+				font-size: 20px;
+			}
+
+			.staff-stats {
+				gap: 8px;
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+			.staff-stat {
+				min-width: unset;
+			}
+
+			.staff-actions-grid {
+				grid-template-columns: 1fr;
+			}
 		}
 	</style>
 }
@@ -328,28 +456,28 @@
 				<div class="staff-stat">
 					<div class="staff-stat__icon staff-stat__icon--cyan"><i class="fa fa-book"></i></div>
 					<div>
-						<div class="staff-stat__num">1,248</div>
+						<div class="staff-stat__num">@Model.TongSach.ToString("N0")</div>
 						<div class="staff-stat__lbl">Tổng sách</div>
 					</div>
 				</div>
 				<div class="staff-stat">
 					<div class="staff-stat__icon staff-stat__icon--orange"><i class="fa fa-users"></i></div>
 					<div>
-						<div class="staff-stat__num">842</div>
+						<div class="staff-stat__num">@Model.DocGiaDaDuyet.ToString("N0")</div>
 						<div class="staff-stat__lbl">Độc giả đã duyệt</div>
 					</div>
 				</div>
 				<div class="staff-stat">
 					<div class="staff-stat__icon staff-stat__icon--red"><i class="fa fa-hourglass-end"></i></div>
 					<div>
-						<div class="staff-stat__num">23</div>
+						<div class="staff-stat__num">@Model.SachQuaHan.ToString("N0")</div>
 						<div class="staff-stat__lbl">Quá hạn</div>
 					</div>
 				</div>
 				<div class="staff-stat">
 					<div class="staff-stat__icon staff-stat__icon--teal"><i class="fa fa-bookmark"></i></div>
 					<div>
-						<div class="staff-stat__num">156</div>
+						<div class="staff-stat__num">@Model.DonDatTruocChoDuyet.ToString("N0")</div>
 						<div class="staff-stat__lbl">Đợi duyệt</div>
 					</div>
 				</div>
@@ -367,32 +495,32 @@
 		</div>
 
 		<div class="staff-actions-grid">
-			<a href="#" class="staff-action-card">
+			<a asp-controller="Books" asp-action="Create" class="staff-action-card">
 				<div class="staff-action-card__icon"><i class="fa fa-plus-circle"></i></div>
 				<div class="staff-action-card__title">Thêm sách</div>
 				<div class="staff-action-card__desc">Nhập sách mới vào kho</div>
 			</a>
-			<a href="#" class="staff-action-card">
+			<a asp-controller="Borrow" asp-action="Create" class="staff-action-card">
 				<div class="staff-action-card__icon"><i class="fa fa-hand-holding-hand"></i></div>
 				<div class="staff-action-card__title">Xử lý mượn</div>
 				<div class="staff-action-card__desc">Lập phiếu mượn sách</div>
 			</a>
-			<a href="#" class="staff-action-card">
+			<a asp-controller="Borrow" asp-action="Index" asp-route-status="Đang Mượn" class="staff-action-card">
 				<div class="staff-action-card__icon"><i class="fa fa-rotate-left"></i></div>
 				<div class="staff-action-card__title">Xử lý trả</div>
 				<div class="staff-action-card__desc">Tiếp nhận trả sách</div>
 			</a>
-			<a href="#" class="staff-action-card">
+			<a asp-controller="NhanVien" asp-action="PendingAccounts" class="staff-action-card">
 				<div class="staff-action-card__icon"><i class="fa fa-check-square"></i></div>
 				<div class="staff-action-card__title">Duyệt độc giả</div>
 				<div class="staff-action-card__desc">Duyệt tài khoản mới</div>
 			</a>
-			<a href="#" class="staff-action-card">
+			<a asp-controller="AdminReview" asp-action="Index" class="staff-action-card">
 				<div class="staff-action-card__icon"><i class="fa fa-star"></i></div>
 				<div class="staff-action-card__title">Duyệt đánh giá</div>
 				<div class="staff-action-card__desc">Kiểm tra đánh giá sách</div>
 			</a>
-			<a href="#" class="staff-action-card">
+			<a asp-controller="Dashboard" asp-action="Index" class="staff-action-card">
 				<div class="staff-action-card__icon"><i class="fa fa-chart-bar"></i></div>
 				<div class="staff-action-card__title">Báo cáo</div>
 				<div class="staff-action-card__desc">Xem thống kê chi tiết</div>
@@ -405,7 +533,7 @@
 				<span class="staff-sec-title__icon"><i class="fa fa-triangle-exclamation"></i></span>
 				Phiếu mượn quá hạn
 			</h3>
-			<a href="#" class="staff-btn staff-btn--outline">
+			<a asp-controller="Borrow" asp-action="Index" asp-route-status="OVERDUE" class="staff-btn staff-btn--outline">
 				<i class="fa fa-arrow-right"></i>Xem tất cả
 			</a>
 		</div>
@@ -413,69 +541,59 @@
 		<div class="staff-data-card">
 			<div class="staff-data-card__header">
 				<div class="staff-data-card__header-icon"><i class="fa fa-exclamation-circle"></i></div>
-				<div class="staff-data-card__header-text">23 phiếu mượn quá hạn cần xử lý</div>
+				<div class="staff-data-card__header-text">@Model.SachQuaHan.ToString("N0") phiếu mượn quá hạn cần xử lý</div>
 			</div>
-			<div style="overflow-x: auto;">
-				<table class="staff-table">
-					<thead>
-						<tr>
-							<th><i class="fa fa-hashtag me-1"></i>Mã phiếu</th>
-							<th><i class="fa fa-user me-1"></i>Độc giả</th>
-							<th><i class="fa fa-book me-1"></i>Sách</th>
-							<th><i class="fa fa-calendar me-1"></i>Hạn trả</th>
-							<th><i class="fa fa-hourglass-end me-1"></i>Quá hạn</th>
-							<th>Thao tác</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><code>PM000123</code></td>
-							<td><strong>Nguyễn Văn A</strong></td>
-							<td>Lập Trình C#</td>
-							<td>15/08/2026</td>
-							<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>6 ngày</span></td>
-							<td>
-								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
-									<i class="fa fa-phone"></i>Nhắc
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td><code>PM000124</code></td>
-							<td><strong>Trần Thị B</strong></td>
-							<td>Python 101</td>
-							<td>10/08/2026</td>
-							<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>11 ngày</span></td>
-							<td>
-								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
-									<i class="fa fa-phone"></i>Nhắc
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td><code>PM000125</code></td>
-							<td><strong>Lê Hoàng C</strong></td>
-							<td>JavaScript Mastery</td>
-							<td>05/08/2026</td>
-							<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>16 ngày</span></td>
-							<td>
-								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
-									<i class="fa fa-phone"></i>Nhắc
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			@if (Model.PhieuMuonQuaHan.Any())
+			{
+				<div style="overflow-x: auto;">
+					<table class="staff-table">
+						<thead>
+							<tr>
+								<th><i class="fa fa-hashtag me-1"></i>Mã phiếu</th>
+								<th><i class="fa fa-user me-1"></i>Độc giả</th>
+								<th><i class="fa fa-book me-1"></i>Sách</th>
+								<th><i class="fa fa-calendar me-1"></i>Hạn trả</th>
+								<th><i class="fa fa-hourglass-end me-1"></i>Quá hạn</th>
+								<th>Thao tác</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var pm in Model.PhieuMuonQuaHan)
+							{
+								<tr>
+									<td><code>@pm.MaPhieu</code></td>
+									<td><strong>@pm.TenDocGia</strong></td>
+									<td>@pm.TenSachHienThi</td>
+									<td>@pm.NgayHenTra.ToString("dd/MM/yyyy")</td>
+									<td><span class="staff-badge staff-badge--red"><i class="fa fa-exclamation"></i>@pm.SoNgayQuaHan ngày</span></td>
+									<td>
+										<a asp-controller="Borrow" asp-action="ReturnBook" asp-route-id="@pm.MaPhieu"
+										   class="staff-btn staff-btn--primary" style="padding: 6px 10px;" title="Đánh dấu đã trả">
+											<i class="fa fa-check"></i>Trả sách
+										</a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+			else
+			{
+				<div style="padding: 32px 24px; text-align: center; color: #64748b;">
+					<i class="fa fa-circle-check" style="font-size: 28px; color: #10b981; margin-bottom: 8px; display: block;"></i>
+					Hiện không có phiếu mượn nào quá hạn 🎉
+				</div>
+			}
 		</div>
 
-		<!-- ĐƠƠN ĐẶT TRƯỚC CHƯA DUYỆT -->
+		<!-- ĐƠN ĐẶT TRƯỚC CHỜ DUYỆT -->
 		<div class="staff-sec-header">
 			<h3 class="staff-sec-title">
 				<span class="staff-sec-title__icon"><i class="fa fa-hourglass"></i></span>
 				Đơn đặt trước chờ duyệt
 			</h3>
-			<a href="#" class="staff-btn staff-btn--outline">
+			<a asp-controller="Reservation" asp-action="Index" asp-route-status="Đang Chờ" class="staff-btn staff-btn--outline">
 				<i class="fa fa-arrow-right"></i>Xem tất cả
 			</a>
 		</div>
@@ -483,63 +601,53 @@
 		<div class="staff-data-card">
 			<div class="staff-data-card__header">
 				<div class="staff-data-card__header-icon"><i class="fa fa-bookmark"></i></div>
-				<div class="staff-data-card__header-text">156 đơn đặt trước chờ duyệt</div>
+				<div class="staff-data-card__header-text">@Model.DonDatTruocChoDuyet.ToString("N0") đơn đặt trước chờ duyệt</div>
 				<span class="ms-auto badge" style="background: #fed7aa; color: #9a3412; border-radius: 8px; padding: 6px 12px; font-weight: 700; font-size: 12px;">
-					156 đơn
+					@Model.DonDatTruocChoDuyet.ToString("N0") đơn
 				</span>
 			</div>
-			<div style="overflow-x: auto;">
-				<table class="staff-table">
-					<thead>
-						<tr>
-							<th><i class="fa fa-hashtag me-1"></i>Mã đặt</th>
-							<th><i class="fa fa-user me-1"></i>Độc giả</th>
-							<th><i class="fa fa-book me-1"></i>Sách yêu cầu</th>
-							<th><i class="fa fa-calendar me-1"></i>Ngày đặt</th>
-							<th><i class="fa fa-check-square me-1"></i>Trạng thái</th>
-							<th>Thao tác</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><code>DT003421</code></td>
-							<td><strong>Phạm Văn D</strong></td>
-							<td>Design Thinking</td>
-							<td>20/08/2026</td>
-							<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
-							<td>
-								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
-									<i class="fa fa-check"></i>Duyệt
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td><code>DT003422</code></td>
-							<td><strong>Võ Thị E</strong></td>
-							<td>UX/UI Principles</td>
-							<td>19/08/2026</td>
-							<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
-							<td>
-								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
-									<i class="fa fa-check"></i>Duyệt
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td><code>DT003423</code></td>
-							<td><strong>Đinh Văn F</strong></td>
-							<td>Data Science 101</td>
-							<td>18/08/2026</td>
-							<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
-							<td>
-								<button class="staff-btn staff-btn--primary" style="width: 70px; padding: 6px;">
-									<i class="fa fa-check"></i>Duyệt
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			@if (Model.DonDatTruocCanDuyet.Any())
+			{
+				<div style="overflow-x: auto;">
+					<table class="staff-table">
+						<thead>
+							<tr>
+								<th><i class="fa fa-hashtag me-1"></i>Mã đặt</th>
+								<th><i class="fa fa-user me-1"></i>Độc giả</th>
+								<th><i class="fa fa-book me-1"></i>Sách yêu cầu</th>
+								<th><i class="fa fa-calendar me-1"></i>Ngày đặt</th>
+								<th><i class="fa fa-check-square me-1"></i>Trạng thái</th>
+								<th>Thao tác</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var dt in Model.DonDatTruocCanDuyet)
+							{
+								<tr>
+									<td><code>#@dt.MaReservation</code></td>
+									<td><strong>@dt.TenDocGia</strong></td>
+									<td>@dt.TenSachHienThi</td>
+									<td>@dt.NgayDat.ToString("dd/MM/yyyy")</td>
+									<td><span class="staff-badge staff-badge--orange"><i class="fa fa-clock"></i>Chờ duyệt</span></td>
+									<td>
+										<a asp-controller="Reservation" asp-action="Approve" asp-route-id="@dt.MaReservation"
+										   class="staff-btn staff-btn--primary" style="padding: 6px 10px;" title="Duyệt đơn đặt trước">
+											<i class="fa fa-check"></i>Duyệt
+										</a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+			else
+			{
+				<div style="padding: 32px 24px; text-align: center; color: #64748b;">
+					<i class="fa fa-circle-check" style="font-size: 28px; color: #10b981; margin-bottom: 8px; display: block;"></i>
+					Không có đơn đặt trước nào đang chờ duyệt
+				</div>
+			}
 		</div>
 
 		<!-- THỐNG KÊ NHANH -->
@@ -558,7 +666,7 @@
 						<div class="staff-data-card__header-text">Tổng sách</div>
 					</div>
 					<div style="padding: 24px; text-align: center;">
-						<div style="font-size: 36px; font-weight: 900; color: var(--staff-blue); margin-bottom: 8px;">1,248</div>
+						<div style="font-size: 36px; font-weight: 900; color: var(--staff-blue); margin-bottom: 8px;">@Model.TongSach.ToString("N0")</div>
 						<div style="font-size: 12px; color: #64748b;">Trong hệ thống</div>
 					</div>
 				</div>
@@ -570,7 +678,7 @@
 						<div class="staff-data-card__header-text">Sách có sẵn</div>
 					</div>
 					<div style="padding: 24px; text-align: center;">
-						<div style="font-size: 36px; font-weight: 900; color: #10b981; margin-bottom: 8px;">892</div>
+						<div style="font-size: 36px; font-weight: 900; color: #10b981; margin-bottom: 8px;">@Model.SachCoSan.ToString("N0")</div>
 						<div style="font-size: 12px; color: #64748b;">Có thể mượn</div>
 					</div>
 				</div>
@@ -582,7 +690,7 @@
 						<div class="staff-data-card__header-text">Đang mượn</div>
 					</div>
 					<div style="padding: 24px; text-align: center;">
-						<div style="font-size: 36px; font-weight: 900; color: #ea580c; margin-bottom: 8px;">356</div>
+						<div style="font-size: 36px; font-weight: 900; color: #ea580c; margin-bottom: 8px;">@Model.SachDangMuon.ToString("N0")</div>
 						<div style="font-size: 12px; color: #64748b;">Phiếu hoạt động</div>
 					</div>
 				</div>
@@ -594,7 +702,7 @@
 						<div class="staff-data-card__header-text">Quá hạn</div>
 					</div>
 					<div style="padding: 24px; text-align: center;">
-						<div style="font-size: 36px; font-weight: 900; color: #dc2626; margin-bottom: 8px;">23</div>
+						<div style="font-size: 36px; font-weight: 900; color: #dc2626; margin-bottom: 8px;">@Model.SachQuaHan.ToString("N0")</div>
 						<div style="font-size: 12px; color: #64748b;">Cần followup</div>
 					</div>
 				</div>

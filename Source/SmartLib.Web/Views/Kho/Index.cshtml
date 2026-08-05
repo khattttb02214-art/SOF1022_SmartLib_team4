@@ -63,11 +63,19 @@
                                 @k.TrangThai
                             </span>
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             <a asp-action="DanhSachCuon" asp-route-maSach="@k.MaSach"
-                                   class="btn btn-xs btn-outline-primary">
+                               class="btn btn-xs btn-outline-primary">
                                 <i class="fa fa-layer-group me-1"></i>Cuốn
                             </a>
+                            <form asp-action="NgungHoatDongSach" method="post" class="d-inline"
+                                  onsubmit="return confirm('Ngừng hoạt động sách &quot;@k.TenSach&quot;?\nSách sẽ bị ẩn hoàn toàn khỏi kho và không cho độc giả thấy nữa (dữ liệu vẫn được giữ nguyên).')">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="maSach" value="@k.MaSach" />
+                                <button type="submit" class="btn btn-xs btn-outline-danger" title="Ngừng hoạt động — ẩn sách khỏi người dùng">
+                                    <i class="fa fa-ban me-1"></i>Ngừng
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 }

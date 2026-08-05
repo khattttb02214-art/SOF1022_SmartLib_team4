@@ -50,6 +50,22 @@ public class KhoController : Controller
         return View(list.OrderBy(k => k.TrangThai).ThenBy(k => k.TenSach).ToList());
     }
 
+    // ── NGỪNG HOẠT ĐỘNG SÁCH (ẩn khỏi kho + độc giả, giữ nguyên dữ liệu) ──
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> NgungHoatDongSach(string maSach)
+    {
+        var s = await _db.Saches.FindAsync(maSach);
+        if (s == null) return NotFound();
+
+        s.TrangThai = false;
+        s.NgayCapNhat = DateTime.Now;
+        await _db.SaveChangesAsync();
+
+        TempData["success"] = $"Đã ngừng hoạt động sách \"{s.TenSach}\" — sách không còn hiển thị với độc giả và bị ẩn khỏi danh sách kho (dữ liệu vẫn được giữ nguyên).";
+        return RedirectToAction(nameof(Index));
+    }
+
     // ── KỆ SÁCH INDEX ────────────────────────────────────────────
     public async Task<IActionResult> KeSach(string? tang, string? phong)
     {
