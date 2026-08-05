@@ -833,4 +833,8 @@ public class AuthController : Controller
         });
         await _context.SaveChangesAsync();
     }
+    public IActionResult TaoHash()
+    {
+        return Content(BCrypt.Net.BCrypt.HashPassword("123456"));
+    }
 }
